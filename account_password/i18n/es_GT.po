@@ -1,0 +1,221 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* account_password
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-03-31 01:34+0000\n"
+"PO-Revision-Date: 2025-03-31 01:34+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: account_password
+#: model:ir.actions.report,print_report_name:account_password.action_password_receipt
+msgid "'Invoices password - %s' % (object.name)"
+msgstr "'Contraseña de facturas - %s' % (object.name)"
+
+#. module: account_password
+#: model_terms:ir.ui.view,arch_db:account_password.account_password_form
+msgid "<span class=\"o_form_label\">Reference code</span>"
+msgstr "<span class=\"o_form_label\">Código de referencia</span>"
+
+#. module: account_password
+#: model_terms:ir.ui.view,arch_db:account_password.account_password_form
+msgid "Accounting Date"
+msgstr "Fecha contable"
+
+#. module: account_password
+#: model_terms:ir.ui.view,arch_db:account_password.password_receipt_temp
+msgid "Amount"
+msgstr "Monto"
+
+#. module: account_password
+#: model_terms:ir.ui.view,arch_db:account_password.account_password_form
+msgid "Amount Due"
+msgstr "Monto adeudado"
+
+#. module: account_password
+#: model_terms:ir.ui.view,arch_db:account_password.account_password_form
+msgid "Bill Date"
+msgstr "Fecha de factura"
+
+#. module: account_password
+#: model:ir.model.fields,field_description:account_password.field_account_password_account_password__user_id
+msgid "Buyer"
+msgstr "Comprador"
+
+#. module: account_password
+#: model:ir.model.fields,field_description:account_password.field_account_password_account_password__company_id
+msgid "Company"
+msgstr "Compañía"
+
+#. module: account_password
+#: model:ir.model.fields,field_description:account_password.field_account_password_account_password__create_uid
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: account_password
+#: model:ir.model.fields,field_description:account_password.field_account_password_account_password__create_date
+msgid "Created on"
+msgstr "Creado el"
+
+#. module: account_password
+#: model_terms:ir.ui.view,arch_db:account_password.password_receipt_temp
+msgid "Date"
+msgstr "Fecha"
+
+#. module: account_password
+#: model:ir.model.fields,field_description:account_password.field_account_password_account_password__display_name
+msgid "Display Name"
+msgstr Nombre para mostrar"
+
+#. module: account_password
+#: model:ir.model.fields,field_description:account_password.field_account_password_account_password__id
+msgid "ID"
+msgstr ""
+
+#. module: account_password
+#: model:ir.model.fields,field_description:account_password.field_account_password_account_password__account_move_ids
+#: model_terms:ir.ui.view,arch_db:account_password.account_password_form
+#: model_terms:ir.ui.view,arch_db:account_password.password_receipt_temp
+msgid "Invoice"
+msgstr "Factura"
+
+#. module: account_password
+#: model_terms:ir.ui.view,arch_db:account_password.account_password_form
+msgid "Invoice Date"
+msgstr "Fecha de Factura"
+
+#. module: account_password
+#: model_terms:ir.ui.view,arch_db:account_password.password_receipt_temp
+msgid "Invoice date"
+msgstr "Fecha de factura"
+
+#. module: account_password
+#: model:ir.actions.act_window,name:account_password.account_password_acti_window
+#: model:ir.ui.menu,name:account_password.menu_account_password
+msgid "Invoice password"
+msgstr "Contraseña de factura"
+
+#. module: account_password
+#: model:ir.actions.report,name:account_password.action_password_receipt
+msgid "Invoices password"
+msgstr "Contraseña de facturas"
+
+#. module: account_password
+#: model:ir.model.fields,field_description:account_password.field_account_password_account_password__write_uid
+msgid "Last Updated by"
+msgstr "Actualizado por última vez por"
+
+#. module: account_password
+#: model:ir.model.fields,field_description:account_password.field_account_password_account_password__write_date
+msgid "Last Updated on"
+msgstr "Última actualización el"
+
+#. module: account_password
+#: model_terms:ir.ui.view,arch_db:account_password.password_receipt_temp
+msgid "NIT"
+msgstr "NIT"
+
+#. module: account_password
+#: model_terms:ir.ui.view,arch_db:account_password.password_receipt_temp
+msgid "Number"
+msgstr "Número"
+
+#. module: account_password
+#: model:ir.model.fields,field_description:account_password.field_account_password_account_password__observation
+msgid "Observation"
+msgstr "Observación"
+
+#. module: account_password
+#: model_terms:ir.ui.view,arch_db:account_password.account_password_form
+msgid "Payment"
+msgstr "Pago"
+
+#. module: account_password
+#: model:ir.model.fields,field_description:account_password.field_account_password_account_password__partner_id
+msgid "Provider"
+msgstr "Proveedor"
+
+#. module: account_password
+#: model_terms:ir.ui.view,arch_db:account_password.password_receipt_temp
+msgid "RECEPTION DAYS: TUESDAYS AND THURSDAYS"
+msgstr "DÍAS DE RECEPCIÓN: MARTES Y JUEVES"
+
+#. module: account_password
+#: model:ir.model.fields,field_description:account_password.field_account_password_account_password__name
+msgid "Reference code"
+msgstr "Código de referencia"
+
+#. module: account_password
+#: model_terms:ir.ui.view,arch_db:account_password.account_password_form
+msgid "Salesperson"
+msgstr "Vendedor"
+
+#. module: account_password
+#: model_terms:ir.ui.view,arch_db:account_password.password_receipt_temp
+msgid "Series"
+msgstr "Serie"
+
+#. module: account_password
+#: model_terms:ir.ui.view,arch_db:account_password.account_password_form
+msgid "Source Document"
+msgstr "Documento origen"
+
+#. module: account_password
+#: model_terms:ir.ui.view,arch_db:account_password.password_receipt_temp
+msgid "Supplier"
+msgstr "Proveedor"
+
+#. module: account_password
+#: model:ir.model,name:account_password.model_account_password_account_password
+msgid "Supplier payment passwords"
+msgstr "Contraseñas de pago de proveedores"
+
+#. module: account_password
+#: model_terms:ir.ui.view,arch_db:account_password.account_password_form
+msgid "Tax"
+msgstr "Impuesto"
+
+#. module: account_password
+#: model_terms:ir.ui.view,arch_db:account_password.account_password_form
+msgid "Tax Excluded"
+msgstr "Impuestos excluidos"
+
+#. module: account_password
+#. odoo-python
+#: code:addons/account_password/models/models.py:0
+#, python-format
+msgid ""
+"The string with the code 'invoices_password' was not found for the company you work for.\n"
+" Ask the person in charge to create the sequence with the 'Sequence code' field with the value 'invoices_password' and try again."
+msgstr ""
+"No se encontró la secuencia con el código 'invoices_password' para la empresa en la que trabajas.\n"
+" Solicita al responsable que cree la secuencia con el campo 'Código de secuencia' con el valor 'invoices_password' y vuelve a intentarlo."
+
+#. module: account_password
+#: model_terms:ir.ui.view,arch_db:account_password.password_receipt_temp
+msgid ""
+"This counter-receipt does not imply a commitment to pay, only the simple "
+"receipt of the documents indicated for review and timely payment, if "
+"applicable."
+msgstr ""
+"Este contra-recibo no implica compromiso de pago, solo el simple "
+"recepción de los documentos señalados para su revisión y oportuno pago, si fuera "
+"procedente."
+
+#. module: account_password
+#: model_terms:ir.ui.view,arch_db:account_password.account_password_form
+msgid "Total"
+msgstr "Total"
+
+#. module: account_password
+#: model_terms:ir.ui.view,arch_db:account_password.account_password_form
+msgid "Total in Currency"
+msgstr "Total en moneda"
