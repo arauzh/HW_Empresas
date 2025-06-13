@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-31 01:34+0000\n"
-"PO-Revision-Date: 2025-03-31 01:34+0000\n"
+"POT-Creation-Date: 2025-06-13 00:19+0000\n"
+"PO-Revision-Date: 2025-06-13 00:19+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -31,6 +31,14 @@ msgid "Accounting Date"
 msgstr "Fecha contable"
 
 #. module: account_password
+#: model:ir.model.fields,field_description:account_password.field_account_bank_statement_line__password_assigned
+#: model:ir.model.fields,field_description:account_password.field_account_move__password_assigned
+#: model:ir.model.fields,field_description:account_password.field_account_payment__password_assigned
+msgid "Already associated with Supplier Password"
+msgstr "Ya asociado con la contraseña del proveedor"
+
+#. module: account_password
+#: model_terms:ir.ui.view,arch_db:account_password.password_receipt_doc
 #: model_terms:ir.ui.view,arch_db:account_password.password_receipt_temp
 msgid "Amount"
 msgstr "Monto"
@@ -51,6 +59,15 @@ msgid "Buyer"
 msgstr "Comprador"
 
 #. module: account_password
+#: model:ir.model.fields,help:account_password.field_account_bank_statement_line__password_assigned
+#: model:ir.model.fields,help:account_password.field_account_move__password_assigned
+#: model:ir.model.fields,help:account_password.field_account_payment__password_assigned
+msgid ""
+"Check if this invoice has already been assigned in any record "
+"account.Password"
+msgstr "Verificar si esta factura ya está asignada a alguna contraseña de pago"
+
+#. module: account_password
 #: model:ir.model.fields,field_description:account_password.field_account_password_account_password__company_id
 msgid "Company"
 msgstr "Compañía"
@@ -66,6 +83,7 @@ msgid "Created on"
 msgstr "Creado el"
 
 #. module: account_password
+#: model_terms:ir.ui.view,arch_db:account_password.password_receipt_doc
 #: model_terms:ir.ui.view,arch_db:account_password.password_receipt_temp
 msgid "Date"
 msgstr "Fecha"
@@ -78,11 +96,12 @@ msgstr Nombre para mostrar"
 #. module: account_password
 #: model:ir.model.fields,field_description:account_password.field_account_password_account_password__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: account_password
 #: model:ir.model.fields,field_description:account_password.field_account_password_account_password__account_move_ids
 #: model_terms:ir.ui.view,arch_db:account_password.account_password_form
+#: model_terms:ir.ui.view,arch_db:account_password.password_receipt_doc
 #: model_terms:ir.ui.view,arch_db:account_password.password_receipt_temp
 msgid "Invoice"
 msgstr "Factura"
@@ -93,6 +112,7 @@ msgid "Invoice Date"
 msgstr "Fecha de Factura"
 
 #. module: account_password
+#: model_terms:ir.ui.view,arch_db:account_password.password_receipt_doc
 #: model_terms:ir.ui.view,arch_db:account_password.password_receipt_temp
 msgid "Invoice date"
 msgstr "Fecha de factura"
@@ -109,6 +129,11 @@ msgid "Invoices password"
 msgstr "Contraseña de facturas"
 
 #. module: account_password
+#: model:ir.model,name:account_password.model_account_move
+msgid "Journal Entry"
+msgstr "Asiento contable"
+
+#. module: account_password
 #: model:ir.model.fields,field_description:account_password.field_account_password_account_password__write_uid
 msgid "Last Updated by"
 msgstr "Actualizado por última vez por"
@@ -119,11 +144,13 @@ msgid "Last Updated on"
 msgstr "Última actualización el"
 
 #. module: account_password
+#: model_terms:ir.ui.view,arch_db:account_password.password_receipt_doc
 #: model_terms:ir.ui.view,arch_db:account_password.password_receipt_temp
 msgid "NIT"
 msgstr "NIT"
 
 #. module: account_password
+#: model_terms:ir.ui.view,arch_db:account_password.password_receipt_doc
 #: model_terms:ir.ui.view,arch_db:account_password.password_receipt_temp
 msgid "Number"
 msgstr "Número"
@@ -144,6 +171,7 @@ msgid "Provider"
 msgstr "Proveedor"
 
 #. module: account_password
+#: model_terms:ir.ui.view,arch_db:account_password.password_receipt_doc
 #: model_terms:ir.ui.view,arch_db:account_password.password_receipt_temp
 msgid "RECEPTION DAYS: TUESDAYS AND THURSDAYS"
 msgstr "DÍAS DE RECEPCIÓN: MARTES Y JUEVES"
@@ -159,6 +187,7 @@ msgid "Salesperson"
 msgstr "Vendedor"
 
 #. module: account_password
+#: model_terms:ir.ui.view,arch_db:account_password.password_receipt_doc
 #: model_terms:ir.ui.view,arch_db:account_password.password_receipt_temp
 msgid "Series"
 msgstr "Serie"
@@ -169,6 +198,7 @@ msgid "Source Document"
 msgstr "Documento origen"
 
 #. module: account_password
+#: model_terms:ir.ui.view,arch_db:account_password.password_receipt_doc
 #: model_terms:ir.ui.view,arch_db:account_password.password_receipt_temp
 msgid "Supplier"
 msgstr "Proveedor"
@@ -200,14 +230,15 @@ msgstr ""
 " Solicita al responsable que cree la secuencia con el campo 'Código de secuencia' con el valor 'invoices_password' y vuelve a intentarlo."
 
 #. module: account_password
+#: model_terms:ir.ui.view,arch_db:account_password.password_receipt_doc
 #: model_terms:ir.ui.view,arch_db:account_password.password_receipt_temp
 msgid ""
 "This counter-receipt does not imply a commitment to pay, only the simple "
 "receipt of the documents indicated for review and timely payment, if "
 "applicable."
 msgstr ""
-"Este contra-recibo no implica compromiso de pago, solo el simple "
-"recepción de los documentos señalados para su revisión y oportuno pago, si fuera "
+"Este contra-recibo no implica compromiso de pago, solo el simple recepción "
+"de los documentos señalados para su revisión y oportuno pago, si fuera "
 "procedente."
 
 #. module: account_password
