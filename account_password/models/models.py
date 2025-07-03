@@ -15,7 +15,7 @@ class account_password(models.Model):
         ('confirmed', 'CONFIRMED'),
         ('closed',    'CLOSED'),
         ('canceled',  'CANCELED'),
-    ], default='draft', tracking=True)
+    ], default='draft')
     user_id = fields.Many2one(
         'res.users', string='Buyer', index=True,
         default=lambda self: self.env.user, check_company=True)
