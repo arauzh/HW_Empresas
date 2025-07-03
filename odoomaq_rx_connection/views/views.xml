@@ -1,0 +1,60 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+<!--
+    <record model="ir.ui.view" id="odoomaq_rx_connection.list">
+      <field name="name">odoomaq_rx_connection list</field>
+      <field name="model">odoomaq_rx_connection.odoomaq_rx_connection</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+          <field name="value"/>
+          <field name="value2"/>
+        </tree>
+      </field>
+    </record>
+-->
+
+    <!-- actions opening views on models -->
+<!--
+    <record model="ir.actions.act_window" id="odoomaq_rx_connection.action_window">
+      <field name="name">odoomaq_rx_connection window</field>
+      <field name="res_model">odoomaq_rx_connection.odoomaq_rx_connection</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+-->
+
+    <!-- server action to the one above -->
+<!--
+    <record model="ir.actions.server" id="odoomaq_rx_connection.action_server">
+      <field name="name">odoomaq_rx_connection server</field>
+      <field name="model_id" ref="model_odoomaq_rx_connection_odoomaq_rx_connection"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": model._name,
+        }
+      </field>
+    </record>
+-->
+
+    <!-- Top menu item -->
+<!--
+    <menuitem name="odoomaq_rx_connection" id="odoomaq_rx_connection.menu_root"/>
+-->
+    <!-- menu categories -->
+<!--
+    <menuitem name="Menu 1" id="odoomaq_rx_connection.menu_1" parent="odoomaq_rx_connection.menu_root"/>
+    <menuitem name="Menu 2" id="odoomaq_rx_connection.menu_2" parent="odoomaq_rx_connection.menu_root"/>
+-->
+    <!-- actions -->
+<!--
+    <menuitem name="List" id="odoomaq_rx_connection.menu_1_list" parent="odoomaq_rx_connection.menu_1"
+              action="odoomaq_rx_connection.action_window"/>
+    <menuitem name="Server to list" id="odoomaq_rx_connection" parent="odoomaq_rx_connection.menu_2"
+              action="odoomaq_rx_connection.action_server"/>
+-->
+  </data>
+</odoo>
