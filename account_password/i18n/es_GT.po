@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-13 00:19+0000\n"
-"PO-Revision-Date: 2025-06-13 00:19+0000\n"
+"POT-Creation-Date: 2025-07-02 20:12+0000\n"
+"PO-Revision-Date: 2025-07-02 20:12+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -21,9 +21,24 @@ msgid "'Invoices password - %s' % (object.name)"
 msgstr "'Contraseña de facturas - %s' % (object.name)"
 
 #. module: account_password
+#: model_terms:ir.ui.view,arch_db:account_password.password_receipt_doc
+msgid "(document name)"
+msgstr "(Nombre del documento)"
+
+#. module: account_password
 #: model_terms:ir.ui.view,arch_db:account_password.account_password_form
 msgid "<span class=\"o_form_label\">Reference code</span>"
 msgstr "<span class=\"o_form_label\">Código de referencia</span>"
+
+#. module: account_password
+#: model_terms:ir.ui.view,arch_db:account_password.password_receipt_doc
+msgid "<strong>Company address block</strong>"
+msgstr "<strong>Bloque de dirección de la empresa</strong>"
+
+#. module: account_password
+#: model_terms:ir.ui.view,arch_db:account_password.password_receipt_doc
+msgid "<strong>Company details block</strong>"
+msgstr "<strong>Bloque de detalles de la empresa</strong>"
 
 #. module: account_password
 #: model_terms:ir.ui.view,arch_db:account_password.account_password_form
@@ -59,18 +74,64 @@ msgid "Buyer"
 msgstr "Comprador"
 
 #. module: account_password
+#: model:ir.model.fields.selection,name:account_password.selection__account_password_account_password__state__canceled
+msgid "CANCELED"
+msgstr "CANCELADO"
+
+#. module: account_password
+#: model:ir.model.fields.selection,name:account_password.selection__account_password_account_password__state__closed
+msgid "CLOSED"
+msgstr "CERRADO"
+
+#. module: account_password
+#: model:ir.model.fields.selection,name:account_password.selection__account_password_account_password__state__confirmed
+msgid "CONFIRMED"
+msgstr "CONFIRMADO"
+
+#. module: account_password
+#: model_terms:ir.ui.view,arch_db:account_password.account_password_form
+msgid "Cancel"
+msgstr "Cancelar"
+
+#. module: account_password
 #: model:ir.model.fields,help:account_password.field_account_bank_statement_line__password_assigned
 #: model:ir.model.fields,help:account_password.field_account_move__password_assigned
 #: model:ir.model.fields,help:account_password.field_account_payment__password_assigned
 msgid ""
 "Check if this invoice has already been assigned in any record "
 "account.Password"
-msgstr "Verificar si esta factura ya está asignada a alguna contraseña de pago"
+msgstr ""
+"Verificar si esta factura ya está asignada a alguna contraseña de pago"
+
+#. module: account_password
+#: model_terms:ir.ui.view,arch_db:account_password.account_password_form
+msgid "Close"
+msgstr "Cerrar"
 
 #. module: account_password
 #: model:ir.model.fields,field_description:account_password.field_account_password_account_password__company_id
 msgid "Company"
 msgstr "Compañía"
+
+#. module: account_password
+#: model_terms:ir.ui.view,arch_db:account_password.password_receipt_doc
+msgid "Company tagline"
+msgstr "Lema de la empresa"
+
+#. module: account_password
+#: model_terms:ir.ui.view,arch_db:account_password.account_password_form
+msgid "Confirm"
+msgstr "Confirmar"
+
+#. module: account_password
+#: model_terms:ir.ui.view,arch_db:account_password.password_receipt_doc
+msgid "Contains the company address."
+msgstr "Contiene la dirección de la empresa."
+
+#. module: account_password
+#: model_terms:ir.ui.view,arch_db:account_password.password_receipt_doc
+msgid "Contains the company details."
+msgstr "Contiene los detalles de la empresa."
 
 #. module: account_password
 #: model:ir.model.fields,field_description:account_password.field_account_password_account_password__create_uid
@@ -83,6 +144,11 @@ msgid "Created on"
 msgstr "Creado el"
 
 #. module: account_password
+#: model:ir.model.fields.selection,name:account_password.selection__account_password_account_password__state__draft
+msgid "DRAFT"
+msgstr "BORRADOR"
+
+#. module: account_password
 #: model_terms:ir.ui.view,arch_db:account_password.password_receipt_doc
 #: model_terms:ir.ui.view,arch_db:account_password.password_receipt_temp
 msgid "Date"
@@ -91,7 +157,7 @@ msgstr "Fecha"
 #. module: account_password
 #: model:ir.model.fields,field_description:account_password.field_account_password_account_password__display_name
 msgid "Display Name"
-msgstr Nombre para mostrar"
+msgstr "Nombre para mostrar"
 
 #. module: account_password
 #: model:ir.model.fields,field_description:account_password.field_account_password_account_password__id
@@ -145,6 +211,11 @@ msgstr "Última actualización el"
 
 #. module: account_password
 #: model_terms:ir.ui.view,arch_db:account_password.password_receipt_doc
+msgid "Logo"
+msgstr "Logo"
+
+#. module: account_password
+#: model_terms:ir.ui.view,arch_db:account_password.password_receipt_doc
 #: model_terms:ir.ui.view,arch_db:account_password.password_receipt_temp
 msgid "NIT"
 msgstr "NIT"
@@ -159,6 +230,15 @@ msgstr "Número"
 #: model:ir.model.fields,field_description:account_password.field_account_password_account_password__observation
 msgid "Observation"
 msgstr "Observación"
+
+#. module: account_password
+#: model_terms:ir.ui.view,arch_db:account_password.password_receipt_doc
+msgid ""
+"Page:\n"
+"                    <span class=\"page\"/>\n"
+"                    of\n"
+"                    <span class=\"topage\"/>"
+msgstr ""
 
 #. module: account_password
 #: model_terms:ir.ui.view,arch_db:account_password.account_password_form
@@ -198,6 +278,11 @@ msgid "Source Document"
 msgstr "Documento origen"
 
 #. module: account_password
+#: model:ir.model.fields,field_description:account_password.field_account_password_account_password__state
+msgid "State"
+msgstr "Estado"
+
+#. module: account_password
 #: model_terms:ir.ui.view,arch_db:account_password.password_receipt_doc
 #: model_terms:ir.ui.view,arch_db:account_password.password_receipt_temp
 msgid "Supplier"
@@ -217,6 +302,11 @@ msgstr "Impuesto"
 #: model_terms:ir.ui.view,arch_db:account_password.account_password_form
 msgid "Tax Excluded"
 msgstr "Impuestos excluidos"
+
+#. module: account_password
+#: model_terms:ir.ui.view,arch_db:account_password.password_receipt_doc
+msgid "Tax ID"
+msgstr "Identificación fiscal"
 
 #. module: account_password
 #. odoo-python
@@ -244,9 +334,14 @@ msgstr ""
 #. module: account_password
 #: model_terms:ir.ui.view,arch_db:account_password.account_password_form
 msgid "Total"
-msgstr "Total"
+msgstr ""
 
 #. module: account_password
 #: model_terms:ir.ui.view,arch_db:account_password.account_password_form
 msgid "Total in Currency"
 msgstr "Total en moneda"
+
+#. module: account_password
+#: model_terms:ir.ui.view,arch_db:account_password.password_receipt_doc
+msgid "US12345671"
+msgstr ""

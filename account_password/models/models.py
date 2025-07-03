@@ -10,6 +10,12 @@ class account_password(models.Model):
     _order = 'id desc'
     _check_company_auto = True
 
+    state = fields.Selection([
+        ('draft',     'DRAFT'),
+        ('confirmed', 'CONFIRMED'),
+        ('closed',    'CLOSED'),
+        ('canceled',  'CANCELED'),
+    ], default='draft', tracking=True)
     user_id = fields.Many2one(
         'res.users', string='Buyer', index=True,
         default=lambda self: self.env.user, check_company=True)
@@ -92,6 +98,22 @@ class account_password(models.Model):
             if rec.account_move_ids:
                 rec.account_move_ids.write({'password_assigned': False})
         return super(account_password, self).unlink()
+    
+    def action_confirm(self):
+        for rec in self:
+            rec.state = 'confirmed'
+
+    def action_close(self):
+        for rec in self:
+            rec.state = 'closed'
+
+    def action_cancel(self):
+        for rec in self:
+            # 3) Desvincular facturas y limpiar flag
+            if rec.account_move_ids:
+                rec.account_move_ids.write({'password_assigned': False})
+                rec.account_move_ids = [(5, 0, 0)]
+            rec.state = 'canceled'
 
 class AccountMove(models.Model):
     _inherit = 'account.move'

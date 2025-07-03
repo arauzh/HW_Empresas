@@ -8,6 +8,12 @@
       <field name="arch" type="xml">
         <form>
           <field name="company_id" invisible="True"/>
+          <header>
+            <button name="action_confirm" type="object" string="Confirm" invisible="state != 'draft'" class="btn-primary"/>
+            <button name="action_close" type="object" string="Close" invisible="state != 'confirmed'" class="btn-success"/>
+            <button name="action_cancel" type="object" string="Cancel" invisible="state in ('draft','closed','canceled')" class="btn-danger"/>
+            <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,closed,canceled"/>
+          </header>
           <sheet>
             <div class="oe_title">
             <span class="o_form_label" >Reference code</span>
@@ -17,16 +23,16 @@
             </div>
             <group>
               <group>
-                <field name="partner_id" domain="[('company_id', 'in', (False, company_id)), ('supplier_rank', '>', 0)]"/>
+                <field name="partner_id" domain="[('company_id', 'in', (False, company_id)), ('supplier_rank', '>', 0)]" readonly="state in ['closed','canceled']"/>
               </group>
               <group>
-                <field name="observation"/>
+                <field name="observation" readonly="state in ['closed','canceled']"/>
               </group>
             </group>
             <notebook>
               <page name="invoice_list_p" string="Invoice">
                 <!-- <field name="account_move_ids"/> -->
-                <field name="account_move_ids">
+                <field name="account_move_ids" readonly="state in ['closed','canceled']">
                   <tree editable="bottom">
                     <field name="made_sequence_hole" column_invisible="True"/>
                     <field name="name" decoration-bf="1" decoration-danger="made_sequence_hole"/>
@@ -79,9 +85,10 @@
           <field name="name"/>
           <field name="partner_id"/>
           <field name="company_id" readonly="1" options="{'no_create': True}"
-                        groups="base.group_multi_company" optional="hide"/>
+          groups="base.group_multi_company" optional="hide"/>
           <field name="observation"/>
           <field name="account_move_ids" widget="many2many_tags"/>
+          <field name="state" widget="badge" decoration-muted="state == 'draft'" decoration-success="state == 'closed'" decoration-info="state =='confirmed'" decoration-danger="state=='canceled'"/>
         </tree>
       </field>
     </record>
@@ -107,39 +114,6 @@
       <field name="view_mode">tree,form</field>
     </record>
 
-
-    <!-- server action to the one above -->
-<!--
-    <record model="ir.actions.server" id="account_password.action_server">
-      <field name="name">account_password server</field>
-      <field name="model_id" ref="model_account_password_account_password"/>
-      <field name="state">code</field>
-      <field name="code">
-        action = {
-          "type": "ir.actions.act_window",
-          "view_mode": "tree,form",
-          "res_model": model._name,
-        }
-      </field>
-    </record>
--->
-
-    <!-- Top menu item -->
-<!--
-    <menuitem name="account_password" id="account_password.menu_root"/>
--->
-    <!-- menu categories -->
-<!--
-    <menuitem name="Menu 1" id="account_password.menu_1" parent="account_password.menu_root"/>
-    <menuitem name="Menu 2" id="account_password.menu_2" parent="account_password.menu_root"/>
--->
-    <!-- actions -->
-<!--
-    <menuitem name="List" id="account_password.menu_1_list" parent="account_password.menu_1"
-              action="account_password.action_window"/>
-    <menuitem name="Server to list" id="account_password" parent="account_password.menu_2"
-              action="account_password.action_server"/>
--->
     <menuitem id="menu_account_password" name="Invoice password" parent="account.menu_finance_payables" action="account_password_acti_window" sequence="300"/>
   </data>
 </odoo>
