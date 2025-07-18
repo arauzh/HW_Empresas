@@ -119,3 +119,56 @@ class OdoomaqRxConnection(http.Controller):
             _logger.exception(_('Error creating purchase order'))
             return Response(str(e), status=500)
 
+
+    @http.route('/api/payroll/latest', type='json', auth='my_api_key', methods=['GET'], csrf=False)
+    def get_latest_payslip_gross(self, **kwargs):
+        try:
+            Payslip = request.env['hr.payslip'].sudo()
+
+            # 1) Recuperar todas las planillas ordenadas por empleado y fecha de inicio descendente
+            slips = Payslip.search(
+                [],
+                order='employee_id asc, date_from desc'
+            )
+
+            data = []
+            seen_employees = set()
+            for slip in slips:
+                emp_id = slip.employee_id.id
+                # 2) Sólo procesar la primera planilla que aparezca para cada empleado
+                if emp_id in seen_employees:
+                    continue
+                seen_employees.add(emp_id)
+
+                # 3) Calcular salario bruto de esa planilla
+                gross_amount = sum(
+                    slip.line_ids
+                        .filtered(lambda l: l.salary_rule_id.category_id.code == 'GROSS')
+                        .mapped('amount')
+                )
+                
+                # 4) Calcular total de horas trabajadas en esa planilla
+                worked_hours = sum(slip.worked_days_line_ids.mapped('number_of_hours'))
+                
+                data.append({
+                    'employee_id':   emp_id,
+                    'registration_number':  slip.employee_id.registration_number,
+                    'employee_name': slip.employee_id.name,
+                    'payslip_name':  slip.name,
+                    'date_from':     slip.date_from.isoformat(),
+                    'gross_salary':  float(gross_amount),
+                    'worked_hours':  float(worked_hours),
+                })
+
+            # print(data)
+            if not data:
+                return {'error': 'No se encontraron planillas'}
+
+            return {'data': data}
+            # return data
+
+        except Exception as e:
+            # Registrar error en logs de Odoo
+            _logger.error('Error al obtener salarios brutos de la última planilla: %s', e, exc_info=True)
+            # Responder con JSON de error
+            return Response(str(e), status=500)
