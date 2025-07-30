@@ -21,12 +21,15 @@ Module to receive information from Odoo Machinery and place it in the administra
     'version': '17.0.0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base'],
+    'depends': [
+        'base',
+        'purchase'
+    ],
 
     # always loaded
     'data': [
         # 'security/ir.model.access.csv',
-        # 'views/views.xml',
+        'views/purchase_order.xml',
         # 'views/templates.xml',
     ],
     'installable': True,
