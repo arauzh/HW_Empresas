@@ -64,7 +64,7 @@ class OdoomaqRxConnection(http.Controller):
             Purchase = request.env['purchase.order'].sudo().with_company(company.id)
             payment_term_obj = request.env['account.payment.term'].sudo().with_context(lang=lang).search([('name','=',payment_term)], limit=1)
             if not payment_term_obj:
-                return BadRequest(_(f"Payment term {inv_vals['invoice_payment_term_id']} not found"))
+                return BadRequest(_(f"Payment term {payment_term} not found"))
             order_vals = {
                 'partner_id': partner.id,
                 'partner_ref': vendor_ref,
@@ -125,7 +125,8 @@ class OdoomaqRxConnection(http.Controller):
         except Exception as e:
             _logger.info(payload)
             _logger.exception(_('Error creating purchase order'))
-            return Response(str(e), status=500)
+            # return Response(str(e), status=500)
+            return BadRequest(_(f"Error creating purchase order: {e}"))
 
 
     @http.route('/api/payroll/latest', type='json', auth='my_api_key', methods=['GET'], csrf=False)
@@ -294,8 +295,10 @@ class OdoomaqRxConnection(http.Controller):
             if not invoice:
                 return BadRequest(_(f"An unidentified error occurred while creating an invoice."))
                 
-            return {'success': True, 'invoice_id': invoice.id, 'invoice_name': invoice.name}
+            return {'success': True, 'invoice_id': invoice.id, 'invoice_name': invoice.name,}
+        
         except Exception as e:
             _logger.info(payload)
             _logger.exception(_('Error creating invoice'))
-            return Response(str(e), status=500)
+            # return Response(str(e), status=500)
+            return BadRequest(_(f"Error creating invoice: {e}"))
