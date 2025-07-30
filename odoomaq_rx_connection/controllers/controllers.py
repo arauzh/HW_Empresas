@@ -62,7 +62,7 @@ class OdoomaqRxConnection(http.Controller):
 
             # Crear orden de compra
             Purchase = request.env['purchase.order'].sudo().with_company(company.id)
-            payment_term_obj = request.env['account.payment.term'].sudo().with_context(lang=lang).search([('name','=',payment_term)], limit=1)
+            payment_term_obj = request.env['account.payment.term'].sudo().with_context(lang=lang).with_company(company.id).search([('name','=',payment_term)], limit=1)
             if not payment_term_obj:
                 return BadRequest(_(f"Payment term {payment_term} not found"))
             order_vals = {
@@ -92,7 +92,7 @@ class OdoomaqRxConnection(http.Controller):
                 # Impuestos
                 tax_list = []
                 for tax_name in line.get('taxes', []):
-                    tax = request.env['account.tax'].sudo().with_context(lang=lang).search([('name','=',tax_name)], limit=1)
+                    tax = request.env['account.tax'].sudo().with_context(lang=lang).with_company(company.id).search([('name','=',tax_name)], limit=1)
                     if tax:
                         tax_list.append(tax.id)
                 # Producto
@@ -226,11 +226,11 @@ class OdoomaqRxConnection(http.Controller):
             lang = request.env.user.lang
             Invoice = request.env['account.move'].sudo().with_company(company.id)
             origin = ','.join({str(ln.get('purchase_order_id')) for ln in inv_vals['lines'] if ln.get('purchase_order_id')})
-            payment_term_obj = request.env['account.payment.term'].sudo().with_context(lang=lang).search([('name','=',inv_vals['invoice_payment_term_id'])], limit=1)
+            payment_term_obj = request.env['account.payment.term'].sudo().with_context(lang=lang).with_company(company.id).search([('name','=',inv_vals['invoice_payment_term_id'])], limit=1)
             # print(payment_term_obj)
             if not payment_term_obj:
                 return BadRequest(_(f"Payment term {inv_vals['invoice_payment_term_id']} not found"))
-            journal_obj = request.env['account.journal'].sudo().with_context(lang=lang).search([('name','=',inv_vals['journal_id'])], limit=1)
+            journal_obj = request.env['account.journal'].sudo().with_context(lang=lang).with_company(company.id).search([('name','=',inv_vals['journal_id'])], limit=1)
             # print(journal_obj)
             if not journal_obj:
                 return BadRequest(_(f"Journal {inv_vals['journal_id']} not found"))
@@ -257,7 +257,7 @@ class OdoomaqRxConnection(http.Controller):
             # Lines
             for ln in inv_vals['lines']:
                 #Se busca la linea de orden de compra
-                purchase_order_line_obj = request.env['purchase.order.line'].sudo().search([('order_id.name','=',ln.get('purchase_order_id')),('origin_order_line_id','=',ln.get('origin_order_line_id'))], limit=1)
+                purchase_order_line_obj = request.env['purchase.order.line'].sudo().with_company(company.id).search([('order_id.name','=',ln.get('purchase_order_id')),('origin_order_line_id','=',ln.get('origin_order_line_id'))], limit=1)
                 
                 # Se crea la linea con relación a una orden de compra si los campos purchase_order_id y origin_order_line_id 
                 # si traian datos y la linea de la orden de compra fue encontrada.
@@ -271,7 +271,7 @@ class OdoomaqRxConnection(http.Controller):
                     line_vals["quantity"] = float(ln.get('quantity', 0))
                     line_vals["price_unit"] = float(ln.get('price', 0))
                     line_vals["discount"] = float(ln.get('discount', 0))
-                    tax_ids = request.env['account.tax'].sudo().search([('name', 'in', ln.get('taxes', []))]).ids
+                    tax_ids = request.env['account.tax'].sudo().with_context(lang=lang).with_company(company.id).search([('name', 'in', ln.get('taxes', []))]).ids
                     line_vals["tax_ids"] = [(6, 0, tax_ids)]
                     
                     inv_dict['invoice_line_ids'].append((0, 0, line_vals))
@@ -279,7 +279,7 @@ class OdoomaqRxConnection(http.Controller):
                 else:
                     # Se crea la linea sin relación a una orden de compra si los campos purchase_order_id y origin_order_line_id no traen datos
                     prod = request.env['product.product'].sudo().search([('default_code', '=', ln.get('product'))], limit=1)
-                    tax_ids = request.env['account.tax'].sudo().search([('name', 'in', ln.get('taxes', []))]).ids
+                    tax_ids = request.env['account.tax'].sudo().with_context(lang=lang).with_company(company.id).search([('name', 'in', ln.get('taxes', []))]).ids
                     inv_dict['invoice_line_ids'].append((0, 0, {
                         'product_id': prod.id if prod else False,
                         'name': ln.get('description', ''),
