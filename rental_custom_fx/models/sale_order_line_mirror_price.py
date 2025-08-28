@@ -44,6 +44,9 @@ class SaleOrderLine(models.Model):
             line.mirror_price_unit = 0.0
             line.mirror_price_subtotal = 0.0
             line.mirror_currency_id = False
+            
+            if not line.order_id.is_rental_order:
+                continue
 
             if not line.order_id or not line.order_id.pricelist_id.currency_id or not usd or not gtq:
                 continue

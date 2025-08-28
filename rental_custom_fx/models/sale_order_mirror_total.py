@@ -48,6 +48,9 @@ class SaleOrder(models.Model):
             order.mirror_amount_untaxed = 0.0
             order.mirror_amount_tax = 0.0
             order.mirror_amount_total = 0.0
+            
+            if not order.is_rental_order:
+                continue
 
             src_cur = order.pricelist_id.currency_id
             if not src_cur or not usd or not gtq:
