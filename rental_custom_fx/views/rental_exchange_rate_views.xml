@@ -1,0 +1,47 @@
+<!-- rental_custom_fx/views/rental_exchange_rate_views.xml -->
+<odoo>
+    <record id="view_rental_exchange_rate_tree" model="ir.ui.view">
+        <field name="name">rental.exchange.rate.tree</field>
+        <field name="model">rental.exchange.rate</field>
+        <field name="arch" type="xml">
+        <tree editable="top">
+            <field name="date"/>
+            <field name="company_id"/>
+            <field name="rate_usd_to_gtq"/>
+            <field name="rate_gtq_to_usd"/>
+            <field name="active"/>
+        </tree>
+        </field>
+    </record>
+
+    <record id="view_rental_exchange_rate_form" model="ir.ui.view">
+        <field name="name">rental.exchange.rate.form</field>
+        <field name="model">rental.exchange.rate</field>
+        <field name="arch" type="xml">
+        <form>
+            <sheet>
+            <group>
+                <field name="date"/>
+                <field name="company_id"/>
+                <field name="rate_usd_to_gtq"/>
+                <field name="rate_gtq_to_usd" readonly="1"/>
+                <field name="active"/>
+            </group>
+            </sheet>
+        </form>
+        </field>
+    </record>
+
+    <record id="action_rental_exchange_rate" model="ir.actions.act_window">
+        <field name="name">Renting Exchange Rates</field>
+        <field name="res_model">rental.exchange.rate</field>
+        <field name="view_mode">tree,form</field>
+        <field name="target">current</field>
+    </record>
+
+    <menuitem id="menu_rental_exchange_rate_root"
+                name="Renting Exchange Rates"
+                parent="sale_renting.menu_rental_config"
+                action="action_rental_exchange_rate"
+                sequence="30"/>
+</odoo>

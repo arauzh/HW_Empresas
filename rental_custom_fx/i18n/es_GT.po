@@ -1,0 +1,229 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* rental_custom_fx
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-08-28 15:30+0000\n"
+"PO-Revision-Date: 2025-08-28 15:30+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: rental_custom_fx
+#: model:ir.model.fields,field_description:rental_custom_fx.field_rental_exchange_rate__active
+msgid "Active"
+msgstr "Activar"
+
+#. module: rental_custom_fx
+#: model:ir.model.fields,field_description:rental_custom_fx.field_sale_order__mirror_amount_untaxed
+msgid "Base (Mirror Coin)"
+msgstr "Base (Moneda Espejo)"
+
+#. module: rental_custom_fx
+#: model:ir.model.fields,field_description:rental_custom_fx.field_rental_exchange_rate__company_id
+msgid "Company"
+msgstr "Compañía"
+
+#. module: rental_custom_fx
+#: model:ir.model.fields,field_description:rental_custom_fx.field_rental_exchange_rate__create_uid
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: rental_custom_fx
+#: model:ir.model.fields,field_description:rental_custom_fx.field_rental_exchange_rate__create_date
+msgid "Created on"
+msgstr "Creado el"
+
+#. module: rental_custom_fx
+#: model:ir.model,name:rental_custom_fx.model_rental_exchange_rate
+msgid "Custom exchange rate for Renting (USD↔Q)"
+msgstr "Tipo de cambio personalizado para alquiler (USD↔Q)"
+
+#. module: rental_custom_fx
+#: model:ir.model.fields,field_description:rental_custom_fx.field_rental_exchange_rate__date
+msgid "Date"
+msgstr "Fecha"
+
+#. module: rental_custom_fx
+#: model:ir.model.fields,field_description:rental_custom_fx.field_rental_exchange_rate__name
+msgid "Description"
+msgstr "Descripción"
+
+#. module: rental_custom_fx
+#: model:ir.model.fields,field_description:rental_custom_fx.field_rental_exchange_rate__display_name
+msgid "Display Name"
+msgstr "Nombre para mostrar"
+
+#. module: rental_custom_fx
+#: model:ir.model.fields,field_description:rental_custom_fx.field_rental_exchange_rate__id
+msgid "ID"
+msgstr "ID"
+
+#. module: rental_custom_fx
+#: model:ir.model.fields,field_description:rental_custom_fx.field_rental_exchange_rate__write_uid
+msgid "Last Updated by"
+msgstr "Última actualización por"
+
+#. module: rental_custom_fx
+#: model:ir.model.fields,field_description:rental_custom_fx.field_rental_exchange_rate__write_date
+msgid "Last Updated on"
+msgstr "Última actualización el"
+
+#. module: rental_custom_fx
+#: model:ir.model.fields,field_description:rental_custom_fx.field_sale_order_line__mirror_currency_id
+msgid "Mirror coin"
+msgstr "Moneda espejo"
+
+#. module: rental_custom_fx
+#: model:ir.model.fields,field_description:rental_custom_fx.field_sale_order__mirror_currency_id
+msgid "Mirror coin (order)"
+msgstr "Moneda espejo (orden)"
+
+#. module: rental_custom_fx
+#: model_terms:ir.ui.view,arch_db:rental_custom_fx.view_order_form_inherit_rental_fx_only
+msgid "Mirror currency (informative)"
+msgstr "Moneda espejo (informativa)"
+
+#. module: rental_custom_fx
+#: model:ir.model.fields,field_description:rental_custom_fx.field_sale_order_line__mirror_price_unit
+msgid "Price Unit. (Mirror coin)"
+msgstr "Precio unit. (Moneda espejo)"
+
+#. module: rental_custom_fx
+#: model:ir.model.fields,field_description:rental_custom_fx.field_rental_exchange_rate__rate_gtq_to_usd
+msgid "Q→USD Rate"
+msgstr "Tasa Q→USD"
+
+#. module: rental_custom_fx
+#: model:ir.actions.act_window,name:rental_custom_fx.action_rental_exchange_rate
+#: model:ir.ui.menu,name:rental_custom_fx.menu_rental_exchange_rate_root
+msgid "Renting Exchange Rates"
+msgstr "Tipos de cambio de alquiler"
+
+#. module: rental_custom_fx
+#. odoo-python
+#: code:addons/rental_custom_fx/models/sale_advance_wizard_gtq.py:0
+#, python-format
+msgid ""
+"Renting: GTQ currency imposed and price_unit converted from invoice values "
+"​​(USD→Q)."
+msgstr ""
+"Alquiler: Moneda GTQ impuesta y precio unitario convertido a partir de los valores de factura "
+"​​(USD→Q)."
+
+#. module: rental_custom_fx
+#: model:ir.model,name:rental_custom_fx.model_sale_advance_payment_inv
+msgid "Sales Advance Payment Invoice"
+msgstr "Factura de anticipo de ventas"
+
+#. module: rental_custom_fx
+#: model:ir.model,name:rental_custom_fx.model_sale_order
+msgid "Sales Order"
+msgstr "Orden de venta"
+
+#. module: rental_custom_fx
+#: model:ir.model,name:rental_custom_fx.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Línea de la orden de venta"
+
+#. module: rental_custom_fx
+#: model:ir.model.fields,field_description:rental_custom_fx.field_sale_order_line__mirror_price_subtotal
+msgid "Subtotal (Mirror Currency)"
+msgstr "Subtotal (Moneda espejo)"
+
+#. module: rental_custom_fx
+#: model:ir.model.fields,help:rental_custom_fx.field_sale_order_line__mirror_price_subtotal
+msgid ""
+"Subtotal converted to opposite currency (USD↔Q) using custom exchange rate."
+msgstr ""
+"Subtotal convertido a la moneda opuesta (USD↔Q) utilizando un tipo de cambio personalizado."
+
+#. module: rental_custom_fx
+#: model:ir.model.fields,field_description:rental_custom_fx.field_sale_order__mirror_amount_tax
+msgid "Taxes (Mirror Currency)"
+msgstr "Impuestos (moneda espejo)"
+
+#. module: rental_custom_fx
+#. odoo-python
+#: code:addons/rental_custom_fx/models/sale_advance_wizard_gtq.py:0
+#, python-format
+msgid "The GTQ/Q coin was not found in the coin catalog."
+msgstr "La moneda GTQ/Q no se encontró en el catálogo de monedas."
+
+#. module: rental_custom_fx
+#. odoo-python
+#: code:addons/rental_custom_fx/models/sale_advance_wizard_gtq.py:0
+#, python-format
+msgid "The Renting policy only contemplates USD↔GTQ. The order %s is in %s."
+msgstr "La política de alquiler solo contempla USD↔GTQ. El pedido %s está en %s."
+
+#. module: rental_custom_fx
+#. odoo-python
+#: code:addons/rental_custom_fx/models/rental_exchange_rate.py:0
+#: model:ir.model.constraint,message:rental_custom_fx.constraint_rental_exchange_rate_positive_rate
+#, python-format
+msgid "The USD→Q rate must be greater than 0."
+msgstr "El tipo de cambio USD→Q debe ser mayor que 0."
+
+#. module: rental_custom_fx
+#. odoo-python
+#: code:addons/rental_custom_fx/models/rental_exchange_rate.py:0
+#: model:ir.model.constraint,message:rental_custom_fx.constraint_rental_exchange_rate_uniq_company_date
+#, python-format
+msgid "There is already a rate for that date and company."
+msgstr "Ya existe una tarifa para esa fecha y compañía."
+
+#. module: rental_custom_fx
+#. odoo-python
+#: code:addons/rental_custom_fx/models/rental_exchange_rate.py:0
+#, python-format
+msgid "There is no custom exchange rate for the company %s."
+msgstr "No existe un tipo de cambio personalizado para la empresa %s."
+
+#. module: rental_custom_fx
+#. odoo-python
+#: code:addons/rental_custom_fx/models/sale_advance_wizard_gtq.py:0
+#, python-format
+msgid "There is no valid USD→Q exchange rate for the order %s."
+msgstr "No hay un tipo de cambio USD→Q válido para el pedido %s."
+
+#. module: rental_custom_fx
+#: model:ir.model.fields,field_description:rental_custom_fx.field_sale_order__mirror_amount_total
+#: model_terms:ir.ui.view,arch_db:rental_custom_fx.view_quotation_tree_rental_inherit_fx
+msgid "Total (Mirror Currency)"
+msgstr "Total (Moneda espejo)"
+
+#. module: rental_custom_fx
+#: model:ir.model.fields,help:rental_custom_fx.field_sale_order__mirror_amount_total
+msgid ""
+"Total converted to the opposite currency (USD↔Q) using Renting's custom "
+"exchange rate."
+msgstr ""
+"Total convertido a la moneda opuesta (USD↔Q) utilizando el tipo de cambio " 
+"habitual de Alquiler."
+
+#. module: rental_custom_fx
+#. odoo-python
+#: code:addons/rental_custom_fx/models/sale_advance_wizard_gtq.py:0
+#, python-format
+msgid "USD currency was not found in the currency catalog."
+msgstr "No se encontró la moneda USD en el catálogo de monedas."
+
+#. module: rental_custom_fx
+#: model:ir.model.fields,field_description:rental_custom_fx.field_rental_exchange_rate__rate_usd_to_gtq
+msgid "USD→Q rate"
+msgstr "Tasa USD→Q"
+
+#. module: rental_custom_fx
+#: model:ir.model.fields,help:rental_custom_fx.field_sale_order_line__mirror_price_unit
+msgid ""
+"Unit price converted to the opposite currency (USD↔Q) using custom exchange "
+"rate."
+msgstr ""
+"Precio unitario convertido a la moneda opuesta (USD↔Q) utilizando un tipo de cambio personalizado."
