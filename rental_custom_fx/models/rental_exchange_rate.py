@@ -52,5 +52,6 @@ class RentalExchangeRate(models.Model):
                 limit=1,
             )
         if not rec:
-            raise UserError(_("There is no custom exchange rate for the company %s.") % company.name)
+            # raise UserError(_("There is no custom exchange rate for the company %s.") % company.name)
+            return False
         return rec

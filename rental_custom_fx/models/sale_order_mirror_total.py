@@ -59,6 +59,9 @@ class SaleOrder(models.Model):
             # Toma la tasa personalizada por fecha de pedido
             date = fields.Date.to_date(order.date_order or fields.Date.context_today(order))
             fx = self.env["rental.exchange.rate"]._get_fx_for_date(order.company_id, date)
+            
+            if not fx or not fx.rate_usd_to_gtq:
+                return
 
             if src_cur == usd:
                 order.mirror_currency_id = gtq

@@ -55,6 +55,9 @@ class SaleOrderLine(models.Model):
             company = line.order_id.company_id
             date = fields.Date.to_date(line.order_id.date_order or fields.Date.context_today(line))
             fx = self.env["rental.exchange.rate"]._get_fx_for_date(company, date)
+            
+            if not fx or not fx.rate_usd_to_gtq:
+                return
 
             # Solo convertimos si la moneda origen es USD o GTQ
             if src_cur == usd:
