@@ -1,0 +1,49 @@
+
+<odoo>
+    <record id="view_order_form_inherit_rental_fx_only" model="ir.ui.view">
+        <field name="name">sale.order.form.rental.fx.only</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale_renting.rental_order_primary_form_view"/>
+        <field name="arch" type="xml">
+        <xpath expr="//group[@name='note_group']" position="after">
+            <group >
+            <group ></group>
+            <group class="oe_subtotal_footer">
+                <separator string="Mirror currency (informative)"/>
+                <field name="mirror_currency_id" readonly="1"  invisible="True"/>
+                <field name="mirror_amount_untaxed" readonly="1" colspan="2"/>
+                <field name="mirror_amount_tax" readonly="1" colspan="2" />
+                <field name="mirror_amount_total" colspan="2" readonly="1"/>
+            </group>
+            </group>
+        </xpath>
+
+        <xpath expr="//field[@name='order_line']/tree" position="inside">
+            <field name="mirror_price_unit" optional="hide"/>
+            <field name="mirror_price_subtotal" optional="hide"/>
+        </xpath>
+
+        <xpath expr="//field[@name='order_line']/form" position="inside">
+            <group string="Mirror currency (informative)" >
+            <field name="mirror_currency_id" readonly="1"/>
+            <field name="mirror_price_unit" readonly="1"/>
+            <field name="mirror_price_subtotal" readonly="1"/>
+            </group>
+        </xpath>
+        </field>
+    </record>
+    <record id="view_quotation_tree_rental_inherit_fx" model="ir.ui.view">
+        <field name="name">sale.order.tree.rental.fx.only</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale_renting.rental_order_view_tree"/>
+        <field name="arch" type="xml">
+        <xpath expr="//tree/field[@name='amount_total']" position="after">
+            <field name="mirror_currency_id" readonly="1"  column_invisible="True"/>
+            <field name="mirror_amount_total"
+                string="Total (Mirror Currency)"
+                optional="hide"
+                />
+        </xpath>
+        </field>
+    </record>
+</odoo>
