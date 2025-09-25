@@ -43,11 +43,12 @@ class EmployeeUnique(models.Model):
             payslips = self.env["hr.payslip"].search([
                 ("employee_id", "in", employees.ids)
             ])
-            # Solo deducciones que contengan "ASOSIGMA"
+            # Solo deducciones "Provident Fund" con importe > 0
             deductions = self.env["hr.payslip.line"].search([
                 ("slip_id", "in", payslips.ids),
                 ("category_id.code", "=", "DED"),
-                ("name", "ilike", "asosigma")
+                ("name", "ilike", "asosigma"),
+                ("amount", ">", 0)
             ])
             record.deduction_lines = deductions
 
@@ -63,7 +64,13 @@ class EmployeeUnique(models.Model):
                     MAX(e.company_id) AS company_id,
                     MAX(e.registration_number)::varchar AS registration_number
                 FROM hr_employee e
+                JOIN hr_payslip p ON p.employee_id = e.id
+                JOIN hr_payslip_line l ON l.slip_id = p.id
+                JOIN hr_salary_rule_category c ON c.id = l.category_id
                 WHERE e.identification_id IS NOT NULL
+                  AND c.code = 'DED'
+                  AND l.name ILIKE 'asosigma'
+                  AND l.amount > 0
                 GROUP BY e.identification_id
             )
         """)
