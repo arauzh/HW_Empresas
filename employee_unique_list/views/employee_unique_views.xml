@@ -1,0 +1,62 @@
+<odoo>
+    <!-- Acción -->
+    <record id="action_employee_unique" model="ir.actions.act_window">
+        <field name="name">Empleados Únicos</field>
+        <field name="res_model">employee.unique</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Menú -->
+    <menuitem id="menu_employee_unique_root"
+          name="Deducciones ASOSIGMA"
+          parent="account.menu_finance_payables"
+          action="action_employee_unique"
+          sequence="10"
+          groups="employee_unique_list.group_asosigma"/>
+
+    <!-- Vista Árbol -->
+    <record id="view_employee_unique_tree" model="ir.ui.view">
+        <field name="name">employee.unique.tree</field>
+        <field name="model">employee.unique</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="identification_id" string="DPI"/>
+                <field name="registration_number"/>
+                <field name="work_email"/>
+                <field name="company_id" string="Empresa"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Vista Formulario -->
+    <record id="view_employee_unique_form" model="ir.ui.view">
+        <field name="name">employee.unique.form</field>
+        <field name="model">employee.unique</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name" readonly="1"/>
+                        <field name="identification_id" readonly="1" string="DPI"/>
+                        <field name="company_id" readonly="1" string="Empresa"/>
+                    </group>
+                    <notebook>
+                        <page string="Deducciones">
+                            <field name="deduction_lines" mode="tree" readonly="1">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="category_id"/>
+                                    <field name="slip_number"/> <!-- Número de recibo -->
+                                    <field name="payslip_run_name"/> <!-- Lote -->
+                                    <field name="amount"/> 
+                                    <field name="total"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

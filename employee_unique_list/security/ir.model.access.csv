@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_employee_unique,access_employee_unique,model_employee_unique,employee_unique_list.group_asosigma,1,0,0,0

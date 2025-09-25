@@ -1,0 +1,7 @@
+<odoo>
+    <!-- Grupo de seguridad -->
+    <record id="group_asosigma" model="res.groups">
+        <field name="name">ASOSIGMA</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+</odoo>
