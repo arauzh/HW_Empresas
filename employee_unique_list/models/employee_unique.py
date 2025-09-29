@@ -81,9 +81,7 @@ class EmployeeUnique(models.Model):
             payslips = self.env["hr.payslip"].search([("employee_id", "in", employees.ids)])
             deductions = self.env["hr.payslip.line"].search([
                 ("slip_id", "in", payslips.ids),
-                ("category_id.code", "=", "DED"),
-                ("name", "ilike", "asosigma"),
-                ("amount", ">", 0)
+                ("name", "ilike", "ASOSIGMA"),
             ])
             record.deduction_lines = deductions
 
@@ -114,9 +112,7 @@ class EmployeeUnique(models.Model):
                 JOIN hr_payslip_line l ON l.slip_id = p.id
                 JOIN hr_salary_rule_category c ON c.id = l.category_id
                 WHERE e.identification_id IS NOT NULL
-                  AND c.code = 'DED'
-                  AND l.name ILIKE 'asosigma'
-                  AND l.amount > 0
+                  AND l.name ILIKE 'ASOSIGMA'
                 GROUP BY e.identification_id
             )
         """)

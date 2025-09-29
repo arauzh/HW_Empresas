@@ -1,6 +1,6 @@
 {
     "name": "Employee Unique List",
-    "version": "17.0.0.0.0",
+    "version": "17.0.0.0.1",
     "summary": "Lista de empleados únicos por identification_id con deducciones",
     "author": "HW",
     'license': 'LGPL-3',
