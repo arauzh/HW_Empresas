@@ -1,12 +1,10 @@
 <odoo>
-    <!-- Acción -->
     <record id="action_employee_unique" model="ir.actions.act_window">
-        <field name="name">Empleados Únicos</field>
+        <field name="name">Empleados</field>
         <field name="res_model">employee.unique</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">tree</field>
     </record>
 
-    <!-- Menú -->
     <menuitem id="menu_employee_unique_root"
           name="Deducciones ASOSIGMA"
           parent="account.menu_finance_payables"
@@ -14,48 +12,71 @@
           sequence="10"
           groups="employee_unique_list.group_asosigma"/>
 
-    <!-- Vista Árbol -->
     <record id="view_employee_unique_tree" model="ir.ui.view">
         <field name="name">employee.unique.tree</field>
         <field name="model">employee.unique</field>
         <field name="arch" type="xml">
-            <tree>
+            <tree js_class="oe_list_no_open">
                 <field name="name"/>
                 <field name="identification_id" string="DPI"/>
                 <field name="registration_number"/>
                 <field name="work_email"/>
                 <field name="company_id" string="Empresa"/>
+                <button name="action_open_deductions" type="object" string="Ver Deducciones" icon="fa-search"/>
             </tree>
         </field>
     </record>
 
-    <!-- Vista Formulario -->
-    <record id="view_employee_unique_form" model="ir.ui.view">
-        <field name="name">employee.unique.form</field>
-        <field name="model">employee.unique</field>
+    <record id="view_hr_payslip_line_tree_deductions_grouped" model="ir.ui.view">
+    <field name="name">hr.payslip.line.deductions.tree.grouped</field>
+    <field name="model">hr.payslip.line</field>
+    <field name="arch" type="xml">
+        <tree default_group_by="payslip_run_name">
+            <field name="name"/>
+            <field name="category_id"/>
+            <field name="slip_number"/>
+            <!--<field name="payslip_run_name" invisible="1"/>-->
+            <field name="amount"/>
+            <field name="invoice_id" widget="many2one" options="{'no_open': False}"/>
+            <field name="is_invoiced"/>
+            <header>
+                <button name="action_create_supplier_invoice_wizard"
+                        type="object"
+                        string="Crear Factura de Proveedor"
+                        class="btn-primary"/>
+            </header>
+        </tree>
+    </field>
+</record>
+
+    <record id="view_create_supplier_invoice_wizard_form" model="ir.ui.view">
+        <field name="name">create.supplier.invoice.wizard.form</field>
+        <field name="model">create.supplier.invoice.wizard</field>
         <field name="arch" type="xml">
             <form>
                 <sheet>
                     <group>
-                        <field name="name" readonly="1"/>
-                        <field name="identification_id" readonly="1" string="DPI"/>
-                        <field name="company_id" readonly="1" string="Empresa"/>
+                        <field name="supplier_id" options="{'no_create': True}"/>
                     </group>
                     <notebook>
-                        <page string="Deducciones">
-                            <field name="deduction_lines" mode="tree" readonly="1">
-                                <tree>
-                                    <field name="name"/>
-                                    <field name="category_id"/>
-                                    <field name="slip_number"/> <!-- Número de recibo -->
-                                    <field name="payslip_run_name"/> <!-- Lote -->
-                                    <field name="amount"/> 
-                                    <field name="total"/>
+                        <page string="Deducciones a Facturar">
+                            <field name="wizard_line_ids" nolabel="1">
+                                <tree editable="bottom">
+                                    <field name="deduction_id" readonly="1" optional="show" force_save="1"/>
+                                    <field name="employee_name" readonly="1"/>
+                                    <field name="name" readonly="1"/>
+                                    <field name="amount" readonly="1" sum="Total"/>
+                                    <field name="currency_id" invisible="1"/>
+                                    <field name="product_id" required="1" options="{'no_create': True}"/>
                                 </tree>
                             </field>
                         </page>
                     </notebook>
-                </sheet>
+                    </sheet>
+                 <footer>
+                    <button string="Crear Factura" type="object" name="action_create_invoice" class="btn-primary" data-hotkey="q"/>
+                    <button string="Cancelar" class="btn-secondary" special="cancel" data-hotkey="x"/>
+                </footer>
             </form>
         </field>
     </record>
