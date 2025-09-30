@@ -31,7 +31,7 @@
     <field name="name">hr.payslip.line.deductions.tree.grouped</field>
     <field name="model">hr.payslip.line</field>
     <field name="arch" type="xml">
-        <tree default_group_by="payslip_run_name">
+        <tree default_group_by="payslip_run_name" create="false">
             <field name="name"/>
             <field name="category_id"/>
             <field name="slip_number"/>
@@ -66,7 +66,7 @@
                                     <field name="employee_name" readonly="1"/>
                                     <field name="name" readonly="1"/>
                                     <field name="amount" readonly="1" sum="Total"/>
-                                    <field name="currency_id" invisible="1"/>
+                                    <!--<field name="currency_id" invisible="1"/>-->
                                     <field name="product_id" required="1" options="{'no_create': True}"/>
                                 </tree>
                             </field>

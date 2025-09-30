@@ -1,7 +1,7 @@
 {
     "name": "Employee Unique List",
-    "version": "17.0.0.0.1",
-    "summary": "Lista de empleados únicos por identification_id con deducciones",
+    "version": "17.0.0.0.2",
+    "summary": "Lista de empleados únicos por numero de identificacion personal, las deducciones de ASOSIGMA que poseean cada uno y su facturacion",
     "author": "HW",
     'license': 'LGPL-3',
     'website': 'https://www.hw.com.gt',

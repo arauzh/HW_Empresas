@@ -23,12 +23,12 @@ class HrPayslipLine(models.Model):
     )
     invoice_id = fields.Many2one(
         "account.move",
-        string="Factura Proveedor",
+        string="No. de Factura",
         readonly=True,
         help="Factura generada a partir de esta deducción."
     )
     is_invoiced = fields.Boolean(
-        string="¿Facturada?",
+        string="Ya facturada?",
         compute="_compute_is_invoiced",
         store=True
     )
