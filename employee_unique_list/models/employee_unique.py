@@ -23,12 +23,12 @@ class HrPayslipLine(models.Model):
     )
     invoice_id = fields.Many2one(
         "account.move",
-        string="No. de Factura",
+        string="Factura Proveedor",
         readonly=True,
         help="Factura generada a partir de esta deducción."
     )
     is_invoiced = fields.Boolean(
-        string="Ya facturada?",
+        string="¿Facturada?",
         compute="_compute_is_invoiced",
         store=True
     )
@@ -39,7 +39,7 @@ class HrPayslipLine(models.Model):
             rec.is_invoiced = bool(rec.invoice_id and rec.invoice_id.state not in ("cancel"))
 
     def action_create_supplier_invoice_wizard(self):
-        # Bloquear que pueda crear si ya esta facturada
+        # Bloquear si ya está facturada
         invoiced = self.filtered(lambda l: l.is_invoiced)
         if invoiced:
             raise UserError(
@@ -81,7 +81,9 @@ class EmployeeUnique(models.Model):
             payslips = self.env["hr.payslip"].search([("employee_id", "in", employees.ids)])
             deductions = self.env["hr.payslip.line"].search([
                 ("slip_id", "in", payslips.ids),
-                ("name", "ilike", "ASOSIGMA"),
+                #("category_id.code", "=", "DED"),
+                ("name", "ilike", "%ASOSIGMA%"),
+                ("amount", ">", 0)
             ])
             record.deduction_lines = deductions
 
@@ -112,11 +114,12 @@ class EmployeeUnique(models.Model):
                 JOIN hr_payslip_line l ON l.slip_id = p.id
                 JOIN hr_salary_rule_category c ON c.id = l.category_id
                 WHERE e.identification_id IS NOT NULL
-                  AND l.name ILIKE 'ASOSIGMA'
+                  AND l.name ILIKE '%ASOSIGMA%'
+                  AND l.amount > 0
                 GROUP BY e.identification_id
             )
         """)
-
+                # AND c.code = 'DED'
 
 class CreateSupplierInvoiceWizard(models.TransientModel):
     _name = "create.supplier.invoice.wizard"
@@ -184,7 +187,7 @@ class CreateSupplierInvoiceWizard(models.TransientModel):
         }
         invoice = self.env['account.move'].create(invoice_vals)
 
-        # Vincular cada deduccion con una factura
+        # Vincular deducciones con la factura creada
         for deduction in deductions_to_link:
             deduction.invoice_id = invoice.id
 
