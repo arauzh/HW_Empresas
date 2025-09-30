@@ -77,7 +77,7 @@ class EmployeeUnique(models.Model):
             if not record.identification_id:
                 record.deduction_lines = False
                 continue
-            employees = self.env["hr.employee"].search([("identification_id", "=", record.identification_id)])
+            employees = self.env["hr.employee"].with_context(active_test=False).search([("identification_id", "=", record.identification_id)])
             payslips = self.env["hr.payslip"].search([("employee_id", "in", employees.ids)])
             deductions = self.env["hr.payslip.line"].search([
                 ("slip_id", "in", payslips.ids),
@@ -98,22 +98,45 @@ class EmployeeUnique(models.Model):
             'context': dict(self.env.context),
         }
 
+    # Dentro de la clase "EmployeeUnique" en tu archivo .py
+
     def init(self):
         self.env.cr.execute("""
             DROP VIEW IF EXISTS employee_unique CASCADE;
-            CREATE OR REPLACE VIEW employee_unique AS
-            SELECT DISTINCT ON (e.identification_id)
-                e.id AS id,
-                e.name,
-                e.identification_id,
-                e.work_email,
-                e.company_id,
-                e.registration_number
-            FROM hr_employee e
-            JOIN hr_payslip_line l ON l.slip_id = (SELECT id FROM hr_payslip WHERE employee_id = e.id LIMIT 1)
-            WHERE e.identification_id IS NOT NULL
-            AND l.name ILIKE '%ASOSIGMA%'
-            AND l.amount > 0
+            CREATE OR REPLACE VIEW employee_unique AS (
+                WITH latest_employee AS (
+                    SELECT DISTINCT ON (e.identification_id)
+                        e.identification_id,
+                        e.name,
+                        e.work_email,
+                        e.company_id,
+                        e.registration_number
+                    FROM hr_employee e
+                    WHERE e.identification_id IS NOT NULL
+                    ORDER BY 
+                        e.identification_id, 
+                        e.active DESC,
+                        e.create_date DESC
+                ),
+                employees_with_deductions AS (
+                    SELECT DISTINCT e.identification_id
+                    FROM hr_employee e
+                    JOIN hr_payslip p ON p.employee_id = e.id
+                    JOIN hr_payslip_line l ON l.slip_id = p.id
+                    WHERE e.identification_id IS NOT NULL
+                      AND l.name ILIKE '%ASOSIGMA%'
+                      AND l.amount > 0
+                )
+                SELECT
+                    ROW_NUMBER() OVER() AS id,
+                    le.identification_id,
+                    le.name,
+                    le.work_email,
+                    le.company_id,
+                    le.registration_number
+                FROM latest_employee le
+                JOIN employees_with_deductions ed ON le.identification_id = ed.identification_id
+            )
         """)
                 # AND c.code = 'DED'
 
