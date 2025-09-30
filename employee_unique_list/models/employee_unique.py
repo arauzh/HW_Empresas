@@ -101,23 +101,19 @@ class EmployeeUnique(models.Model):
     def init(self):
         self.env.cr.execute("""
             DROP VIEW IF EXISTS employee_unique CASCADE;
-            CREATE OR REPLACE VIEW employee_unique AS (
-                SELECT
-                    MIN(e.id) AS id,
-                    MAX(e.name)::varchar AS name,
-                    e.identification_id,
-                    MAX(e.work_email)::varchar AS work_email,
-                    MAX(e.company_id) AS company_id,
-                    MAX(e.registration_number)::varchar AS registration_number
-                FROM hr_employee e
-                JOIN hr_payslip p ON p.employee_id = e.id
-                JOIN hr_payslip_line l ON l.slip_id = p.id
-                JOIN hr_salary_rule_category c ON c.id = l.category_id
-                WHERE e.identification_id IS NOT NULL
-                  AND l.name ILIKE '%ASOSIGMA%'
-                  AND l.amount > 0
-                GROUP BY e.identification_id
-            )
+            CREATE OR REPLACE VIEW employee_unique AS
+            SELECT DISTINCT ON (e.identification_id)
+                e.id AS id,
+                e.name,
+                e.identification_id,
+                e.work_email,
+                e.company_id,
+                e.registration_number
+            FROM hr_employee e
+            JOIN hr_payslip_line l ON l.slip_id = (SELECT id FROM hr_payslip WHERE employee_id = e.id LIMIT 1)
+            WHERE e.identification_id IS NOT NULL
+            AND l.name ILIKE '%ASOSIGMA%'
+            AND l.amount > 0
         """)
                 # AND c.code = 'DED'
 
