@@ -1,5 +1,8 @@
 from odoo import models, fields, api
 from odoo.exceptions import UserError
+import logging
+_logger = logging.getLogger(__name__)
+
 
 class HrPayslipLine(models.Model):
     _inherit = 'hr.payslip.line'
@@ -58,6 +61,7 @@ class EmployeeUnique(models.Model):
     _name = "employee.unique"
     _description = "Empleado Único por Documento"
     _auto = False
+    _check_company_auto = False # Corrección Multi-Compañía
 
     name = fields.Char("Nombre")
     identification_id = fields.Char("Número de Identificación")
@@ -77,35 +81,36 @@ class EmployeeUnique(models.Model):
                 record.deduction_lines = False
                 continue
 
-            all_companies = self.env['res.company'].search([])
-
-            employees = self.env["hr.employee"].with_context(
-                active_test=False,
-                allowed_company_ids=all_companies.ids
-            ).search([("identification_id", "=", record.identification_id)])
-
-            payslips = self.env["hr.payslip"].with_context(
-                allowed_company_ids=all_companies.ids
-            ).search([("employee_id", "in", employees.ids)])
-
-            deductions = self.env["hr.payslip.line"].with_context(
-                allowed_company_ids=all_companies.ids
-            ).search([
+            employees = self.env["hr.employee"].sudo().with_context(active_test=False).with_company(False).search([
+                ("identification_id", "=", record.identification_id)
+            ])
+            
+            payslips = self.env["hr.payslip"].sudo().with_company(False).search([
+                ("employee_id", "in", employees.ids)
+            ])
+            
+            deductions = self.env["hr.payslip.line"].sudo().with_company(False).search([
                 ("slip_id", "in", payslips.ids),
                 ("name", "ilike", "%ASOSIGMA%"),
                 ("amount", ">", 0)
             ])
+
             record.deduction_lines = deductions
 
     def action_open_deductions(self):
         self.ensure_one()
+
+        all_company_ids = self.env['res.company'].search([]).ids
+        action_context = dict(self.env.context, allowed_company_ids=all_company_ids)
+        domain = [('id', 'in', self.deduction_lines.ids)]
+        
         return {
             'name': f'Deducciones de {self.name}',
             'type': 'ir.actions.act_window',
             'res_model': 'hr.payslip.line',
             'views': [(self.env.ref('employee_unique_list.view_hr_payslip_line_tree_deductions_grouped').id, 'tree')],
-            'domain': [('id', 'in', self.deduction_lines.ids)],
-            'context': dict(self.env.context),
+            'domain': domain,
+            'context': action_context,
         }
 
 
@@ -147,7 +152,7 @@ class EmployeeUnique(models.Model):
                 JOIN employees_with_deductions ed ON le.identification_id = ed.identification_id
             )
         """)
-                # AND c.code = 'DED'
+
 
 class CreateSupplierInvoiceWizard(models.TransientModel):
     _name = "create.supplier.invoice.wizard"
