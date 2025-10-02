@@ -91,7 +91,7 @@ class EmployeeUnique(models.Model):
             
             deductions = self.env["hr.payslip.line"].sudo().with_company(False).search([
                 ("slip_id", "in", payslips.ids),
-                ("name", "ilike", "%ASOSIGMA%"),
+                ("name", "ilike", "%Provident Fund%"),
                 ("amount", ">", 0)
             ])
 
@@ -115,43 +115,73 @@ class EmployeeUnique(models.Model):
 
 
     def init(self):
-        self.env.cr.execute("""
-            DROP VIEW IF EXISTS employee_unique CASCADE;
-            CREATE OR REPLACE VIEW employee_unique AS (
-                WITH latest_employee AS (
-                    SELECT DISTINCT ON (e.identification_id)
-                        e.identification_id,
-                        e.name,
-                        e.work_email,
-                        e.company_id,
-                        e.registration_number
-                    FROM hr_employee e
-                    WHERE e.identification_id IS NOT NULL
-                    ORDER BY 
-                        e.identification_id, 
-                        e.active DESC,
-                        e.create_date DESC
-                ),
-                employees_with_deductions AS (
-                    SELECT DISTINCT e.identification_id
-                    FROM hr_employee e
-                    JOIN hr_payslip p ON p.employee_id = e.id
-                    JOIN hr_payslip_line l ON l.slip_id = p.id
-                    WHERE e.identification_id IS NOT NULL
-                      AND l.name ILIKE '%ASOSIGMA%'
-                      AND l.amount > 0
+        _logger.info("Iniciando método init() para crear/actualizar la vista 'employee_unique'...")
+        
+        # Usamos un bloque try...except para capturar cualquier error de SQL.
+        try:
+            # VOLVEMOS A LA LÓGICA SQL ORIGINAL CON 'JOIN' QUE ERA LA CORRECTA
+            self.env.cr.execute("""
+                DROP VIEW IF EXISTS employee_unique CASCADE;
+                CREATE OR REPLACE VIEW employee_unique AS (
+                    WITH latest_employee AS (
+                        SELECT DISTINCT ON (e.identification_id)
+                            e.identification_id,
+                            e.name,
+                            e.work_email,
+                            e.company_id,
+                            e.registration_number
+                        FROM hr_employee e
+                        WHERE e.identification_id IS NOT NULL
+                        ORDER BY 
+                            e.identification_id, 
+                            e.active DESC,
+                            e.create_date DESC
+                    ),
+                    employees_with_deductions AS (
+                        SELECT DISTINCT e.identification_id
+                        FROM hr_employee e
+                        JOIN hr_payslip p ON p.employee_id = e.id
+                        JOIN hr_payslip_line l ON l.slip_id = p.id
+                        WHERE e.identification_id IS NOT NULL
+                          AND l.name ILIKE '%Provident Fund%'
+                          AND l.amount > 0
+                    )
+                    SELECT
+                        ROW_NUMBER() OVER() AS id,
+                        le.identification_id,
+                        le.name,
+                        le.work_email,
+                        le.company_id,
+                        le.registration_number
+                    FROM latest_employee le
+                    JOIN employees_with_deductions ed ON le.identification_id = ed.identification_id
                 )
-                SELECT
-                    ROW_NUMBER() OVER() AS id,
-                    le.identification_id,
-                    le.name,
-                    le.work_email,
-                    le.company_id,
-                    le.registration_number
-                FROM latest_employee le
-                JOIN employees_with_deductions ed ON le.identification_id = ed.identification_id
-            )
-        """)
+            """)
+            #_logger.info("VISTA 'employee_unique' CREADA O REEMPLAZADA CON ÉXITO.")
+
+        except Exception as e:
+            #_logger.error(f"FALLO AL CREAR LA VISTA SQL 'employee_unique': {e}")
+            return
+
+        # --- Logs de Verificación ---
+        try:
+            #_logger.info("Verificando contenido de la vista...")
+            self.env.cr.execute("""
+                SELECT count(*) FROM (
+                    SELECT DISTINCT ON (e.identification_id) 1
+                    FROM hr_employee e
+                    WHERE e.identification_id IS NOT NULL
+                ) as initial_employees;
+            """)
+            initial_count = self.env.cr.fetchone()[0]
+            #_logger.info(f"Vista 'employee_unique' [Paso 1]: Se encontraron {initial_count} empleados únicos iniciales en total.")
+
+            self.env.cr.execute("SELECT count(*) FROM employee_unique;")
+            final_count = self.env.cr.fetchone()[0]
+            #_logger.info(f"Vista 'employee_unique' [Paso 2]: Se encontraron {final_count} empleados en la vista final (filtrados).")
+        
+        except Exception as e:
+            #_logger.error(f"FALLO AL VERIFICAR LOS CONTEOS DE LA VISTA: {e}")
 
 
 class CreateSupplierInvoiceWizard(models.TransientModel):
