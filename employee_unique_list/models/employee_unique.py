@@ -1,7 +1,6 @@
 from odoo import models, fields, api
 from odoo.exceptions import UserError
 
-
 class HrPayslipLine(models.Model):
     _inherit = 'hr.payslip.line'
 
@@ -77,11 +76,22 @@ class EmployeeUnique(models.Model):
             if not record.identification_id:
                 record.deduction_lines = False
                 continue
-            employees = self.env["hr.employee"].with_context(active_test=False).search([("identification_id", "=", record.identification_id)])
-            payslips = self.env["hr.payslip"].search([("employee_id", "in", employees.ids)])
-            deductions = self.env["hr.payslip.line"].search([
+
+            all_companies = self.env['res.company'].search([])
+
+            employees = self.env["hr.employee"].with_context(
+                active_test=False,
+                allowed_company_ids=all_companies.ids
+            ).search([("identification_id", "=", record.identification_id)])
+
+            payslips = self.env["hr.payslip"].with_context(
+                allowed_company_ids=all_companies.ids
+            ).search([("employee_id", "in", employees.ids)])
+
+            deductions = self.env["hr.payslip.line"].with_context(
+                allowed_company_ids=all_companies.ids
+            ).search([
                 ("slip_id", "in", payslips.ids),
-                #("category_id.code", "=", "DED"),
                 ("name", "ilike", "%ASOSIGMA%"),
                 ("amount", ">", 0)
             ])
@@ -98,7 +108,6 @@ class EmployeeUnique(models.Model):
             'context': dict(self.env.context),
         }
 
-    # Dentro de la clase "EmployeeUnique" en tu archivo .py
 
     def init(self):
         self.env.cr.execute("""
