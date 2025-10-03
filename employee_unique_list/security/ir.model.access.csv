@@ -2,3 +2,5 @@ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_employee_unique,access_employee_unique,model_employee_unique,employee_unique_list.group_asosigma,1,0,0,0
 access_create_supplier_invoice_wizard,access_create_supplier_invoice_wizard,model_create_supplier_invoice_wizard,,1,1,1,1
 access_create_supplier_invoice_wizard_line,access_create_supplier_invoice_wizard_line,model_create_supplier_invoice_wizard_line,,1,1,1,1
+access_employee_unique_asosigma,access.employee.unique.asosigma,model_employee_unique,employee_unique_list.group_asosigma,1,1,0,0
+

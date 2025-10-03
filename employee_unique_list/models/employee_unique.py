@@ -1,7 +1,5 @@
 from odoo import models, fields, api
 from odoo.exceptions import UserError
-import logging
-_logger = logging.getLogger(__name__)
 
 
 class HrPayslipLine(models.Model):
@@ -41,7 +39,6 @@ class HrPayslipLine(models.Model):
             rec.is_invoiced = bool(rec.invoice_id and rec.invoice_id.state not in ("cancel"))
 
     def action_create_supplier_invoice_wizard(self):
-        # Bloquear si ya está facturada
         invoiced = self.filtered(lambda l: l.is_invoiced)
         if invoiced:
             raise UserError(
@@ -61,10 +58,12 @@ class EmployeeUnique(models.Model):
     _name = "employee.unique"
     _description = "Empleado Único por Documento"
     _auto = False
-    _check_company_auto = False # Corrección Multi-Compañía
+    _check_company_auto = False
 
     name = fields.Char("Nombre")
+    unique_document = fields.Char("Documento Único")
     identification_id = fields.Char("Número de Identificación")
+    cui = fields.Char("CUI")
     registration_number = fields.Char("Número de Registro")
     work_email = fields.Char("Correo")
     company_id = fields.Many2one("res.company", "Compañía")
@@ -77,13 +76,18 @@ class EmployeeUnique(models.Model):
 
     def _compute_deduction_lines(self):
         for record in self:
-            if not record.identification_id:
+            if not record.unique_document:
                 record.deduction_lines = False
                 continue
 
-            employees = self.env["hr.employee"].sudo().with_context(active_test=False).with_company(False).search([
-                ("identification_id", "=", record.identification_id)
-            ])
+            # Buscamos todos los registros de empleado donde el CUI o el No. de ID coincidan
+            domain = [
+                '|',
+                ('identification_id', '=', record.unique_document),
+                ('cui', '=', record.unique_document)
+            ]
+            
+            employees = self.env["hr.employee"].sudo().with_context(active_test=False).with_company(False).search(domain)
             
             payslips = self.env["hr.payslip"].sudo().with_company(False).search([
                 ("employee_id", "in", employees.ids)
@@ -91,7 +95,7 @@ class EmployeeUnique(models.Model):
             
             deductions = self.env["hr.payslip.line"].sudo().with_company(False).search([
                 ("slip_id", "in", payslips.ids),
-                ("name", "ilike", "%Provident Fund%"),
+                ("name", "ilike", "%ASOSIGMA%"),
                 ("amount", ">", 0)
             ])
 
@@ -99,7 +103,6 @@ class EmployeeUnique(models.Model):
 
     def action_open_deductions(self):
         self.ensure_one()
-
         all_company_ids = self.env['res.company'].search([]).ids
         action_context = dict(self.env.context, allowed_company_ids=all_company_ids)
         domain = [('id', 'in', self.deduction_lines.ids)]
@@ -115,74 +118,63 @@ class EmployeeUnique(models.Model):
 
 
     def init(self):
-        _logger.info("Iniciando método init() para crear/actualizar la vista 'employee_unique'...")
-        
-        # Usamos un bloque try...except para capturar cualquier error de SQL.
-        try:
-            # VOLVEMOS A LA LÓGICA SQL ORIGINAL CON 'JOIN' QUE ERA LA CORRECTA
             self.env.cr.execute("""
                 DROP VIEW IF EXISTS employee_unique CASCADE;
                 CREATE OR REPLACE VIEW employee_unique AS (
                     WITH latest_employee AS (
-                        SELECT DISTINCT ON (e.identification_id)
+                        SELECT DISTINCT ON (COALESCE(e.identification_id, e.cui))
+                            COALESCE(e.identification_id, e.cui) AS unique_document,
                             e.identification_id,
+                            e.cui,
                             e.name,
                             e.work_email,
                             e.company_id,
                             e.registration_number
                         FROM hr_employee e
-                        WHERE e.identification_id IS NOT NULL
+                        WHERE e.identification_id IS NOT NULL OR e.cui IS NOT NULL
                         ORDER BY 
-                            e.identification_id, 
+                            unique_document, 
                             e.active DESC,
                             e.create_date DESC
                     ),
                     employees_with_deductions AS (
-                        SELECT DISTINCT e.identification_id
+                        SELECT DISTINCT COALESCE(e.identification_id, e.cui) AS unique_document
                         FROM hr_employee e
                         JOIN hr_payslip p ON p.employee_id = e.id
                         JOIN hr_payslip_line l ON l.slip_id = p.id
-                        WHERE e.identification_id IS NOT NULL
-                          AND l.name ILIKE '%Provident Fund%'
+                        WHERE (e.identification_id IS NOT NULL OR e.cui IS NOT NULL)
+                          AND l.name ILIKE '%ASOSIGMA%'
                           AND l.amount > 0
                     )
                     SELECT
                         ROW_NUMBER() OVER() AS id,
+                        le.unique_document,
                         le.identification_id,
+                        le.cui,
                         le.name,
                         le.work_email,
                         le.company_id,
                         le.registration_number
                     FROM latest_employee le
-                    JOIN employees_with_deductions ed ON le.identification_id = ed.identification_id
+                    JOIN employees_with_deductions ed ON le.unique_document = ed.unique_document
                 )
             """)
-            #_logger.info("VISTA 'employee_unique' CREADA O REEMPLAZADA CON ÉXITO.")
+            
+    def open_employee_unique_view(self):
+        # Que empresa es la que tiene permitido utilizar esta funcion
+        ALLOWED_COMPANY_ID = 5
 
-        except Exception as e:
-            #_logger.error(f"FALLO AL CREAR LA VISTA SQL 'employee_unique': {e}")
-            return
-
-        # --- Logs de Verificación ---
-        try:
-            #_logger.info("Verificando contenido de la vista...")
-            self.env.cr.execute("""
-                SELECT count(*) FROM (
-                    SELECT DISTINCT ON (e.identification_id) 1
-                    FROM hr_employee e
-                    WHERE e.identification_id IS NOT NULL
-                ) as initial_employees;
-            """)
-            initial_count = self.env.cr.fetchone()[0]
-            #_logger.info(f"Vista 'employee_unique' [Paso 1]: Se encontraron {initial_count} empleados únicos iniciales en total.")
-
-            self.env.cr.execute("SELECT count(*) FROM employee_unique;")
-            final_count = self.env.cr.fetchone()[0]
-            #_logger.info(f"Vista 'employee_unique' [Paso 2]: Se encontraron {final_count} empleados en la vista final (filtrados).")
+        current_company = self.env.company
         
-        except Exception as e:
-            #_logger.error(f"FALLO AL VERIFICAR LOS CONTEOS DE LA VISTA: {e}")
+        if current_company.id != ALLOWED_COMPANY_ID:
+            raise UserError(
+                "¡Acceso no Permitido!\n\n"
+                "Esta funcionalidad solo puede ser utilizada desde la compañía 'ASOSIGMA'. "
+                f"Por favor, cambia de compañía para continuar."
+            )
 
+        action = self.env['ir.actions.act_window']._for_xml_id('employee_unique_list.action_employee_unique')
+        return action
 
 class CreateSupplierInvoiceWizard(models.TransientModel):
     _name = "create.supplier.invoice.wizard"

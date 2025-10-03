@@ -5,27 +5,36 @@
         <field name="view_mode">tree</field>
     </record>
 
+    <record id="action_server_check_company_before_open" model="ir.actions.server">
+            <field name="name">Verificar Compañía para Deducciones ASOSIGMA</field>
+            <field name="model_id" ref="model_employee_unique"/>
+            <field name="state">code</field>
+            <field name="code">
+action = model.open_employee_unique_view()
+            </field>
+        </record>
+
     <menuitem id="menu_employee_unique_root"
-          name="Deducciones ASOSIGMA"
-          parent="account.menu_finance_payables"
-          action="action_employee_unique"
-          sequence="10"
-          groups="employee_unique_list.group_asosigma"/>
+              name="Deducciones ASOSIGMA"
+              parent="account.menu_finance_payables"
+              action="action_server_check_company_before_open"
+              sequence="10"
+              groups="employee_unique_list.group_asosigma"/>
 
     <record id="view_employee_unique_tree" model="ir.ui.view">
-        <field name="name">employee.unique.tree</field>
-        <field name="model">employee.unique</field>
-        <field name="arch" type="xml">
-            <tree js_class="oe_list_no_open">
-                <field name="name"/>
-                <field name="identification_id" string="DPI"/>
-                <field name="registration_number"/>
-                <field name="work_email"/>
-                <field name="company_id" string="Empresa"/>
-                <button name="action_open_deductions" type="object" string="Ver Deducciones" icon="fa-search"/>
-            </tree>
-        </field>
-    </record>
+            <field name="name">employee.unique.tree</field>
+            <field name="model">employee.unique</field>
+            <field name="arch" type="xml">
+                <tree js_class="oe_list_no_open">
+                    <field name="name"/>
+                    <field name="unique_document" string="DPI"/>
+                    <field name="registration_number"/>
+                    <field name="work_email"/>
+                    <field name="company_id" string="Empresa"/>
+                    <button name="action_open_deductions" type="object" string="Ver Deducciones" icon="fa-search"/>
+                </tree>
+            </field>
+        </record>
 
     <record id="view_hr_payslip_line_tree_deductions_grouped" model="ir.ui.view">
     <field name="name">hr.payslip.line.deductions.tree.grouped</field>
