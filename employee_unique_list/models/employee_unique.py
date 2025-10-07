@@ -258,6 +258,7 @@ class CreateSupplierInvoiceWizard(models.TransientModel):
         invoice_vals = {
             'partner_id': self.supplier_id.id,
             'move_type': 'in_invoice',
+            'company_id': self.env.company.id,
             'invoice_line_ids': invoice_lines,
         }
         invoice = self.env['account.move'].create(invoice_vals)
