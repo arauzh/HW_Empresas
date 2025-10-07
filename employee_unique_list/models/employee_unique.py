@@ -191,17 +191,37 @@ class CreateSupplierInvoiceWizard(models.TransientModel):
     def default_get(self, fields_list):
         res = super().default_get(fields_list)
         deduction_ids = self.env.context.get('active_ids', [])
-        if deduction_ids:
-            lines = []
-            deductions = self.env['hr.payslip.line'].browse(deduction_ids)
-            for deduction in deductions:
-                if deduction.is_invoiced:
-                    raise UserError(f"La deducción '{deduction.name}' ya fue facturada.")
-                lines.append((0, 0, {
-                    'deduction_id': deduction.id,
-                    'product_id': deduction.product_id.id or False,
-                }))
-            res['wizard_line_ids'] = lines
+        if not deduction_ids:
+            return res
+
+        deductions = self.env['hr.payslip.line'].browse(deduction_ids)
+        
+        employee = deductions.mapped('employee_id').sudo()
+
+        if len(employee) > 1:
+            raise UserError("Solo puedes crear una factura para deducciones del mismo empleado a la vez.")
+        
+        supplier_partner = employee.work_contact_id
+        
+        if not supplier_partner:
+            raise UserError(
+                f"El empleado '{employee.name}' no tiene un 'Contacto Laboral' asignado en su ficha.\n\n"
+                f"Por favor, ve a la pestaña 'Información Laboral' de la ficha del empleado y asigna su contacto."
+            )
+            
+        if 'supplier_id' in fields_list:
+            res['supplier_id'] = supplier_partner.id
+
+
+        lines = []
+        for deduction in deductions:
+            if deduction.is_invoiced:
+                raise UserError(f"La deducción '{deduction.name}' del empleado {deduction.employee_id.name} ya fue facturada.")
+            lines.append((0, 0, {
+                'deduction_id': deduction.id,
+                'product_id': deduction.product_id.id or False,
+            }))
+        res['wizard_line_ids'] = lines
         return res
 
     def action_create_invoice(self):

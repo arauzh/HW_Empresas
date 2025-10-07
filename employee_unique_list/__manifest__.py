@@ -1,6 +1,6 @@
 {
     "name": "Employee Unique List",
-    "version": "17.0.0.0.5",
+    "version": "17.0.0.0.6",
     "summary": "Lista de empleados únicos por numero de identificacion personal, las deducciones de ASOSIGMA que poseean cada uno y su facturacion",
     "author": "HW",
     'license': 'LGPL-3',

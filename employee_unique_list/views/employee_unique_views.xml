@@ -40,7 +40,7 @@ action = model.open_employee_unique_view()
     <field name="name">hr.payslip.line.deductions.tree.grouped</field>
     <field name="model">hr.payslip.line</field>
     <field name="arch" type="xml">
-        <tree default_group_by="payslip_run_name" create="false">
+        <tree default_group_by="payslip_run_name" create="false" default_order="date_to desc">
             <field name="name"/>
             <field name="category_id"/>
             <field name="slip_number"/>
