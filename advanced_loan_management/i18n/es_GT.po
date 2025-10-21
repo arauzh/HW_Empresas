@@ -1,0 +1,1070 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* advanced_loan_management
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 17.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-10-15 15:25+0000\n"
+"PO-Revision-Date: 2025-10-15 15:25+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: advanced_loan_management
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_report_template
+msgid "<strong>Name:</strong>"
+msgstr "<strong>Nombre:</strong>"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,help:advanced_loan_management.field_repayment_line__interest_account_id
+msgid "Account For Interest"
+msgstr "Cuenta de intereses"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,help:advanced_loan_management.field_repayment_line__repayment_account_id
+msgid "Account For Repayment"
+msgstr "Cuenta para reembolso"
+
+#. module: advanced_loan_management
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_request_view_form
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.repayment_line_view_form
+msgid "Accounting"
+msgstr "Contabilidad"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_request__message_needaction
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_type__message_needaction
+msgid "Action Needed"
+msgstr "Acción necesaria"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,help:advanced_loan_management.field_message_popup__message
+msgid "Alert Content"
+msgstr "Contenido de alerta"
+
+#. module: advanced_loan_management
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_report_template
+msgid "Amortization Schedule"
+msgstr "Calendario de amortización"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,help:advanced_loan_management.field_loan_type__tenure
+msgid "Amortization period"
+msgstr "Periodo de amortización"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,field_description:advanced_loan_management.field_repayment_line__amount
+#: model:ir.model.fields,field_description:advanced_loan_management.field_repayment_line_partner__amount
+#: model:ir.model.fields,help:advanced_loan_management.field_repayment_line__amount
+#: model:ir.model.fields,help:advanced_loan_management.field_repayment_line_partner__amount
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_report_template
+msgid "Amount"
+msgstr "Capital"
+
+#. module: advanced_loan_management
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_type_view_kanban
+msgid "Amount :"
+msgstr "Capital :"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,help:advanced_loan_management.field_loan_request__processing_fee
+#: model:ir.model.fields,help:advanced_loan_management.field_loan_type__processing_fee
+msgid "Amount For Initializing The Loan"
+msgstr "Monto para iniciar el préstamo"
+
+#. module: advanced_loan_management
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_request_view_form
+msgid "Approve"
+msgstr "Aprobar"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields.selection,name:advanced_loan_management.selection__loan_request__state__approved
+msgid "Approved"
+msgstr "Aprobado"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_request__message_attachment_count
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_type__message_attachment_count
+msgid "Attachment Count"
+msgstr "Conteo de archivos adjuntos"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields.selection,name:advanced_loan_management.selection__loan_request__payment_frequency__biweekly
+msgid "Biweekly"
+msgstr "Quincenal"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,help:advanced_loan_management.field_loan_request__loan_type_id
+msgid "Can choose different loan types suitable"
+msgstr "Puede elegir diferentes tipos de préstamos adecuados"
+
+#. module: advanced_loan_management
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.reject_reason_view_form
+msgid "Cancel"
+msgstr "Cancelar"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,help:advanced_loan_management.field_loan_request__credit_account_id
+msgid "Choose account for disbursement credit"
+msgstr "Seleccione la cuenta para el crédito de desembolso"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,help:advanced_loan_management.field_loan_request__debit_account_id
+msgid "Choose account for disbursement debit"
+msgstr "Seleccione la cuenta para el débito del desembolso"
+
+#. module: advanced_loan_management
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_request_view_form
+msgid "Close"
+msgstr "Cerca"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields.selection,name:advanced_loan_management.selection__loan_request__state__closed
+msgid "Closed"
+msgstr "Cerrado"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_documents__company_id
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_request__company_id
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_type__company_id
+#: model:ir.model.fields,field_description:advanced_loan_management.field_repayment_line__company_id
+#: model:ir.model.fields,field_description:advanced_loan_management.field_repayment_line_partner__company_id
+#: model:ir.model.fields,help:advanced_loan_management.field_repayment_line__company_id
+#: model:ir.model.fields,help:advanced_loan_management.field_repayment_line_partner__company_id
+msgid "Company"
+msgstr "Compañía"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,help:advanced_loan_management.field_loan_documents__company_id
+#: model:ir.model.fields,help:advanced_loan_management.field_loan_request__company_id
+#: model:ir.model.fields,help:advanced_loan_management.field_loan_type__company_id
+msgid "Company Name"
+msgstr "Nombre de empresa"
+
+#. module: advanced_loan_management
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_request_view_form
+msgid "Compute Repayments"
+msgstr "Calcular Cuotas"
+
+#. module: advanced_loan_management
+#. odoo-python
+#: code:addons/advanced_loan_management/models/loan_request.py:0
+#, python-format
+msgid "Compute the repayments before requesting"
+msgstr "Calcular los reembolsos antes de solicitarlos"
+
+#. module: advanced_loan_management
+#: model:ir.model,name:advanced_loan_management.model_res_config_settings
+msgid "Config Settings"
+msgstr "Ajustes de configuración"
+
+#. module: advanced_loan_management
+#: model:ir.ui.menu,name:advanced_loan_management.loan_management_conf
+msgid "Configuration"
+msgstr "Configuración"
+
+#. module: advanced_loan_management
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_request_view_form
+msgid "Confirm"
+msgstr "Confirmar"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields.selection,name:advanced_loan_management.selection__loan_request__state__confirmed
+msgid "Confirmed"
+msgstr "Confirmado"
+
+#. module: advanced_loan_management
+#: model:ir.model,name:advanced_loan_management.model_res_partner
+msgid "Contact"
+msgstr "Contacto"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_documents__create_uid
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_request__create_uid
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_type__create_uid
+#: model:ir.model.fields,field_description:advanced_loan_management.field_message_popup__create_uid
+#: model:ir.model.fields,field_description:advanced_loan_management.field_reject_reason__create_uid
+#: model:ir.model.fields,field_description:advanced_loan_management.field_repayment_line__create_uid
+#: model:ir.model.fields,field_description:advanced_loan_management.field_repayment_line_partner__create_uid
+msgid "Created by"
+msgstr "Creado por"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_documents__create_date
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_request__create_date
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_type__create_date
+#: model:ir.model.fields,field_description:advanced_loan_management.field_message_popup__create_date
+#: model:ir.model.fields,field_description:advanced_loan_management.field_reject_reason__create_date
+#: model:ir.model.fields,field_description:advanced_loan_management.field_repayment_line__create_date
+#: model:ir.model.fields,field_description:advanced_loan_management.field_repayment_line_partner__create_date
+msgid "Created on"
+msgstr "Creado el"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_request__credit_account_id
+msgid "Credit account"
+msgstr "Cuenta de crédito"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_type__note
+msgid "Criteria"
+msgstr "Criterios"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,help:advanced_loan_management.field_loan_type__note
+msgid "Criteria for approving loan requests"
+msgstr "Criterios para aprobar solicitudes de préstamos"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_request__currency_id
+#: model:ir.model.fields,help:advanced_loan_management.field_loan_request__currency_id
+msgid "Currency"
+msgstr "Moneda"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,help:advanced_loan_management.field_loan_request__date
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_report_template
+msgid "Date"
+msgstr "Fecha"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,help:advanced_loan_management.field_repayment_line__date
+#: model:ir.model.fields,help:advanced_loan_management.field_repayment_line_partner__date
+msgid "Date of the payment"
+msgstr "Fecha del pago"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_request__debit_account_id
+msgid "Debit account"
+msgstr "Cuenta de débito"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_request__disbursal_amount
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_type__disbursal_amount
+msgid "Disbursal Amount"
+msgstr "Monto del desembolso"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_request__disbursal_date
+#: model:ir.model.fields,help:advanced_loan_management.field_loan_request__disbursal_date
+msgid "Disbursal date"
+msgstr "Fecha de desembolso"
+
+#. module: advanced_loan_management
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_request_view_form
+msgid "Disburse"
+msgstr "Desembolsar"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields.selection,name:advanced_loan_management.selection__loan_request__state__disbursed
+msgid "Disbursed"
+msgstr "Desembolsado"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,field_description:advanced_loan_management.field_res_config_settings__disbursement_account_id
+msgid "Disbursement account"
+msgstr "Cuenta de desembolso"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_documents__display_name
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_request__display_name
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_type__display_name
+#: model:ir.model.fields,field_description:advanced_loan_management.field_message_popup__display_name
+#: model:ir.model.fields,field_description:advanced_loan_management.field_reject_reason__display_name
+#: model:ir.model.fields,field_description:advanced_loan_management.field_repayment_line__display_name
+#: model:ir.model.fields,field_description:advanced_loan_management.field_repayment_line_partner__display_name
+msgid "Display Name"
+msgstr "Nombre para mostrar"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,help:advanced_loan_management.field_res_partner__loan_count
+#: model:ir.model.fields,help:advanced_loan_management.field_res_users__loan_count
+msgid "Displays numbers of loans ongoing and closed by the employee"
+msgstr "Muestra el número de préstamos en curso y cerrados por el empleado."
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,help:advanced_loan_management.field_loan_request__reject_reason
+msgid "Displays rejected reason"
+msgstr "Muestra el motivo del rechazo"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,help:advanced_loan_management.field_loan_documents__loan_proofs
+msgid "Document name for identification"
+msgstr "Nombre del documento de identificación"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_type__documents_ids
+#: model:ir.ui.menu,name:advanced_loan_management.loan_management_certificates
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_request_view_form
+msgid "Documents"
+msgstr "Documentos"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,help:advanced_loan_management.field_loan_request__documents_ids
+msgid "Documents as proof"
+msgstr "Documentos como prueba"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields.selection,name:advanced_loan_management.selection__loan_request__state__draft
+msgid "Draft"
+msgstr "Borrador"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,help:advanced_loan_management.field_loan_type__tenure_plan
+msgid "EMI payment plan"
+msgstr "Plan de pago EMI"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_request__rate_fee
+msgid "Fee rate"
+msgstr "Tasa de Cuota"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_request__date
+msgid "First payment date"
+msgstr "Fecha"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_request__message_follower_ids
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_type__message_follower_ids
+msgid "Followers"
+msgstr "Seguidores"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_request__message_partner_ids
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_type__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Seguidores (Contactos)"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,help:advanced_loan_management.field_loan_request__request
+#: model:ir.model.fields,help:advanced_loan_management.field_repayment_line__invoice
+msgid "For monitoring the record"
+msgstr "Para monitorear el registro"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields.selection,name:advanced_loan_management.selection__loan_request__payment_frequency__fortnightly
+msgid "Fortnightly"
+msgstr "Catorcenal"
+
+#. module: advanced_loan_management
+#: model:ir.model,name:advanced_loan_management.model_message_popup
+msgid "Generate Popup Message"
+msgstr "Generar mensaje emergente"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_request__guarantor_partner_id
+msgid "Guarantor"
+msgstr "Fiador"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_request__has_message
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_type__has_message
+msgid "Has Message"
+msgstr "Tiene mensaje"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_documents__id
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_request__id
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_type__id
+#: model:ir.model.fields,field_description:advanced_loan_management.field_message_popup__id
+#: model:ir.model.fields,field_description:advanced_loan_management.field_reject_reason__id
+#: model:ir.model.fields,field_description:advanced_loan_management.field_repayment_line__id
+#: model:ir.model.fields,field_description:advanced_loan_management.field_repayment_line_partner__id
+msgid "ID"
+msgstr "ID"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,help:advanced_loan_management.field_loan_request__message_needaction
+#: model:ir.model.fields,help:advanced_loan_management.field_loan_type__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Si está marcada, los mensajes nuevos requieren su atención."
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,help:advanced_loan_management.field_loan_request__message_has_error
+#: model:ir.model.fields,help:advanced_loan_management.field_loan_request__message_has_sms_error
+#: model:ir.model.fields,help:advanced_loan_management.field_loan_type__message_has_error
+#: model:ir.model.fields,help:advanced_loan_management.field_loan_type__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Si está marcada, algunos mensajes tendrán un error de entrega."
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,help:advanced_loan_management.field_loan_request__img_attachment_ids
+msgid "Image proofs"
+msgstr "Pruebas de imagen"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_request__img_attachment_ids
+msgid "Images"
+msgstr "Imágenes"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,help:advanced_loan_management.field_repayment_line__state
+msgid "Includes paid and unpaid states for each repayments"
+msgstr "Incluye estados pagados y no pagados para cada reembolso"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,help:advanced_loan_management.field_loan_request__tenure
+msgid "Installment period"
+msgstr "Período de pago"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,field_description:advanced_loan_management.field_repayment_line__interest_account_id
+msgid "Interest"
+msgstr "Interés"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,field_description:advanced_loan_management.field_repayment_line__interest_amount
+#: model:ir.model.fields,field_description:advanced_loan_management.field_repayment_line_partner__interest_amount
+#: model:ir.model.fields,help:advanced_loan_management.field_repayment_line__interest_amount
+#: model:ir.model.fields,help:advanced_loan_management.field_repayment_line_partner__interest_amount
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_report_template
+msgid "Interest Amount"
+msgstr "Monto de interés"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,field_description:advanced_loan_management.field_res_config_settings__interest_product_id
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.res_config_settings_view_form
+msgid "Interest Product"
+msgstr "Producto de interés"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_request__interest_rate
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_type__interest_rate
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_report_template
+msgid "Interest Rate"
+msgstr "Tasa de interés"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,help:advanced_loan_management.field_loan_request__interest_rate
+msgid "Interest percentage"
+msgstr "Porcentaje de interés"
+
+#. module: advanced_loan_management
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.res_config_settings_view_form
+msgid "Interest product and repayment details."
+msgstr "Detalles del producto de interés y reembolso."
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,help:advanced_loan_management.field_reject_reason__loan
+msgid "Invisible Field"
+msgstr "Campo invisible"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields.selection,name:advanced_loan_management.selection__repayment_line__state__invoiced
+msgid "Invoiced"
+msgstr "Facturado"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_request__message_is_follower
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_type__message_is_follower
+msgid "Is Follower"
+msgstr "Es seguidor"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_request__journal_id
+#: model:ir.model.fields,field_description:advanced_loan_management.field_repayment_line__journal_loan_id
+msgid "Journal"
+msgstr "Diario"
+
+#. module: advanced_loan_management
+#: model:ir.model,name:advanced_loan_management.model_account_move
+msgid "Journal Entry"
+msgstr "Asiento contable"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,help:advanced_loan_management.field_repayment_line__journal_loan_id
+msgid "Journal Record"
+msgstr "Registro de diario"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,help:advanced_loan_management.field_loan_request__journal_id
+msgid "Journal types"
+msgstr "Tipos de revistas"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_documents__write_uid
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_request__write_uid
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_type__write_uid
+#: model:ir.model.fields,field_description:advanced_loan_management.field_message_popup__write_uid
+#: model:ir.model.fields,field_description:advanced_loan_management.field_reject_reason__write_uid
+#: model:ir.model.fields,field_description:advanced_loan_management.field_repayment_line__write_uid
+#: model:ir.model.fields,field_description:advanced_loan_management.field_repayment_line_partner__write_uid
+msgid "Last Updated by"
+msgstr "Actualizado por última vez por"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_documents__write_date
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_request__write_date
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_type__write_date
+#: model:ir.model.fields,field_description:advanced_loan_management.field_message_popup__write_date
+#: model:ir.model.fields,field_description:advanced_loan_management.field_reject_reason__write_date
+#: model:ir.model.fields,field_description:advanced_loan_management.field_repayment_line__write_date
+#: model:ir.model.fields,field_description:advanced_loan_management.field_repayment_line_partner__write_date
+msgid "Last Updated on"
+msgstr "Última actualización el"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,field_description:advanced_loan_management.field_reject_reason__loan
+#: model:ir.model.fields,help:advanced_loan_management.field_repayment_line__loan_id
+#: model:ir.model.fields,help:advanced_loan_management.field_repayment_line_partner__loan_id
+#: model:ir.ui.menu,name:advanced_loan_management.loan_management_loan
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.repayment_line_default_group
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.res_config_settings_view_form
+msgid "Loan"
+msgstr "Préstamo"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,field_description:advanced_loan_management.field_repayment_line__name
+#: model:ir.model.fields,field_description:advanced_loan_management.field_repayment_line_partner__name
+msgid "Loan "
+msgstr "Préstamo "
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_request__loan_amount
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_type__loan_amount
+#: model:ir.model.fields,help:advanced_loan_management.field_loan_type__loan_amount
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_report_template
+msgid "Loan Amount"
+msgstr "Monto del préstamo"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,field_description:advanced_loan_management.field_res_partner__loan_count
+#: model:ir.model.fields,field_description:advanced_loan_management.field_res_users__loan_count
+msgid "Loan Count"
+msgstr "Recuento de préstamos"
+
+#. module: advanced_loan_management
+#: model:ir.actions.act_window,name:advanced_loan_management.loan_documents_action
+#: model:ir.model,name:advanced_loan_management.model_loan_documents
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_documents_view_tree
+msgid "Loan Documents"
+msgstr "Documentos de préstamo"
+
+#. module: advanced_loan_management
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.repayment_line_default_group
+msgid "Loan ID"
+msgstr "ID de préstamo"
+
+#. module: advanced_loan_management
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.res_config_settings_view_form
+msgid "Loan Interest"
+msgstr "Intereses del préstamo"
+
+#. module: advanced_loan_management
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.res_config_settings_view_form
+msgid "Loan Interest Details"
+msgstr "Detalles de intereses del préstamo"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,help:advanced_loan_management.field_loan_type__interest_rate
+msgid "Loan Interest Rate"
+msgstr "Tasa de interés del préstamo"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_request__repayment_lines_ids
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_request__repayment_lines_partner_ids
+msgid "Loan Line"
+msgstr "Línea de préstamo"
+
+#. module: advanced_loan_management
+#: model:ir.module.category,name:advanced_loan_management.loan_management_groups
+#: model:ir.ui.menu,name:advanced_loan_management.loan_management_menu_root
+msgid "Loan Management"
+msgstr "Gestión de préstamos"
+
+#. module: advanced_loan_management
+#: model:ir.ui.menu,name:advanced_loan_management.loan_management_proofs
+msgid "Loan Proofs"
+msgstr "Comprobantes de préstamos"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,field_description:advanced_loan_management.field_repayment_line__loan_id
+#: model:ir.model.fields,field_description:advanced_loan_management.field_repayment_line_partner__loan_id
+msgid "Loan Ref."
+msgstr "Ref. de préstamo."
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_request__name
+msgid "Loan Reference"
+msgstr "Referencia de préstamo"
+
+#. module: advanced_loan_management
+#: model:ir.ui.menu,name:advanced_loan_management.loan_management_report
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_report_template
+msgid "Loan Report"
+msgstr "Informe de préstamo"
+
+#. module: advanced_loan_management
+#: model:ir.actions.act_window,name:advanced_loan_management.loan_request_action
+#: model:ir.actions.report,name:advanced_loan_management.loan_management_report_action
+#: model:ir.model,name:advanced_loan_management.model_loan_request
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_request_view_form
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_request_view_tree
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.repayment_line_view_tree
+msgid "Loan Request"
+msgstr "Solicitud de préstamo"
+
+#. module: advanced_loan_management
+#: model:ir.actions.act_window,name:advanced_loan_management.loan_type_action
+#: model:ir.model,name:advanced_loan_management.model_loan_type
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_request__loan_type_id
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_report_template
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_request_view_form
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_type_view_form
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_type_view_tree
+msgid "Loan Type"
+msgstr "Tipo de préstamo"
+
+#. module: advanced_loan_management
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.res_config_settings_view_form
+msgid "Loan management accounts"
+msgstr "Cuentas de gestión de préstamos"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,help:advanced_loan_management.field_res_config_settings__disbursement_account_id
+msgid "Loan management disburse accounts"
+msgstr "Cuentas de desembolso de gestión de préstamos"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,help:advanced_loan_management.field_res_config_settings__repayment_account_id
+msgid "Loan payment account"
+msgstr "Cuenta de pago de préstamo"
+
+#. module: advanced_loan_management
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_request_view_form
+msgid "Loan rejection"
+msgstr "Rechazo de préstamo"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,help:advanced_loan_management.field_loan_request__state
+msgid "Loan request states"
+msgstr "Estados de solicitud de préstamo"
+
+#. module: advanced_loan_management
+#: model:ir.ui.menu,name:advanced_loan_management.loan_management_request
+msgid "Loan requests"
+msgstr "Solicitudes de préstamo"
+
+#. module: advanced_loan_management
+#: model:ir.ui.menu,name:advanced_loan_management.loan_management_type
+msgid "Loan types"
+msgstr "Tipos de préstamos"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,help:advanced_loan_management.field_loan_type__name
+msgid "LoanType Name"
+msgstr "Nombre del tipo de préstamo"
+
+#. module: advanced_loan_management
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.res_partner_view_form_inherit
+msgid "Loans"
+msgstr "Préstamos"
+
+#. module: advanced_loan_management
+#: model:res.groups,name:advanced_loan_management.loan_management_group_manager
+msgid "Manager"
+msgstr "Gerente"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,field_description:advanced_loan_management.field_message_popup__message
+msgid "Message"
+msgstr "Mensaje"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_request__message_has_error
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_type__message_has_error
+msgid "Message Delivery error"
+msgstr "Error de entrega de mensaje"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_request__message_ids
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_type__message_ids
+msgid "Messages"
+msgstr "Mensajes"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields.selection,name:advanced_loan_management.selection__loan_request__payment_frequency__monthly
+msgid "Monthly"
+msgstr "Mensual"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_type__name
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_report_template
+msgid "Name"
+msgstr "Nombre"
+
+#. module: advanced_loan_management
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_type_view_kanban
+msgid "Name :"
+msgstr "Nombre :"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_request__message_needaction_counter
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_type__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Número de acciones"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_request__message_has_error_counter
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_type__message_has_error_counter
+msgid "Number of errors"
+msgstr "Número de errores"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,help:advanced_loan_management.field_loan_request__message_needaction_counter
+#: model:ir.model.fields,help:advanced_loan_management.field_loan_type__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "Número de mensajes que requieren acción"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,help:advanced_loan_management.field_loan_request__message_has_error_counter
+#: model:ir.model.fields,help:advanced_loan_management.field_loan_type__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Número de mensajes con error de entrega"
+
+#. module: advanced_loan_management
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.message_wizard_view_form
+msgid "Ok"
+msgstr "OK"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,field_description:advanced_loan_management.field_repayment_line_partner__outstanding_capital
+#: model:ir.model.fields,help:advanced_loan_management.field_repayment_line_partner__outstanding_capital
+msgid "Outstanding capital"
+msgstr "Capital pendiente"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields.selection,name:advanced_loan_management.selection__repayment_line__state__paid
+msgid "Paid"
+msgstr "Pagado"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_request__partner_id
+#: model:ir.model.fields,field_description:advanced_loan_management.field_repayment_line__partner_id
+#: model:ir.model.fields,field_description:advanced_loan_management.field_repayment_line_partner__partner_id
+#: model:ir.model.fields,help:advanced_loan_management.field_loan_request__partner_id
+#: model:ir.model.fields,help:advanced_loan_management.field_repayment_line__partner_id
+#: model:ir.model.fields,help:advanced_loan_management.field_repayment_line_partner__partner_id
+msgid "Partner"
+msgstr "Socio"
+
+#. module: advanced_loan_management
+#: model:ir.model,name:advanced_loan_management.model_repayment_line_partner
+#: model:ir.model.fields,help:advanced_loan_management.field_loan_request__repayment_lines_partner_ids
+msgid "Partner loan repayments"
+msgstr "Reembolsos de préstamos de socios"
+
+#. module: advanced_loan_management
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_request_view_form
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.repayment_line_view_form
+msgid "Pay"
+msgstr "Pagar"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,field_description:advanced_loan_management.field_repayment_line__date
+#: model:ir.model.fields,field_description:advanced_loan_management.field_repayment_line_partner__date
+msgid "Payment Date"
+msgstr "Fecha de pago"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_request__payment_frequency
+msgid "Payment frequency"
+msgstr "Frecuencia de pago"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,help:advanced_loan_management.field_loan_request__payment_frequency
+msgid "Payment frequency, used for the frequency of installments"
+msgstr "recuencia de pago, utilizada para la frecuencia de las cuotas."
+
+#. module: advanced_loan_management
+#. odoo-python
+#: code:addons/advanced_loan_management/models/loan_request.py:0
+#, python-format
+msgid "Pending Repayments"
+msgstr "Reembolsos pendientes"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,help:advanced_loan_management.field_loan_request__rate_fee
+msgid "Percentage rate of quota"
+msgstr "Tasa porcentual de cuota"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_request__periodic_payment
+#: model:ir.model.fields,help:advanced_loan_management.field_loan_request__periodic_payment
+msgid "Periodic payment"
+msgstr "Pago periódico"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,help:advanced_loan_management.field_loan_type__documents_ids
+msgid "Personal Proofs"
+msgstr "Pruebas personales"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_request__processing_fee
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_type__processing_fee
+msgid "Processing Fee"
+msgstr "Tarifa de procesamiento"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,help:advanced_loan_management.field_res_config_settings__interest_product_id
+msgid "Product For Interest To Create Invoice Lines"
+msgstr "Producto de interés para crear líneas de factura"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,help:advanced_loan_management.field_res_config_settings__repayment_product_id
+msgid "Product For Repayment To Create Invoice Lines"
+msgstr "Producto para reembolso para crear líneas de factura"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_documents__loan_proofs
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_request__documents_ids
+msgid "Proofs"
+msgstr "Pruebas"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_request__reject_reason
+#: model:ir.model.fields,field_description:advanced_loan_management.field_reject_reason__reason
+msgid "Reason"
+msgstr "Razón"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,help:advanced_loan_management.field_reject_reason__reason
+msgid "Reason Content"
+msgstr "Contenido de la razón"
+
+#. module: advanced_loan_management
+#: model:ir.model,name:advanced_loan_management.model_account_payment_register
+msgid "Register Payment"
+msgstr "Registrar pago"
+
+#. module: advanced_loan_management
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_request_view_form
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.reject_reason_view_form
+msgid "Reject"
+msgstr "Rechazar"
+
+#. module: advanced_loan_management
+#: model:ir.model,name:advanced_loan_management.model_reject_reason
+msgid "Reject Reasons From The Company Side"
+msgstr "Razones de rechazo por parte de la empresa"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields.selection,name:advanced_loan_management.selection__loan_request__state__rejected
+msgid "Rejected"
+msgstr "Rechazado"
+
+#. module: advanced_loan_management
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_type_view_form
+msgid "Reminder"
+msgstr "Recordatorio"
+
+#. module: advanced_loan_management
+#. odoo-python
+#: code:addons/advanced_loan_management/models/loan_request.py:0
+#: code:addons/advanced_loan_management/models/loan_request.py:0
+#: model:ir.model.fields,field_description:advanced_loan_management.field_repayment_line__repayment_account_id
+#, python-format
+msgid "Repayment"
+msgstr "Reembolso"
+
+#. module: advanced_loan_management
+#: model:ir.actions.act_window,name:advanced_loan_management.repayment_line_action
+#: model:ir.model,name:advanced_loan_management.model_repayment_line
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.repayment_line_view_form
+msgid "Repayment Line"
+msgstr "Línea de pago"
+
+#. module: advanced_loan_management
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_request_view_form
+msgid "Repayment Partner"
+msgstr "Reembolsos socio"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,field_description:advanced_loan_management.field_res_config_settings__repayment_product_id
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.res_config_settings_view_form
+msgid "Repayment Product"
+msgstr "Producto de reembolso"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,field_description:advanced_loan_management.field_res_config_settings__repayment_account_id
+msgid "Repayment accounts"
+msgstr "Cuentas de pago"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,help:advanced_loan_management.field_loan_request__repayment_lines_ids
+msgid "Repayment lines"
+msgstr "Líneas de pago"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,help:advanced_loan_management.field_repayment_line__name
+#: model:ir.model.fields,help:advanced_loan_management.field_repayment_line_partner__name
+msgid "Repayment no: of loan"
+msgstr "Número de reembolso: del préstamo"
+
+#. module: advanced_loan_management
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_request_view_form
+msgid "Repayment schedules"
+msgstr "Calendario de pagos"
+
+#. module: advanced_loan_management
+#: model:ir.ui.menu,name:advanced_loan_management.loan_management_lines
+msgid "Repayments"
+msgstr "Reembolsos"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_request__request
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_request_view_form
+msgid "Request"
+msgstr "Solicitar"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_request__message_has_sms_error
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_type__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "Error de entrega de SMS"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,help:advanced_loan_management.field_loan_request__name
+msgid "Sequence number for loan requests"
+msgstr "Número de secuencia para solicitudes de préstamos"
+
+#. module: advanced_loan_management
+#: model:ir.actions.act_window,name:advanced_loan_management.res_config_settings_action
+#: model:ir.ui.menu,name:advanced_loan_management.loan_management_settings
+msgid "Settings"
+msgstr "Ajustes"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_request__state
+#: model:ir.model.fields,field_description:advanced_loan_management.field_repayment_line__state
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_report_template
+msgid "State"
+msgstr "Estado"
+
+#. module: advanced_loan_management
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_request_view_form
+msgid "Subtotal Capital"
+msgstr "Capital subtotal"
+
+#. module: advanced_loan_management
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_request_view_form
+msgid "Subtotal quantity"
+msgstr "Cantidad subtotal"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_request__tenure
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_type__tenure
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_report_template
+msgid "Tenure"
+msgstr "Cuotas"
+
+#. module: advanced_loan_management
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_type_view_kanban
+msgid "Tenure :"
+msgstr "Cuotas :"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_type__tenure_plan
+msgid "Tenure Plan"
+msgstr "Plan de Cuotas"
+
+#. module: advanced_loan_management
+#. odoo-python
+#: code:addons/advanced_loan_management/models/loan_request.py:0
+#, python-format
+msgid "The partner has already an ongoing loan."
+msgstr "El socio ya tiene un préstamo vigente."
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,field_description:advanced_loan_management.field_repayment_line__total_amount
+#: model:ir.model.fields,field_description:advanced_loan_management.field_repayment_line_partner__total_amount
+#: model:ir.model.fields,help:advanced_loan_management.field_repayment_line__total_amount
+#: model:ir.model.fields,help:advanced_loan_management.field_repayment_line_partner__total_amount
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_report_template
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_request_view_form
+msgid "Total Amount"
+msgstr "Monto Total"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,help:advanced_loan_management.field_loan_type__disbursal_amount
+msgid "Total Amount To Be Disbursed"
+msgstr "Monto total a desembolsar"
+
+#. module: advanced_loan_management
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_request_view_form
+msgid "Total interest amount"
+msgstr "Monto total de interés"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,help:advanced_loan_management.field_loan_request__loan_amount
+msgid "Total loan amount"
+msgstr "Monto total del préstamo"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,help:advanced_loan_management.field_loan_request__disbursal_amount
+msgid "Total loan amount available to disburse"
+msgstr "Monto total del préstamo disponible para desembolsar"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields.selection,name:advanced_loan_management.selection__repayment_line__state__unpaid
+msgid "Unpaid"
+msgstr "No pagado"
+
+#. module: advanced_loan_management
+#: model:res.groups,name:advanced_loan_management.loan_management_group_user
+msgid "User"
+msgstr "Usuario"
+
+#. module: advanced_loan_management
+#: model:ir.module.category,description:advanced_loan_management.loan_management_groups
+msgid ""
+"User access level for loan_management\n"
+"                model\n"
+"            "
+msgstr ""
+"Nivel de acceso de usuario para el modelo de gestión de\n"
+"                préstamos\n"
+"            "
+
+#. module: advanced_loan_management
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_request_view_form
+msgid "View"
+msgstr "Vista"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields.selection,name:advanced_loan_management.selection__loan_request__state__waiting
+msgid "Waiting For Approval"
+msgstr "Esperando aprobación"
+
+#. module: advanced_loan_management
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_request_view_form
+msgid "Waiting for approval from the manager"
+msgstr "Esperando la aprobación del gerente"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_request__website_message_ids
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_type__website_message_ids
+msgid "Website Messages"
+msgstr "Mensajes del sitio web"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,help:advanced_loan_management.field_loan_request__website_message_ids
+#: model:ir.model.fields,help:advanced_loan_management.field_loan_type__website_message_ids
+msgid "Website communication history"
+msgstr "Historial de comunicación del sitio web"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,field_description:advanced_loan_management.field_repayment_line__invoice
+msgid "invoice"
+msgstr "factura"
+
+#. module: advanced_loan_management
+#: model:ir.model,name:advanced_loan_management.model_report_advanced_loan_management_loan_report_template
+msgid "report.advanced_loan_management.loan_report_template"
+msgstr ""
