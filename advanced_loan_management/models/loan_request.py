@@ -12,6 +12,7 @@ class LoanRequest(models.Model):
     _name = 'loan.request'
     _inherit = ['mail.thread']
     _description = 'Loan Request'
+    _order = 'id desc, name desc'
 
     name = fields.Char(string='Loan Reference', readonly=True,
                        copy=False, help="Sequence number for loan requests",
@@ -43,7 +44,7 @@ class LoanRequest(models.Model):
     periodic_payment = fields.Float(string="Periodic payment", compute='_compute_rate_fee', digits=(16, 8), store=True,
                             help="Periodic payment")
     date = fields.Date(string="First payment date", default=fields.Date.today(), 
-                       required=True, help="Date")
+                       required=True, help="First payment date")
     disbursal_date = fields.Date(string="Disbursal date", default=fields.Date.today(), 
                        required=True, help="Disbursal date")
     partner_id = fields.Many2one('res.partner', string="Partner",
@@ -276,10 +277,11 @@ class LoanRequest(models.Model):
             loan.repayment_lines_ids.unlink()
             self._compute_repayment_partner()
             date_start = datetime.strptime(str(loan.date),'%Y-%m-%d')
-            amount = loan.loan_amount / loan.tenure
+            amount_init = loan.loan_amount
+            amount = amount_init / loan.tenure
             # interest = loan.loan_amount * loan.interest_rate
             interest = sum(self.env['repayment.line.partner'].search([('loan_id', '=', loan.id)]).mapped('interest_amount'))
-            print(interest)
+            # print(interest)
             interest_amount = interest / loan.tenure
             total_amount = amount + interest_amount
             partner = self.partner_id
@@ -289,6 +291,7 @@ class LoanRequest(models.Model):
                     'partner_id': partner.id,
                     'date': date_start,
                     'amount': amount,
+                    'capital_balance': amount_init - amount,
                     'interest_amount': interest_amount,
                     'total_amount': total_amount,
                     # 'interest_account_id': self.env.ref('advanced_loan_management.'
@@ -300,6 +303,7 @@ class LoanRequest(models.Model):
                     #                                      'loan_accounts').id,
                     'repayment_account_id': self.env['ir.config_parameter'].sudo().get_param('advanced_loan_management.repayment_account_id'),
                     'loan_id': loan.id})
+                amount_init -= amount
                 if self.payment_frequency == 'biweekly':
                     date_start += relativedelta(days=15)
                 elif self.payment_frequency == 'fortnightly':

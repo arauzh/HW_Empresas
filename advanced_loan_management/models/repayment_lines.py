@@ -23,6 +23,8 @@ class RepaymentLine(models.Model):
                        help="Date of the payment")
     amount = fields.Float(string="Amount", required=True, help="Amount",
                           digits=(16, 6))
+    capital_balance = fields.Float(string="Capital balance",
+                          digits=(16, 6))
     interest_amount = fields.Float(string="Interest Amount", required=True,
                                    help="Interest Amount", digits=(16, 6))
     total_amount = fields.Float(string="Total Amount", required=True,

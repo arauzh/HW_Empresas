@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-15 15:25+0000\n"
-"PO-Revision-Date: 2025-10-15 15:25+0000\n"
+"POT-Creation-Date: 2025-10-23 20:42+0000\n"
+"PO-Revision-Date: 2025-10-23 20:42+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,9 +16,57 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: advanced_loan_management
+#: model:ir.actions.report,print_report_name:advanced_loan_management.loan_management_report2_action
+msgid "('Loan - %s' % (object.name))"
+msgstr "('Préstamo - %s' % (object.name))"
+
+#. module: advanced_loan_management
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_report_templates2
+msgid "<span>%</span>"
+msgstr " <span>%</span>"
+
+#. module: advanced_loan_management
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_report_templates2
+msgid "<span>No. LOAN: </span>"
+msgstr "<span>PRÉSTAMO No.: </span>"
+
+#. module: advanced_loan_management
 #: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_report_template
-msgid "<strong>Name:</strong>"
-msgstr "<strong>Nombre:</strong>"
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_report_templates2
+msgid "<strong class=\"fw-bolder\">Debtor:</strong>"
+msgstr "<strong class=\"fw-bolder\">Deudor:</strong>"
+
+#. module: advanced_loan_management
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_report_templates2
+msgid "<strong class=\"fw-bolder\">Guarantor:</strong>"
+msgstr "<strong class=\"fw-bolder\">Fiador:</strong>"
+
+#. module: advanced_loan_management
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_report_template
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_report_templates2
+msgid "<strong class=\"fw-bolder\">Interest Rate:</strong>"
+msgstr "<strong class=\"fw-bolder\">Tasa de interés:</strong>"
+
+#. module: advanced_loan_management
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_report_templates2
+msgid "<strong class=\"fw-bolder\">Interest:</strong>"
+msgstr "<strong class=\"fw-bolder\">Interés:</strong>"
+
+#. module: advanced_loan_management
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_report_template
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_report_templates2
+msgid "<strong class=\"fw-bolder\">Loan Amount:</strong>"
+msgstr "<strong class=\"fw-bolder\">Monto del préstamo:</strong>"
+
+#. module: advanced_loan_management
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_report_templates2
+msgid "<strong class=\"fw-bolder\">Quotas:</strong>"
+msgstr "<strong class=\"fw-bolder\">Cuotas:</strong>"
+
+#. module: advanced_loan_management
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_report_templates2
+msgid "ASOSIGMA"
+msgstr "ASOSIGMA"
 
 #. module: advanced_loan_management
 #: model:ir.model.fields,help:advanced_loan_management.field_repayment_line__interest_account_id
@@ -48,11 +96,6 @@ msgid "Alert Content"
 msgstr "Contenido de alerta"
 
 #. module: advanced_loan_management
-#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_report_template
-msgid "Amortization Schedule"
-msgstr "Calendario de amortización"
-
-#. module: advanced_loan_management
 #: model:ir.model.fields,help:advanced_loan_management.field_loan_type__tenure
 msgid "Amortization period"
 msgstr "Periodo de amortización"
@@ -63,6 +106,7 @@ msgstr "Periodo de amortización"
 #: model:ir.model.fields,help:advanced_loan_management.field_repayment_line__amount
 #: model:ir.model.fields,help:advanced_loan_management.field_repayment_line_partner__amount
 #: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_report_template
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_report_templates2
 msgid "Amount"
 msgstr "Capital"
 
@@ -107,6 +151,13 @@ msgstr "Puede elegir diferentes tipos de préstamos adecuados"
 #: model_terms:ir.ui.view,arch_db:advanced_loan_management.reject_reason_view_form
 msgid "Cancel"
 msgstr "Cancelar"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,field_description:advanced_loan_management.field_repayment_line__capital_balance
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_report_template
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_report_templates2
+msgid "Capital balance"
+msgstr "Saldo capital"
 
 #. module: advanced_loan_management
 #: model:ir.model.fields,help:advanced_loan_management.field_loan_request__credit_account_id
@@ -227,8 +278,8 @@ msgid "Currency"
 msgstr "Moneda"
 
 #. module: advanced_loan_management
-#: model:ir.model.fields,help:advanced_loan_management.field_loan_request__date
 #: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_report_template
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_report_templates2
 msgid "Date"
 msgstr "Fecha"
 
@@ -326,8 +377,9 @@ msgstr "Tasa de Cuota"
 
 #. module: advanced_loan_management
 #: model:ir.model.fields,field_description:advanced_loan_management.field_loan_request__date
+#: model:ir.model.fields,help:advanced_loan_management.field_loan_request__date
 msgid "First payment date"
-msgstr "Fecha"
+msgstr "Primera fecha de pago"
 
 #. module: advanced_loan_management
 #: model:ir.model.fields,field_description:advanced_loan_management.field_loan_request__message_follower_ids
@@ -424,6 +476,7 @@ msgstr "Interés"
 #: model:ir.model.fields,help:advanced_loan_management.field_repayment_line__interest_amount
 #: model:ir.model.fields,help:advanced_loan_management.field_repayment_line_partner__interest_amount
 #: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_report_template
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_report_templates2
 msgid "Interest Amount"
 msgstr "Monto de interés"
 
@@ -436,7 +489,6 @@ msgstr "Producto de interés"
 #. module: advanced_loan_management
 #: model:ir.model.fields,field_description:advanced_loan_management.field_loan_request__interest_rate
 #: model:ir.model.fields,field_description:advanced_loan_management.field_loan_type__interest_rate
-#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_report_template
 msgid "Interest Rate"
 msgstr "Tasa de interés"
 
@@ -529,7 +581,6 @@ msgstr "Préstamo "
 #: model:ir.model.fields,field_description:advanced_loan_management.field_loan_request__loan_amount
 #: model:ir.model.fields,field_description:advanced_loan_management.field_loan_type__loan_amount
 #: model:ir.model.fields,help:advanced_loan_management.field_loan_type__loan_amount
-#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_report_template
 msgid "Loan Amount"
 msgstr "Monto del préstamo"
 
@@ -596,7 +647,6 @@ msgstr "Referencia de préstamo"
 
 #. module: advanced_loan_management
 #: model:ir.ui.menu,name:advanced_loan_management.loan_management_report
-#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_report_template
 msgid "Loan Report"
 msgstr "Informe de préstamo"
 
@@ -614,7 +664,6 @@ msgstr "Solicitud de préstamo"
 #: model:ir.actions.act_window,name:advanced_loan_management.loan_type_action
 #: model:ir.model,name:advanced_loan_management.model_loan_type
 #: model:ir.model.fields,field_description:advanced_loan_management.field_loan_request__loan_type_id
-#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_report_template
 #: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_request_view_form
 #: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_type_view_form
 #: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_type_view_tree
@@ -667,6 +716,11 @@ msgid "Loans"
 msgstr "Préstamos"
 
 #. module: advanced_loan_management
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_report_templates2
+msgid "Logo"
+msgstr "Logo"
+
+#. module: advanced_loan_management
 #: model:res.groups,name:advanced_loan_management.loan_management_group_manager
 msgid "Manager"
 msgstr "Gerente"
@@ -695,7 +749,6 @@ msgstr "Mensual"
 
 #. module: advanced_loan_management
 #: model:ir.model.fields,field_description:advanced_loan_management.field_loan_type__name
-#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_report_template
 msgid "Name"
 msgstr "Nombre"
 
@@ -944,6 +997,7 @@ msgstr "Ajustes"
 #: model:ir.model.fields,field_description:advanced_loan_management.field_loan_request__state
 #: model:ir.model.fields,field_description:advanced_loan_management.field_repayment_line__state
 #: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_report_template
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_report_templates2
 msgid "State"
 msgstr "Estado"
 
@@ -958,9 +1012,19 @@ msgid "Subtotal quantity"
 msgstr "Cantidad subtotal"
 
 #. module: advanced_loan_management
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_report_template
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_report_templates2
+msgid "TABLE FOR ACCOUNTING OPERATION"
+msgstr "TABLA PARA OPERACIONES CONTABLES"
+
+#. module: advanced_loan_management
+#: model:ir.actions.report,name:advanced_loan_management.loan_management_report2_action
+msgid "Table for accounting operations"
+msgstr "Tabla de operaciones contables"
+
+#. module: advanced_loan_management
 #: model:ir.model.fields,field_description:advanced_loan_management.field_loan_request__tenure
 #: model:ir.model.fields,field_description:advanced_loan_management.field_loan_type__tenure
-#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_report_template
 msgid "Tenure"
 msgstr "Cuotas"
 
@@ -987,6 +1051,7 @@ msgstr "El socio ya tiene un préstamo vigente."
 #: model:ir.model.fields,help:advanced_loan_management.field_repayment_line__total_amount
 #: model:ir.model.fields,help:advanced_loan_management.field_repayment_line_partner__total_amount
 #: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_report_template
+#: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_report_templates2
 #: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_request_view_form
 msgid "Total Amount"
 msgstr "Monto Total"
@@ -1067,4 +1132,4 @@ msgstr "factura"
 #. module: advanced_loan_management
 #: model:ir.model,name:advanced_loan_management.model_report_advanced_loan_management_loan_report_template
 msgid "report.advanced_loan_management.loan_report_template"
-msgstr ""
+msgstr "report.advanced_loan_management.loan_report_template"

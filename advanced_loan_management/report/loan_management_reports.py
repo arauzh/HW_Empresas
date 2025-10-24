@@ -28,8 +28,8 @@ class LoanDetails(models.AbstractModel):
             'Loan_Amount': str(loan_id.loan_amount),
         }
         """Fetching values for the report using query and returns the value"""
-        query = """SELECT name as Name, date as Date, amount as Amount,
-         interest_amount as Interest_amount,state as State, 
+        query = """SELECT name as Name, date as Date, COALESCE(amount, 0) as Amount, COALESCE(capital_balance, 0) AS Capital_balance, 
+         COALESCE(interest_amount, 0) as Interest_amount, state as State, 
          total_amount as Total_amount FROM repayment_line"""
         check = """WHERE"""
         condition = """loan_id='{cust}'""".format(cust=loan_id.id)

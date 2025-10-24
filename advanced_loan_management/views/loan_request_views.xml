@@ -14,12 +14,14 @@
             <field name="arch" type="xml">
                 <tree string="Loan Request">
                     <field name="name"/>
+                    <field name="currency_id" column_invisible="True"/>
                     <field name="partner_id"/>
-                    <field name="loan_amount"/>
-                    <field name="interest_rate"/>
+                    <field name="loan_amount" widget="monetary" options="{'digits':[16,2], 'currency_field': 'currency_id'}"/>
+                    <field name="interest_rate" widget="percentage"/>
                     <field name="date"/>
                     <field name="tenure"/>
-                    <field name="company_id"/>
+                    <field name="periodic_payment" widget="monetary" options="{'digits':[16,2], 'currency_field': 'currency_id'}"/>
+                    <field name="company_id" optional="hide"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -108,6 +110,7 @@
                                         <field name="name"/>
                                         <field name="date"/>
                                         <field name="amount" widget="float" options="{'digits':[16,2]}" sum="Subtotal quantity"/>
+                                        <field name="capital_balance" widget="float" options="{'digits':[16,2]}"/>
                                         <field name="interest_amount" widget="float" options="{'digits':[16,2]}" sum="Total interest amount"/>
                                         <field name="total_amount" widget="float" options="{'digits':[16,2]}" sum="Total Amount"/>
                                         <field name="state"

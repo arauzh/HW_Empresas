@@ -5,21 +5,51 @@
         <t t-call="web.html_container">
             <t t-call="web.external_layout">
                 <div class="page">
-                    <h3 align="center">Loan Report</h3>
-                    <div>
+                    <!-- <h4>TABLE FOR ACCOUNTING OPERATION</h4> -->
+                    <!-- <div>
                         <group>
-                            <strong>Name:</strong>
+                            <strong>Debtor:</strong>
                             <span t-esc="data['Customer']"/>
                             <br/>
-                            <span t-esc="data['CustomerAddress']"/>
+                            <strong>Loan Amount:</strong>
+                            <span t-esc="data['Loan_Amount']"/>
                             <br/>
-                            <span t-esc="data['CustomerAddress2']"/>
+                            <strong>Interest Rate:</strong>
+                            <span t-esc="data['Interest_Rate']"/>
                             <br/>
-                            <span t-esc="data['CustomerContact']"/>
+                            <strong>Tenure:</strong>
+                            <span t-esc="data['Tenure']"/>
                             <br/>
                         </group>
+                    </div> -->
+                    <div class="row mb-3">
+                        <div class="col-4"></div>
+                        <div class="col-4">
+                            <h6 class="fw-bolder">TABLE FOR ACCOUNTING OPERATION</h6>
+                        </div>
+                        <div class="col-4"></div>
                     </div>
-                    <group>
+                    <div id="informations" class="row mb-3">
+                        <div class="col-4">
+                            <p style="font-size: 13px;" class="m-0">
+                                <strong class="fw-bolder">Debtor:</strong>
+                                <span t-esc="data['Customer']"></span>
+                            </p>
+                        </div>
+                        <div class="col-4">
+                            <p style="font-size: 13px;" class="m-0">
+                                <strong class="fw-bolder">Loan Amount:</strong>
+                                <span t-esc="data['Loan_Amount']"></span>
+                            </p>
+                        </div>
+                        <div class="col-4">
+                            <p style="font-size: 13px;" class="m-0">
+                                <strong class="fw-bolder">Interest Rate:</strong>
+                                <span t-esc="data['Interest_Rate']"></span>
+                            </p>
+                        </div>
+                    </div>
+                    <!-- <group>
                         <table class="table table-sm">
                             <thead>
                                 <tr>
@@ -44,17 +74,16 @@
                                 </td>
                             </tbody>
                         </table>
-                    </group>
-                    <br/>
-                    <br/>
-                    <h3 align="center">Amortization Schedule</h3>
+                    </group> -->
+                    <!-- <h3 align="center">Amortization Schedule</h3> -->
                     <table class="table table-sm">
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Name</th>
+                                <!-- <th>Name</th> -->
                                 <th>Date</th>
                                 <th>Amount</th>
+                                <th>Capital balance</th>
                                 <th>Interest Amount</th>
                                 <th>Total Amount</th>
                                 <th>State</th>
@@ -63,26 +92,29 @@
                         <tbody>
                             <t t-set="i" t-value="1"/>
                             <tr t-foreach="docs" t-as="line">
-                                <td align="center">
+                                <td align="center" style="font-size: 11px;">
                                     <span t-esc="i"/>
                                     <t t-set="i" t-value="i+1"/>
                                 </td>
-                                <td align="center">
+                                <!-- <td align="center" style="font-size: 11px;">
                                     <t t-esc="line['name']"/>
-                                </td>
-                                <td align="center">
+                                </td> -->
+                                <td align="center" style="font-size: 11px;">
                                     <t t-esc="line['date']"/>
                                 </td>
-                                <td align="center">
-                                    <t t-esc="line['amount']"/>
+                                <td align="right" style="font-size: 11px;">
+                                    <t t-esc="line['amount']" t-options="{'widget': 'float', 'precision': 2}"/>
                                 </td>
-                                <td align="center">
-                                    <t t-esc="line['interest_amount']"/>
+                                <td align="right" style="font-size: 11px;">
+                                    <t t-esc="line['capital_balance']" t-options="{'widget': 'float', 'precision': 2}"/>
                                 </td>
-                                <td align="center">
-                                    <t t-esc="line['total_amount']"/>
+                                <td align="right" style="font-size: 11px;">
+                                    <t t-esc="line['interest_amount']" t-options="{'widget': 'float', 'precision': 2}"/>
                                 </td>
-                                <td align="center"
+                                <td align="right" style="font-size: 11px;">
+                                    <t t-esc="line['total_amount']" t-options="{'widget': 'float', 'precision': 2}"/>
+                                </td>
+                                <td align="center" style="font-size: 9px;"
                                     t-att-style="'color: ' + ('green' if line['state'] == 'paid' else ('sienna' if line['state'] == 'invoiced' else 'red'))">
                                     <t t-esc="{'unpaid': 'Unpaid', 'invoiced': 'Invoiced', 'paid': 'Paid'} [line['state']]"/>
                                 </td>

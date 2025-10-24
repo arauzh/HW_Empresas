@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--    PDF report Template-->
+    <template id="loan_report_templates2">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="doc">
+                <t t-if="not o" t-set="o" t-value="doc"/>
+
+                <t t-if="not company">
+                    <!-- Multicompany -->
+                    <t t-if="company_id">
+                        <t t-set="company" t-value="company_id"/>
+                    </t>
+                    <t t-elif="o and 'company_id' in o and o.company_id.sudo()">
+                        <t t-set="company" t-value="o.company_id.sudo()"/>
+                    </t>
+                    <t t-else="else">
+                        <t t-set="company" t-value="res_company"/>
+                    </t>
+                </t>
+                <t t-set= "var_datenow" t-value="datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=-6))).strftime('%d/%m/%Y %H:%M')"/>
+
+                <div t-attf-class="o_company_#{company.id}_layout header" t-att-style="report_header_style">
+                    <div class="o_background_header">
+                    <div class="float-end">
+                        <div style="font-size: 10px;" class="mt0 text-end "><span t-esc="var_datenow"/></div>
+                    </div>
+                    <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" class="float-start" alt="Logo"/>
+                    <div class="row">
+                        <div class="col text-center">
+                            <h5 class="fw-bolder">ASOSIGMA</h5>
+                            <h6 class="fw-bolder">TABLE FOR ACCOUNTING OPERATION</h6>
+                        </div>
+                    </div>
+                    <div class="float-end">
+                        <div style="font-size: 16px;" class="mt0 text-end fw-bolder"><span>No. LOAN: </span><span t-esc="o.name"/></div>
+                    </div>
+                    </div>
+                </div>
+
+                <div t-attf-class="article o_report_layout_striped" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
+                    <div class="page">
+                        <div id="informations" class="row mb-2">
+                            <div class="col-5">
+                                <p style="font-size: 13px;" class="m-0">
+                                    <strong class="fw-bolder">Debtor:</strong>
+                                    <span t-field="o.partner_id.name"></span>
+                                </p>
+                                <p style="font-size: 13px;" class="m-0">
+                                    <strong class="fw-bolder">Guarantor:</strong>
+                                    <t t-foreach="o.guarantor_partner_id" t-as="p">
+                                        <span t-esc="p.name"/><br/>
+                                    </t>
+                                </p>
+                            </div>
+                            <div class="col-4">
+                                <p style="font-size: 13px;" class="m-0">
+                                    <strong class="fw-bolder">Loan Amount:</strong>
+                                    <span t-esc="'%s %s' % ((o.currency_id and (o.currency_id.symbol or '')) or '',('%.2f' % ((o.loan_amount or 0.0))))"/>
+                                </p>
+                                 <t t-set="total_interest" t-value="sum(o.repayment_lines_ids.mapped('interest_amount'))"/>
+                                <p style="font-size: 13px;" class="m-0">
+                                    <strong class="fw-bolder">Interest:</strong>
+                                    <span t-esc="'%s %s' % ((o.currency_id and (o.currency_id.symbol or '')) or '',('%.2f' % ((total_interest or 0.0))))"/>
+                                </p>
+                            </div>
+                            <div class="col-3">
+                                <p style="font-size: 13px;" class="m-0">
+                                    <strong class="fw-bolder">Quotas:</strong>
+                                    <span t-field="o.tenure"></span>
+                                </p>
+                                <p style="font-size: 13px;" class="m-0">
+                                    <strong class="fw-bolder">Interest Rate:</strong>
+                                    <span t-esc="'%.2f' % (o.interest_rate * 100)"></span><span>%</span>
+                                </p>
+                            </div>
+                        </div>
+
+                        <table class="table table-sm">
+                            <thead>
+                                <tr style="font-size: 12px;">
+                                    <th>#</th>
+                                    <!-- <th>Name</th> -->
+                                    <th>Date</th>
+                                    <th>Amount</th>
+                                    <th>Capital balance</th>
+                                    <th>Interest Amount</th>
+                                    <th>Total Amount</th>
+                                    <th>State</th>
+                                </tr>
+                            </thead>
+                            <tbody class="table-group-divider">
+                                <t t-set="i" t-value="1"/>
+                                <tr t-foreach="o.repayment_lines_ids" t-as="line">
+                                    <td align="right" style="font-size: 11px; padding: 2px 3px;">
+                                        <span t-esc="i"/>
+                                        <t t-set="i" t-value="i+1"/>
+                                    </td>
+                                    <!-- <td align="center" style="font-size: 11px;">
+                                        <t t-esc="line['name']"/>
+                                    </td> -->
+                                    <td align="center" style="font-size: 11px; padding: 2px 3px;">
+                                        <t t-esc="line.date"/>
+                                    </td>
+                                    <td align="right" style="font-size: 11px; padding: 2px 3px;">
+                                        <t t-esc="line.amount" t-options="{'widget': 'float', 'precision': 2}"/>
+                                    </td>
+                                    <td align="right" style="font-size: 11px; padding: 1px 3px;">
+                                        <t t-esc="line.capital_balance" t-options="{'widget': 'float', 'precision': 2}"/>
+                                    </td>
+                                    <td align="right" style="font-size: 11px; padding: 2px 3px;">
+                                        <t t-esc="line.interest_amount" t-options="{'widget': 'float', 'precision': 2}"/>
+                                    </td>
+                                    <td align="right" style="font-size: 11px; padding: 2px 3px;">
+                                        <t t-esc="line.total_amount" t-options="{'widget': 'float', 'precision': 2}"/>
+                                    </td>
+                                    <td align="center"
+                                        t-att-style="'color: ' + ('green' if line.state == 'paid' else ('sienna' if line.state == 'invoiced' else 'red'))  + '; font-size: 11px; padding: 2px 3px;'">
+                                        <t t-esc="{'unpaid': 'Unpaid', 'invoiced': 'Invoiced', 'paid': 'Paid'} [line.state]"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>
