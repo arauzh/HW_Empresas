@@ -297,11 +297,11 @@ class LoanRequest(models.Model):
                     # 'interest_account_id': self.env.ref('advanced_loan_management.'
                     #                                     'loan_management_'
                     #                                     'inrst_accounts').id,
-                    'interest_account_id': self.env['ir.config_parameter'].sudo().get_param('advanced_loan_management.interest_product_id'),
+                    'interest_account_id': self.env['ir.config_parameter'].sudo().get_param('advanced_loan_management.interest_product_id').id,
                     # 'repayment_account_id': self.env.ref('advanced_loan_management.'
                     #                                      'demo_'
                     #                                      'loan_accounts').id,
-                    'repayment_account_id': self.env['ir.config_parameter'].sudo().get_param('advanced_loan_management.repayment_account_id'),
+                    'repayment_account_id': self.env['ir.config_parameter'].sudo().get_param('advanced_loan_management.repayment_account_id').id,
                     'loan_id': loan.id})
                 amount_init -= amount
                 if self.payment_frequency == 'biweekly':
