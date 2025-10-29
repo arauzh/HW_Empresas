@@ -6,6 +6,7 @@ from odoo import api, models
 class LoanDetails(models.AbstractModel):
     """fetch pdf report values"""
     _name = 'report.advanced_loan_management.loan_report_template'
+    _description = 'fetch pdf report values'
 
     @api.model
     def _get_report_values(self, doc_ids, data=None):

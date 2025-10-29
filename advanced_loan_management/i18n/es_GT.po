@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-27 16:24+0000\n"
-"PO-Revision-Date: 2025-10-27 16:24+0000\n"
+"POT-Creation-Date: 2025-10-29 13:30+0000\n"
+"PO-Revision-Date: 2025-10-29 13:30+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -23,7 +23,7 @@ msgstr "('Préstamo - %s' % (object.name))"
 #. module: advanced_loan_management
 #: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_report_templates2
 msgid "<span>%</span>"
-msgstr "<span>%</span>"
+msgstr "<span>% </span>"
 
 #. module: advanced_loan_management
 #: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_report_templates2
@@ -66,7 +66,7 @@ msgstr "<strong class=\"fw-bolder\">Cuotas:</strong>"
 #. module: advanced_loan_management
 #: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_report_templates2
 msgid "ASOSIGMA"
-msgstr "ASOSIGMA"
+msgstr " ASOSIGMA "
 
 #. module: advanced_loan_management
 #: model:ir.model.fields,help:advanced_loan_management.field_repayment_line__interest_account_id
@@ -172,7 +172,7 @@ msgstr "Seleccione la cuenta para el débito del desembolso"
 #. module: advanced_loan_management
 #: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_request_view_form
 msgid "Close"
-msgstr "Cerca"
+msgstr "Cerrar"
 
 #. module: advanced_loan_management
 #: model:ir.model.fields.selection,name:advanced_loan_management.selection__loan_request__state__closed
@@ -500,6 +500,12 @@ msgid "Interest Rate"
 msgstr "Tasa de interés"
 
 #. module: advanced_loan_management
+#: model:ir.model.fields,field_description:advanced_loan_management.field_res_company__interest_account_id
+#: model:ir.model.fields,field_description:advanced_loan_management.field_res_config_settings__interest_account_id
+msgid "Interest account"
+msgstr "Cuenta de intereses"
+
+#. module: advanced_loan_management
 #: model:ir.model.fields,help:advanced_loan_management.field_loan_request__interest_rate
 msgid "Interest percentage"
 msgstr "Porcentaje de interés"
@@ -544,7 +550,7 @@ msgstr "Registro de diario"
 #. module: advanced_loan_management
 #: model:ir.model.fields,help:advanced_loan_management.field_loan_request__journal_id
 msgid "Journal types"
-msgstr "Tipos de revistas"
+msgstr "Tipos de diario"
 
 #. module: advanced_loan_management
 #: model:ir.model.fields,field_description:advanced_loan_management.field_loan_documents__write_uid
@@ -626,7 +632,6 @@ msgstr "Tasa de interés del préstamo"
 
 #. module: advanced_loan_management
 #: model:ir.model.fields,field_description:advanced_loan_management.field_loan_request__repayment_lines_ids
-#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_request__repayment_lines_partner_ids
 msgid "Loan Line"
 msgstr "Línea de préstamo"
 
@@ -688,6 +693,12 @@ msgid "Loan management disburse accounts"
 msgstr "Cuentas de desembolso de gestión de préstamos"
 
 #. module: advanced_loan_management
+#: model:ir.model.fields,help:advanced_loan_management.field_res_company__interest_account_id
+#: model:ir.model.fields,help:advanced_loan_management.field_res_config_settings__interest_account_id
+msgid "Loan management interest accounts"
+msgstr "Cuentas de intereses de gestión de préstamos"
+
+#. module: advanced_loan_management
 #: model:ir.model.fields,help:advanced_loan_management.field_res_company__repayment_account_id
 #: model:ir.model.fields,help:advanced_loan_management.field_res_config_settings__repayment_account_id
 msgid "Loan payment account"
@@ -726,7 +737,7 @@ msgstr "Préstamos"
 #. module: advanced_loan_management
 #: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_report_templates2
 msgid "Logo"
-msgstr "Logo"
+msgstr "Logo "
 
 #. module: advanced_loan_management
 #: model:res.groups,name:advanced_loan_management.loan_management_group_manager
@@ -816,6 +827,11 @@ msgid "Partner"
 msgstr "Socio"
 
 #. module: advanced_loan_management
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_request__repayment_lines_partner_ids
+msgid "Partner loan line"
+msgstr "Línea de préstamo de socio"
+
+#. module: advanced_loan_management
 #: model:ir.model,name:advanced_loan_management.model_repayment_line_partner
 #: model:ir.model.fields,help:advanced_loan_management.field_loan_request__repayment_lines_partner_ids
 msgid "Partner loan repayments"
@@ -841,7 +857,7 @@ msgstr "Frecuencia de pago"
 #. module: advanced_loan_management
 #: model:ir.model.fields,help:advanced_loan_management.field_loan_request__payment_frequency
 msgid "Payment frequency, used for the frequency of installments"
-msgstr "recuencia de pago, utilizada para la frecuencia de las cuotas."
+msgstr "Recuencia de pago, utilizada para la frecuencia de las cuotas."
 
 #. module: advanced_loan_management
 #. odoo-python
@@ -1104,7 +1120,7 @@ msgid ""
 "User access level for loan_management\n"
 "                model\n"
 "            "
-msgstr ""
+msgstr " "
 "Nivel de acceso de usuario para el modelo de gestión de\n"
 "                préstamos\n"
 "            "
@@ -1137,11 +1153,11 @@ msgid "Website communication history"
 msgstr "Historial de comunicación del sitio web"
 
 #. module: advanced_loan_management
+#: model:ir.model,name:advanced_loan_management.model_report_advanced_loan_management_loan_report_template
+msgid "fetch pdf report values"
+msgstr "Obtener valores de informes en PDF"
+
+#. module: advanced_loan_management
 #: model:ir.model.fields,field_description:advanced_loan_management.field_repayment_line__invoice
 msgid "invoice"
 msgstr "factura"
-
-#. module: advanced_loan_management
-#: model:ir.model,name:advanced_loan_management.model_report_advanced_loan_management_loan_report_template
-msgid "report.advanced_loan_management.loan_report_template"
-msgstr "report.advanced_loan_management.loan_report_template"

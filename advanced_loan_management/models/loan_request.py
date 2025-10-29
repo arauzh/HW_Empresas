@@ -56,7 +56,7 @@ class LoanRequest(models.Model):
                                           string="Guarantor")
     repayment_lines_partner_ids = fields.One2many('repayment.line.partner',
                                           'loan_id',
-                                          string="Loan Line", index=True,
+                                          string="Partner loan line", index=True,
                                           help="Partner loan repayments")
     repayment_lines_ids = fields.One2many('repayment.line',
                                           'loan_id',
@@ -99,7 +99,7 @@ class LoanRequest(models.Model):
                                     ('monthly', 'Monthly')],
                                     copy=False, tracking=True, default='fortnightly', help="Payment frequency, used for the frequency of installments")
 
-    @api.model
+    @api.model_create_multi
     def create(self, vals):
         """create  auto sequence for the loan request records"""
         loan_count = self.env['loan.request'].search(
@@ -297,11 +297,13 @@ class LoanRequest(models.Model):
                     # 'interest_account_id': self.env.ref('advanced_loan_management.'
                     #                                     'loan_management_'
                     #                                     'inrst_accounts').id,
-                    'interest_account_id': self.env['ir.config_parameter'].sudo().get_param('advanced_loan_management.interest_product_id').id,
+                    # 'interest_account_id': self.env['ir.config_parameter'].sudo().get_param('advanced_loan_management.interest_account_id').id,
+                    'interest_account_id': self.company_id.interest_account_id.id,
                     # 'repayment_account_id': self.env.ref('advanced_loan_management.'
                     #                                      'demo_'
                     #                                      'loan_accounts').id,
-                    'repayment_account_id': self.env['ir.config_parameter'].sudo().get_param('advanced_loan_management.repayment_account_id').id,
+                    # 'repayment_account_id': self.env['ir.config_parameter'].sudo().get_param('advanced_loan_management.repayment_account_id').id,
+                    'repayment_account_id': self.company_id.repayment_account_id.id,
                     'loan_id': loan.id})
                 amount_init -= amount
                 if self.payment_frequency == 'biweekly':
