@@ -16,6 +16,11 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: advanced_loan_management
+#: model:ir.module.module,shortdesc:base.module_advanced_loan_management
+msgid "Loan Management"
+msgstr "Gestión de préstamos"
+
+#. module: advanced_loan_management
 #: model:ir.actions.report,print_report_name:advanced_loan_management.loan_management_report2_action
 msgid "('Loan - %s' % (object.name))"
 msgstr "('Préstamo - %s' % (object.name))"
