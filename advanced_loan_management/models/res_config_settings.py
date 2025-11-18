@@ -17,17 +17,17 @@ class ResCompany(models.Model):
                                                   "To Create Invoice Lines")
     interest_account_id = fields.Many2one('account.account',
                                              string="Interest account",
-                                             domain="[('account_type', '=', 'liability_current')]",
+                                             # domain="[('account_type', '=', 'liability_current')]",
                                              check_company=True,
                                              help="Loan management interest accounts")
     disbursement_account_id = fields.Many2one('account.account',
                                              string="Disbursement account",
-                                             domain="[('account_type', '=', 'liability_current')]",
+                                             # domain="[('account_type', '=', 'liability_current')]",
                                              check_company=True,
                                              help="Loan management disburse accounts")
     repayment_account_id = fields.Many2one('account.account',
                                              string="Repayment accounts",
-                                             domain="[('account_type', '=', 'asset_cash')]",
+                                             # domain="[('account_type', '=', 'asset_cash')]",
                                              check_company=True,
                                              help="Loan payment account")
 
@@ -54,20 +54,23 @@ class ResConfigSettings(models.TransientModel):
                                              related='company_id.interest_account_id',
                                              string="Interest account",
                                              # config_parameter="advanced_loan_management.interest_account_id",
-                                             domain="[('account_type', '=', 'liability_current'),('company_id', '=', company_id)]",
+                                             # domain="[('account_type', '=', 'liability_current'),('company_id', '=', company_id)]",
+                                             domain="[('company_id', '=', company_id)]",
                                              check_company=True, readonly=False,
                                              help="Loan management interest accounts")
     disbursement_account_id = fields.Many2one('account.account',
                                              related='company_id.disbursement_account_id',
                                              string="Disbursement account",
                                              # config_parameter="advanced_loan_management.disbursement_account_id",
-                                             domain="[('account_type', '=', 'liability_current'),('company_id', '=', company_id)]",
+                                             # domain="[('account_type', '=', 'liability_current'),('company_id', '=', company_id)]",
+                                             domain="[('company_id', '=', company_id)]",
                                              check_company=True, readonly=False,
                                              help="Loan management disburse accounts")
     repayment_account_id = fields.Many2one('account.account',
                                              related='company_id.repayment_account_id',
                                              string="Repayment accounts",
                                              # config_parameter="advanced_loan_management.repayment_account_id",
-                                             domain="[('account_type', '=', 'asset_cash'),('company_id', '=', company_id)]",
+                                             # domain="[('account_type', '=', 'asset_cash'),('company_id', '=', company_id)]",
+                                             domain="[('company_id', '=', company_id)]",
                                              check_company=True, readonly=False,
                                              help="Loan payment account")
