@@ -59,10 +59,12 @@ class RepaymentLine(models.Model):
     def action_pay_emi(self):
         """Creates invoice for each EMI"""
         time_now = self.date
-        interest_product_id = self.env['ir.config_parameter'].sudo().get_param(
-            'advanced_loan_management.interest_product_id')
-        repayment_product_id = self.env['ir.config_parameter'].sudo().get_param(
-            'advanced_loan_management.repayment_product_id')
+        # interest_product_id = self.env['ir.config_parameter'].sudo().get_param(
+        #     'advanced_loan_management.interest_product_id')
+        interest_product_id = self.company_id.interest_product_id.id
+        # repayment_product_id = self.env['ir.config_parameter'].sudo().get_param(
+        #     'advanced_loan_management.repayment_product_id')
+        repayment_product_id = self.company_id.repayment_product_id.id
         for rec in self:
             loan_lines_ids = self.env['repayment.line'].search(
                 [('loan_id', '=', rec.loan_id.id)], order='date asc')

@@ -199,7 +199,7 @@ class LoanRequest(models.Model):
                 'credit': amount > 0.0 and amount or 0.0,
             }
             vals = {
-                'name': f'DIS / {reference}',
+                'name': f'DIS/{reference}',
                 'narration': reference,
                 'ref': reference,
                 'journal_id': journal_id,
