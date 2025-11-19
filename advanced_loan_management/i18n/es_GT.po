@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-10-29 13:30+0000\n"
-"PO-Revision-Date: 2025-10-29 13:30+0000\n"
+"POT-Creation-Date: 2025-11-19 17:55+0000\n"
+"PO-Revision-Date: 2025-11-19 17:55+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -537,7 +537,6 @@ msgid "Is Follower"
 msgstr "Es seguidor"
 
 #. module: advanced_loan_management
-#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_request__journal_id
 #: model:ir.model.fields,field_description:advanced_loan_management.field_repayment_line__journal_loan_id
 msgid "Journal"
 msgstr "Diario"
@@ -553,9 +552,19 @@ msgid "Journal Record"
 msgstr "Registro de diario"
 
 #. module: advanced_loan_management
-#: model:ir.model.fields,help:advanced_loan_management.field_loan_request__journal_id
-msgid "Journal types"
-msgstr "Tipos de diario"
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_request__journal_id
+msgid "Journal for disbursement"
+msgstr "Diario para desembolso"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,field_description:advanced_loan_management.field_loan_request__journal_pay_id
+msgid "Journal for payment"
+msgstr "Diario para pago"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,help:advanced_loan_management.field_loan_request__journal_pay_id
+msgid "Journal type for payment"
+msgstr "Tipo de diario para pago"
 
 #. module: advanced_loan_management
 #: model:ir.model.fields,field_description:advanced_loan_management.field_loan_documents__write_uid
@@ -704,6 +713,13 @@ msgid "Loan management interest accounts"
 msgstr "Cuentas de intereses de gestión de préstamos"
 
 #. module: advanced_loan_management
+#. odoo-python
+#: code:addons/advanced_loan_management/models/loan_request.py:0
+#, python-format
+msgid "Loan management parameters are missing from the company's configuration."
+msgstr "Faltan parámetros de gestión de préstamos en la configuración de la empresa."
+
+#. module: advanced_loan_management
 #: model:ir.model.fields,help:advanced_loan_management.field_res_company__repayment_account_id
 #: model:ir.model.fields,help:advanced_loan_management.field_res_config_settings__repayment_account_id
 msgid "Loan payment account"
@@ -716,6 +732,7 @@ msgstr "Rechazo de préstamo"
 
 #. module: advanced_loan_management
 #: model:ir.model.fields,help:advanced_loan_management.field_loan_request__state
+#: model:ir.model.fields,help:advanced_loan_management.field_repayment_line__loan_state
 msgid "Loan request states"
 msgstr "Estados de solicitud de préstamo"
 
@@ -723,6 +740,11 @@ msgstr "Estados de solicitud de préstamo"
 #: model:ir.ui.menu,name:advanced_loan_management.loan_management_request
 msgid "Loan requests"
 msgstr "Solicitudes de préstamo"
+
+#. module: advanced_loan_management
+#: model:ir.model.fields,field_description:advanced_loan_management.field_repayment_line__loan_state
+msgid "Loan status"
+msgstr "Estado del préstamo"
 
 #. module: advanced_loan_management
 #: model:ir.ui.menu,name:advanced_loan_management.loan_management_type
@@ -742,7 +764,7 @@ msgstr "Préstamos"
 #. module: advanced_loan_management
 #: model_terms:ir.ui.view,arch_db:advanced_loan_management.loan_report_templates2
 msgid "Logo"
-msgstr "Logo "
+msgstr "Logo"
 
 #. module: advanced_loan_management
 #: model:res.groups,name:advanced_loan_management.loan_management_group_manager
@@ -1110,6 +1132,11 @@ msgid "Total loan amount available to disburse"
 msgstr "Monto total del préstamo disponible para desembolsar"
 
 #. module: advanced_loan_management
+#: model:ir.model.fields,help:advanced_loan_management.field_loan_request__journal_id
+msgid "Types of journal entries for disbursement"
+msgstr "Tipos de diario"
+
+#. module: advanced_loan_management
 #: model:ir.model.fields.selection,name:advanced_loan_management.selection__repayment_line__state__unpaid
 msgid "Unpaid"
 msgstr "No pagado"
@@ -1156,6 +1183,13 @@ msgstr "Mensajes del sitio web"
 #: model:ir.model.fields,help:advanced_loan_management.field_loan_type__website_message_ids
 msgid "Website communication history"
 msgstr "Historial de comunicación del sitio web"
+
+#. module: advanced_loan_management
+#. odoo-python
+#: code:addons/advanced_loan_management/models/loan_request.py:0
+#, python-format
+msgid "You have not selected the payment journal"
+msgstr "No se ha seleccionado el diario de pagos."
 
 #. module: advanced_loan_management
 #: model:ir.model,name:advanced_loan_management.model_report_advanced_loan_management_loan_report_template

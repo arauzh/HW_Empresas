@@ -46,10 +46,11 @@
         <field name="priority" eval="8"/>
         <field name="arch" type="xml">
             <form string="Repayment Line" create="false">
+                <field name="loan_state" invisible="True"/>
                 <header>
                     <field name="state" widget="statusbar"
                            statusbar_visible="unpaid,paid"/>
-                    <button invisible="(invoice == True) or (state != 'unpaid')"
+                    <button invisible="(invoice == True) or (state != 'unpaid') or (loan_state != 'disbursed')"
                             name="action_pay_emi"
                             class="oe_highlight"
                             string="Pay"
@@ -58,34 +59,34 @@
                 <sheet>
                     <div class="oe_title">
                         <h1>
-                            <field name="name" style="width: 50%%;"/>
+                            <field name="name" style="width: 50%%;" readonly="True"/>
                         </h1>
                     </div>
                     <group>
                         <group>
-                            <field name="partner_id"/>
-                            <field name="loan_id"/>
+                            <field name="partner_id" readonly="True"/>
+                            <field name="loan_id" readonly="True"/>
                         </group>
                         <group>
-                            <field name="date"/>
-                            <field name="amount"/>
-                            <field name="interest_amount"/>
-                            <field name="total_amount"/>
-                            <field name="invoice" column_invisible="1"/>
+                            <field name="date" readonly="True"/>
+                            <field name="amount" readonly="True"/>
+                            <field name="interest_amount" readonly="True"/>
+                            <field name="total_amount" readonly="True"/>
+                            <field name="invoice" column_invisible="1" readonly="True"/>
                         </group>
                         <group>
-                            <field name="company_id"/>
+                            <field name="company_id" readonly="True"/>
                         </group>
                     </group>
                     <notebook>
                         <page string="Accounting">
                             <group>
                                 <group>
-                                    <field name="journal_loan_id"/>
+                                    <field name="journal_loan_id" readonly="True"/>
                                 </group>
                                 <group>
-                                    <field name="interest_account_id"/>
-                                    <field name="repayment_account_id"/>
+                                    <field name="interest_account_id" readonly="True"/>
+                                    <field name="repayment_account_id" readonly="True"/>
                                 </group>
                             </group>
                         </page>

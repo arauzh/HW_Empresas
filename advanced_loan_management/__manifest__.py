@@ -16,7 +16,7 @@
     'website': 'https://www.hw.com.gt',
     
     'category': 'Accounting',
-    'version': '17.0.3.3',
+    'version': '17.0.4.0',
     
     'depends': ['base',
                 'mail', 

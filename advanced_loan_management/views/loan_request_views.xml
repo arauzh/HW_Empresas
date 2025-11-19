@@ -165,6 +165,9 @@
                                         <field name="journal_id"
                                                required="state == 'approved'"
                                                readonly="state == 'disbursed'"/>
+                                        <field name="journal_pay_id"
+                                               required="state == 'approved'"
+                                               readonly="state == 'disbursed'"/>
                                     </group>
                                     <group>
                                         <field name="debit_account_id"

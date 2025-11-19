@@ -32,6 +32,7 @@ class RepaymentLine(models.Model):
     loan_id = fields.Many2one('loan.request', string="Loan Ref.",
                               help="Loan",
                               readonly=True)
+    loan_state = fields.Selection(string="Loan status", related='loan_id.state')
     state = fields.Selection(string="State",
                              selection=[('unpaid', 'Unpaid'),
                                         ('invoiced', 'Invoiced'),
@@ -89,6 +90,7 @@ class RepaymentLine(models.Model):
             'partner_id': self.partner_id.id,
             'currency_id': self.company_id.currency_id.id,
             'payment_reference': self.name,
+            'journal_id': self.journal_loan_id.id,
             'invoice_line_ids': [
                 (0, 0, {
                     'price_unit': self.amount,

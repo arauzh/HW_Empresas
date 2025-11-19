@@ -71,9 +71,15 @@ class LoanRequest(models.Model):
                                           string="Images",
                                           help="Image proofs")
     journal_id = fields.Many2one('account.journal',
-                                 string="Journal",
-                                 help="Journal types",
+                                 string="Journal for disbursement",
+                                 help="Types of journal entries for disbursement",
                                  domain="[('type', '=', 'purchase'),"
+                                        "('company_id', '=', company_id)]",
+                                 )
+    journal_pay_id = fields.Many2one('account.journal',
+                                 string="Journal for payment",
+                                 help="Journal type for payment",
+                                 domain="[('type', '=', 'sale'),"
                                         "('company_id', '=', company_id)]",
                                  )
     debit_account_id = fields.Many2one('account.account',
@@ -276,6 +282,11 @@ class LoanRequest(models.Model):
             """
         self.request = True
         for loan in self:
+            if not self.journal_pay_id:
+                raise UserError(_('You have not selected the payment journal'))
+            if not self.company_id.interest_account_id or not self.company_id.repayment_account_id:
+                raise UserError(_('Loan management parameters are missing from the company\'s configuration.'))
+            
             loan.repayment_lines_ids.unlink()
             self._compute_repayment_partner()
             date_start = datetime.strptime(str(loan.date),'%Y-%m-%d')
@@ -296,6 +307,7 @@ class LoanRequest(models.Model):
                     'capital_balance': amount_init - amount,
                     'interest_amount': interest_amount,
                     'total_amount': total_amount,
+                    'journal_loan_id': self.journal_pay_id.id,
                     # 'interest_account_id': self.env.ref('advanced_loan_management.'
                     #                                     'loan_management_'
                     #                                     'inrst_accounts').id,
