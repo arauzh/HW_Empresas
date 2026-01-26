@@ -2,7 +2,7 @@ from odoo import models, api, _
 
 class ReportCustomDaily(models.AbstractModel):
     _name = 'report.custom_general_ledger.template_custom_daily'
-    _description = 'Lógica del Libro Diario Resumido'
+    _description = 'Lógica del Libro Diario Resumido (Fuerza 3 Digitos)'
 
     def _get_account_data(self, date_from, date_to, target_move, company_id):
         cr = self.env.cr
@@ -22,9 +22,15 @@ class ReportCustomDaily(models.AbstractModel):
         period_data = {row[0]: {'debit': row[1], 'credit': row[2]} for row in cr.fetchall()}
 
         accounts = self.env['account.account'].search([('company_id', '=', company_id)])
-        
         all_groups = self.env['account.group'].search([('company_id', '=', company_id)])
-        groups_by_prefix = {g.code_prefix_start: g for g in all_groups if g.code_prefix_start}
+
+        # grupos
+        group_map = {}
+        for g in all_groups:
+            if g.code_prefix_start:
+                group_map[g.code_prefix_start] = g.name
+                if len(g.code_prefix_start) > 3:
+                     group_map[g.code_prefix_start[:3]] = g.name
 
         grouped_results = {}
 
@@ -35,30 +41,22 @@ class ReportCustomDaily(models.AbstractModel):
             if debit == 0 and credit == 0:
                 continue
 
-            group = account.group_id
-            
-            if not group:
-                prefix_3 = account.code[:3] 
-                prefix_2 = account.code[:2] 
-                
-                if prefix_3 in groups_by_prefix:
-                    group = groups_by_prefix[prefix_3]
-                elif prefix_2 in groups_by_prefix:
-                    group = groups_by_prefix[prefix_2]
+            # --- 3 DÍGITOS ---
+            code_key = account.code[:3] if len(account.code) >= 3 else account.code
 
-            if group:
-                key = f"group_{group.id}"
-                code = group.code_prefix_start
-                name = group.name
-            else:
-                key = f"account_{account.id}"
-                code = account.code
-                name = account.name
+            group_name = group_map.get(code_key, False)
+            if not group_name:
+                if account.group_id:
+                    group_name = account.group_id.name
+                else:
+                    group_name = f"GRUPO {code_key}"
+
+            key = f"prefix_{code_key}"
 
             if key not in grouped_results:
                 grouped_results[key] = {
-                    'code': code,
-                    'name': name,
+                    'code': code_key,
+                    'name': group_name,
                     'debit': 0.0,
                     'credit': 0.0,
                 }

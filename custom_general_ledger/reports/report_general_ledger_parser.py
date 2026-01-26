@@ -2,7 +2,7 @@ from odoo import models, api, _
 
 class ReportCustomLedger(models.AbstractModel):
     _name = 'report.custom_general_ledger.template_custom_ledger'
-    _description = 'Lógica del Reporte de Libro Mayor Agrupado'
+    _description = 'Lógica del Reporte de Libro Mayor Agrupado (Fuerza 3 Digitos)'
 
     def _get_account_data(self, date_from, date_to, target_move, company_id):
         cr = self.env.cr
@@ -11,7 +11,7 @@ class ReportCustomLedger(models.AbstractModel):
         if target_move == 'all':
             move_state = ['posted', 'draft']
             
-        # 1. Obtener Saldo Anterior
+        # 1. Consulta
         query_initial = """
             SELECT aml.account_id, SUM(aml.debit) - SUM(aml.credit) as initial_balance
             FROM account_move_line aml
@@ -22,7 +22,6 @@ class ReportCustomLedger(models.AbstractModel):
         cr.execute(query_initial, (date_from, company_id, move_state))
         initial_data = {row[0]: row[1] for row in cr.fetchall()}
 
-        # 2. Obtener Movimientos del Periodo
         query_period = """
             SELECT aml.account_id, SUM(aml.debit) as debit, SUM(aml.credit) as credit
             FROM account_move_line aml
@@ -33,12 +32,16 @@ class ReportCustomLedger(models.AbstractModel):
         cr.execute(query_period, (date_from, date_to, company_id, move_state))
         period_data = {row[0]: {'debit': row[1], 'credit': row[2]} for row in cr.fetchall()}
 
-        # 3. Consolidar y Agrupar
+        # 2. Carga de Cuentas y Grupos
         accounts = self.env['account.account'].search([('company_id', '=', company_id)])
-        
-        # Buscamos grupos que tengan código definido
         all_groups = self.env['account.group'].search([('company_id', '=', company_id)])
-        groups_by_prefix = {g.code_prefix_start: g for g in all_groups if g.code_prefix_start}
+        
+        group_map = {}
+        for g in all_groups:
+            if g.code_prefix_start:
+                group_map[g.code_prefix_start] = g.name
+                if len(g.code_prefix_start) > 3:
+                     group_map[g.code_prefix_start[:3]] = g.name
 
         grouped_results = {}
 
@@ -50,41 +53,35 @@ class ReportCustomLedger(models.AbstractModel):
             if initial == 0 and debit == 0 and credit == 0:
                 continue
 
-            group = account.group_id
-            
-            if not group:
-                prefix_3 = account.code[:3]
-                prefix_2 = account.code[:2]
-                
-                if prefix_3 in groups_by_prefix:
-                    group = groups_by_prefix[prefix_3]
-                elif prefix_2 in groups_by_prefix:
-                    group = groups_by_prefix[prefix_2]
+            code_key = account.code[:3] if len(account.code) >= 3 else account.code
 
-            if group:
-                key = f"group_{group.id}"
-                code = group.code_prefix_start
-                name = group.name
-            else:
-                key = f"account_{account.id}"
-                code = account.code
-                name = account.name
+            group_name = group_map.get(code_key, False)
+            
+            if not group_name:
+                if account.group_id:
+                    group_name = account.group_id.name
+                else:
+                    group_name = f"GRUPO {code_key}"
+
+            # Diccionario
+            key = f"prefix_{code_key}"
 
             if key not in grouped_results:
                 grouped_results[key] = {
-                    'code': code,
-                    'name': name,
+                    'code': code_key,    
+                    'name': group_name,  
                     'initial_balance': 0.0,
                     'debit': 0.0,
                     'credit': 0.0,
                     'final_balance': 0.0,
                 }
 
+            # Suma
             grouped_results[key]['initial_balance'] += initial
             grouped_results[key]['debit'] += debit
             grouped_results[key]['credit'] += credit
 
-        # 4. Calcular saldos finales y ordenar
+        # 3. Totales y Orden
         report_lines = []
         for key, values in grouped_results.items():
             values['final_balance'] = values['initial_balance'] + values['debit'] - values['credit']
