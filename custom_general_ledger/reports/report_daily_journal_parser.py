@@ -11,24 +11,21 @@ class ReportCustomDaily(models.AbstractModel):
         if target_move == 'all':
             move_state = ['posted', 'draft']
 
-        # SOLO consultamos movimientos del periodo
         query_period = """
-            SELECT 
-                aml.account_id,
-                SUM(aml.debit) as debit,
-                SUM(aml.credit) as credit
+            SELECT aml.account_id, SUM(aml.debit) as debit, SUM(aml.credit) as credit
             FROM account_move_line aml
             JOIN account_move am ON am.id = aml.move_id
-            WHERE am.date >= %s AND am.date <= %s
-            AND am.company_id = %s
-            AND am.state = ANY(%s)
+            WHERE am.date >= %s AND am.date <= %s AND am.company_id = %s AND am.state = ANY(%s)
             GROUP BY aml.account_id
         """
         cr.execute(query_period, (date_from, date_to, company_id, move_state))
         period_data = {row[0]: {'debit': row[1], 'credit': row[2]} for row in cr.fetchall()}
 
-        # Agrupación por Cuentas / Grupos
         accounts = self.env['account.account'].search([('company_id', '=', company_id)])
+        
+        all_groups = self.env['account.group'].search([('company_id', '=', company_id)])
+        groups_by_prefix = {g.code_prefix_start: g for g in all_groups if g.code_prefix_start}
+
         grouped_results = {}
 
         for account in accounts:
@@ -38,8 +35,17 @@ class ReportCustomDaily(models.AbstractModel):
             if debit == 0 and credit == 0:
                 continue
 
-            # Lógica de grupos (igual al mayor)
             group = account.group_id
+            
+            if not group:
+                prefix_3 = account.code[:3] 
+                prefix_2 = account.code[:2] 
+                
+                if prefix_3 in groups_by_prefix:
+                    group = groups_by_prefix[prefix_3]
+                elif prefix_2 in groups_by_prefix:
+                    group = groups_by_prefix[prefix_2]
+
             if group:
                 key = f"group_{group.id}"
                 code = group.code_prefix_start
