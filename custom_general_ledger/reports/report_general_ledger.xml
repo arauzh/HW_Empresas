@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_custom_ledger" model="ir.actions.report">
+        <field name="name">Libro Mayor</field>
+        <field name="model">custom.ledger.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">custom_general_ledger.template_custom_ledger</field>
+        <field name="report_file">custom_general_ledger.template_custom_ledger</field>
+        <field name="binding_model_id" ref="model_custom_ledger_wizard"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="base.paperformat_euro"/>
+    </record>
+
+    <template id="template_custom_ledger">
+        <t t-call="web.html_container">
+            <t t-call="web.basic_layout">
+                
+                <div class="header">
+                    <div class="row">
+                        <div class="col-8 text-start" style="font-size: 14px; font-family: Helvetica, Arial, sans-serif;">
+                            <div class="fw-bold" style="font-size: 16px;">
+                                <span t-field="company.name"/>
+                            </div>
+                            <div>
+                                <strong>NIT:</strong> <span t-field="company.vat"/>
+                            </div>
+                            <div class="fw-bold mt-1">
+                                LIBRO MAYOR AUTORIZADO
+                            </div>
+                            <div>
+                                Del <span t-esc="data['date_from']" t-options='{"widget": "date"}'/> 
+                                al <span t-esc="data['date_to']" t-options='{"widget": "date"}'/>
+                            </div>
+                        </div>
+
+                        <div class="col-4 text-end" style="font-size: 14px; font-family: Helvetica, Arial, sans-serif;">
+                            <t t-if="data.get('folio')">
+                                <div class="fw-bold" style="font-size: 16px;">
+                                    FOLIO: <span t-esc="data['folio']"/>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+                    <hr style="border-top: 2px solid black; margin-top: 5px; margin-bottom: 10px;"/>
+                </div>
+
+                <div class="footer">
+                    <div class="text-end" style="font-size: 10px;">
+                        Página <span class="page"/> de <span class="topage"/>
+                    </div>
+                </div>
+
+                <div class="page">
+                    <style>
+                        table { font-size: 12px; }
+                    </style>
+
+                    <table class="table table-sm table-bordered mt-4">
+                        <thead>
+                            <tr class="table-active">
+                                <th>Código</th>
+                                <th>Descripción</th>
+                                <th class="text-end">Saldo Anterior</th>
+                                <th class="text-end">Débitos</th>
+                                <th class="text-end">Créditos</th>
+                                <th class="text-end">Saldo Final</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-set="total_initial" t-value="0"/>
+                            <t t-set="total_debit" t-value="0"/>
+                            <t t-set="total_credit" t-value="0"/>
+                            <t t-set="total_final" t-value="0"/>
+
+                            <tr t-foreach="lines" t-as="line">
+                                <td><span t-esc="line['code']"/></td>
+                                <td><span t-esc="line['name']"/></td>
+                                
+                                <td class="text-end">
+                                    <t t-if="line['initial_balance'] &lt; 0">
+                                        (<span t-esc="line['initial_balance'] * -1" t-options='{"widget": "monetary", "display_currency": company.currency_id}'/>)
+                                    </t>
+                                    <t t-else="">
+                                        <span t-esc="line['initial_balance']" t-options='{"widget": "monetary", "display_currency": company.currency_id}'/>
+                                    </t>
+                                </td>
+                                <td class="text-end">
+                                    <span t-esc="line['debit']" t-options='{"widget": "monetary", "display_currency": company.currency_id}'/>
+                                </td>
+                                <td class="text-end">
+                                    <span t-esc="line['credit']" t-options='{"widget": "monetary", "display_currency": company.currency_id}'/>
+                                </td>
+                                <td class="text-end">
+                                    <t t-if="line['final_balance'] &lt; 0">
+                                        (<span t-esc="line['final_balance'] * -1" t-options='{"widget": "monetary", "display_currency": company.currency_id}'/>)
+                                    </t>
+                                    <t t-else="">
+                                        <span t-esc="line['final_balance']" t-options='{"widget": "monetary", "display_currency": company.currency_id}'/>
+                                    </t>
+                                </td>
+
+                                <t t-set="total_initial" t-value="total_initial + line['initial_balance']"/>
+                                <t t-set="total_debit" t-value="total_debit + line['debit']"/>
+                                <t t-set="total_credit" t-value="total_credit + line['credit']"/>
+                                <t t-set="total_final" t-value="total_final + line['final_balance']"/>
+                            </tr>
+                            
+                            <tr class="fw-bold table-active" style="border-top: 2px solid black;">
+                                <td colspan="2" class="text-end">TOTALES:</td>
+                                <td class="text-end">
+                                    <t t-if="total_initial &lt; 0">
+                                        (<span t-esc="total_initial * -1" t-options='{"widget": "monetary", "display_currency": company.currency_id}'/>)
+                                    </t>
+                                    <t t-else="">
+                                        <span t-esc="total_initial" t-options='{"widget": "monetary", "display_currency": company.currency_id}'/>
+                                    </t>
+                                </td>
+                                <td class="text-end">
+                                    <span t-esc="total_debit" t-options='{"widget": "monetary", "display_currency": company.currency_id}'/>
+                                </td>
+                                <td class="text-end">
+                                    <span t-esc="total_credit" t-options='{"widget": "monetary", "display_currency": company.currency_id}'/>
+                                </td>
+                                <td class="text-end">
+                                    <t t-if="total_final &lt; 0">
+                                        (<span t-esc="total_final * -1" t-options='{"widget": "monetary", "display_currency": company.currency_id}'/>)
+                                    </t>
+                                    <t t-else="">
+                                        <span t-esc="total_final" t-options='{"widget": "monetary", "display_currency": company.currency_id}'/>
+                                    </t>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

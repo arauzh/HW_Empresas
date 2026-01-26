@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_custom_ledger_wizard_form" model="ir.ui.view">
+        <field name="name">custom.ledger.wizard.form</field>
+        <field name="model">custom.ledger.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Libro Mayor Personalizado">
+                <group>
+                    <group>
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                    </group>
+                    <group>
+                        <field name="target_move" widget="radio"/>
+                        <field name="folio" placeholder="Ej: 001-2024"/> <field name="company_id" invisible="1"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="action_print_report" string="Exportar PDF" type="object" class="btn-primary"/>
+                    <button string="Cancelar" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="action_custom_ledger_wizard" model="ir.actions.act_window">
+        <field name="name">Libro Mayor</field>
+        <field name="res_model">custom.ledger.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_report_control_root"
+          name="Libros Autorizados"
+          parent="account.menu_finance_reports"
+          sequence="40"/>
+    
+    <menuitem id="menu_custom_ledger_report"
+              name="Libro Mayor"
+              parent="menu_report_control_root"
+              action="action_custom_ledger_wizard"
+              sequence="20"/>
+</odoo>
