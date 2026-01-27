@@ -36,12 +36,10 @@ class ReportCustomLedger(models.AbstractModel):
         accounts = self.env['account.account'].search([('company_id', '=', company_id)])
         all_groups = self.env['account.group'].search([('company_id', '=', company_id)])
         
-        group_map = {}
+        group_names = {}
         for g in all_groups:
             if g.code_prefix_start:
-                group_map[g.code_prefix_start] = g.name
-                if len(g.code_prefix_start) > 3:
-                     group_map[g.code_prefix_start[:3]] = g.name
+                group_names[g.code_prefix_start] = g.name
 
         grouped_results = {}
 
@@ -53,33 +51,26 @@ class ReportCustomLedger(models.AbstractModel):
             if initial == 0 and debit == 0 and credit == 0:
                 continue
 
+            # Determinamos el prefijo (3 dígitos)
             code_key = account.code[:3] if len(account.code) >= 3 else account.code
 
-            group_name = group_map.get(code_key, False)
-            
-            if not group_name:
-                if account.group_id:
-                    group_name = account.group_id.name
-                else:
-                    group_name = f"GRUPO {code_key}"
-
-            # Diccionario
-            key = f"prefix_{code_key}"
-
-            if key not in grouped_results:
-                grouped_results[key] = {
-                    'code': code_key,    
-                    'name': group_name,  
+            # SI EL GRUPO YA EXISTE EN EL DICCIONARIO, NO CAMBIAMOS EL NOMBRE
+            if code_key not in grouped_results:
+                name_to_use = group_names.get(code_key) or (account.group_id.name if account.group_id else f"GRUPO {code_key}")
+                
+                grouped_results[code_key] = {
+                    'code': code_key,
+                    'name': name_to_use,
                     'initial_balance': 0.0,
                     'debit': 0.0,
                     'credit': 0.0,
                     'final_balance': 0.0,
                 }
 
-            # Suma
-            grouped_results[key]['initial_balance'] += initial
-            grouped_results[key]['debit'] += debit
-            grouped_results[key]['credit'] += credit
+            # Sumamos los valores (el nombre ya no se toca)
+            grouped_results[code_key]['initial_balance'] += initial
+            grouped_results[code_key]['debit'] += debit
+            grouped_results[code_key]['credit'] += credit
 
         # 3. Totales y Orden
         report_lines = []

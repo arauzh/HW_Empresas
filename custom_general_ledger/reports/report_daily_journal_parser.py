@@ -24,13 +24,11 @@ class ReportCustomDaily(models.AbstractModel):
         accounts = self.env['account.account'].search([('company_id', '=', company_id)])
         all_groups = self.env['account.group'].search([('company_id', '=', company_id)])
 
-        # grupos
-        group_map = {}
+        # Mapa de nombres de grupos
+        group_names = {}
         for g in all_groups:
             if g.code_prefix_start:
-                group_map[g.code_prefix_start] = g.name
-                if len(g.code_prefix_start) > 3:
-                     group_map[g.code_prefix_start[:3]] = g.name
+                group_names[g.code_prefix_start] = g.name
 
         grouped_results = {}
 
@@ -41,28 +39,22 @@ class ReportCustomDaily(models.AbstractModel):
             if debit == 0 and credit == 0:
                 continue
 
-            # --- 3 DÍGITOS ---
             code_key = account.code[:3] if len(account.code) >= 3 else account.code
 
-            group_name = group_map.get(code_key, False)
-            if not group_name:
-                if account.group_id:
-                    group_name = account.group_id.name
-                else:
-                    group_name = f"GRUPO {code_key}"
-
-            key = f"prefix_{code_key}"
-
-            if key not in grouped_results:
-                grouped_results[key] = {
+            if code_key not in grouped_results:
+                # Buscamos el nombre correcto una sola vez
+                name_to_use = group_names.get(code_key) or (account.group_id.name if account.group_id else f"GRUPO {code_key}")
+                
+                grouped_results[code_key] = {
                     'code': code_key,
-                    'name': group_name,
+                    'name': name_to_use,
                     'debit': 0.0,
                     'credit': 0.0,
                 }
 
-            grouped_results[key]['debit'] += debit
-            grouped_results[key]['credit'] += credit
+            # Acumulamos montos
+            grouped_results[code_key]['debit'] += debit
+            grouped_results[code_key]['credit'] += credit
 
         report_lines = list(grouped_results.values())
         report_lines.sort(key=lambda x: x['code'] or '')
