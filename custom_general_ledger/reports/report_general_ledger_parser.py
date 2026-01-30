@@ -49,12 +49,6 @@ class ReportCustomLedger(models.AbstractModel):
             raw_initial = initial_data.get(account.id, 0.0)
             raw_debit = period_data.get(account.id, {}).get('debit', 0.0)
             raw_credit = period_data.get(account.id, {}).get('credit', 0.0)
-
-            # --- CORRECCIÓN: CUENTAS DE RESULTADOS (P&L) ---
-            # Si la cuenta es de Ingresos o Gastos, su saldo inicial 
-            # no se arrastra de años anteriores (se reinicia).
-            # 'equity': Capital, 'asset': Activos, 'liability': Pasivos -> SÍ arrastran
-            # 'income': Ingresos, 'expense': Gastos -> NO arrastran (Initial = 0)
             
             if account.internal_group in ['income', 'expense']:
                 initial = 0.0
@@ -64,9 +58,6 @@ class ReportCustomLedger(models.AbstractModel):
             debit = currency.round(raw_debit) if raw_debit else 0.0
             credit = currency.round(raw_credit) if raw_credit else 0.0
 
-            # --- FILTRO: SI NO SE MOVIÓ EN ESTE PERIODO, ADIÓS ---
-            # Como ahora initial es 0 para las cuentas viejas de gastos,
-            # si no tienen movimientos en 2026, entrarán aquí y se ocultarán.
             if debit == 0 and credit == 0:
                 continue
 
