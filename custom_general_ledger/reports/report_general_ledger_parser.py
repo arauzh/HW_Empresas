@@ -6,6 +6,8 @@ class ReportCustomLedger(models.AbstractModel):
 
     def _get_account_data(self, date_from, date_to, target_move, company_id):
         cr = self.env.cr
+        company = self.env['res.company'].browse(company_id)
+        currency = company.currency_id
         
         move_state = ['posted']
         if target_move == 'all':
@@ -44,11 +46,28 @@ class ReportCustomLedger(models.AbstractModel):
         grouped_results = {}
 
         for account in accounts:
-            initial = initial_data.get(account.id, 0.0)
-            debit = period_data.get(account.id, {}).get('debit', 0.0)
-            credit = period_data.get(account.id, {}).get('credit', 0.0)
+            raw_initial = initial_data.get(account.id, 0.0)
+            raw_debit = period_data.get(account.id, {}).get('debit', 0.0)
+            raw_credit = period_data.get(account.id, {}).get('credit', 0.0)
 
-            if initial == 0 and debit == 0 and credit == 0:
+            # --- CORRECCIÓN: CUENTAS DE RESULTADOS (P&L) ---
+            # Si la cuenta es de Ingresos o Gastos, su saldo inicial 
+            # no se arrastra de años anteriores (se reinicia).
+            # 'equity': Capital, 'asset': Activos, 'liability': Pasivos -> SÍ arrastran
+            # 'income': Ingresos, 'expense': Gastos -> NO arrastran (Initial = 0)
+            
+            if account.internal_group in ['income', 'expense']:
+                initial = 0.0
+            else:
+                initial = currency.round(raw_initial) if raw_initial else 0.0
+
+            debit = currency.round(raw_debit) if raw_debit else 0.0
+            credit = currency.round(raw_credit) if raw_credit else 0.0
+
+            # --- FILTRO: SI NO SE MOVIÓ EN ESTE PERIODO, ADIÓS ---
+            # Como ahora initial es 0 para las cuentas viejas de gastos,
+            # si no tienen movimientos en 2026, entrarán aquí y se ocultarán.
+            if debit == 0 and credit == 0:
                 continue
 
             # Determinamos el prefijo (3 dígitos)
