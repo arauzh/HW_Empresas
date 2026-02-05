@@ -6,14 +6,12 @@ class ReportCustomLedger(models.AbstractModel):
 
     def _get_account_data(self, date_from, date_to, target_move, company_id):
         cr = self.env.cr
-        company = self.env['res.company'].browse(company_id)
-        currency = company.currency_id
         
         move_state = ['posted']
         if target_move == 'all':
             move_state = ['posted', 'draft']
             
-        # 1. Consulta
+        # 1. Consulta Saldo Inicial
         query_initial = """
             SELECT aml.account_id, SUM(aml.debit) - SUM(aml.credit) as initial_balance
             FROM account_move_line aml
@@ -24,6 +22,7 @@ class ReportCustomLedger(models.AbstractModel):
         cr.execute(query_initial, (date_from, company_id, move_state))
         initial_data = {row[0]: row[1] for row in cr.fetchall()}
 
+        # 2. Consulta Movimientos del Periodo
         query_period = """
             SELECT aml.account_id, SUM(aml.debit) as debit, SUM(aml.credit) as credit
             FROM account_move_line aml
@@ -34,7 +33,7 @@ class ReportCustomLedger(models.AbstractModel):
         cr.execute(query_period, (date_from, date_to, company_id, move_state))
         period_data = {row[0]: {'debit': row[1], 'credit': row[2]} for row in cr.fetchall()}
 
-        # 2. Carga de Cuentas y Grupos
+        # 3. Carga de Cuentas y Grupos
         accounts = self.env['account.account'].search([('company_id', '=', company_id)])
         all_groups = self.env['account.group'].search([('company_id', '=', company_id)])
         
@@ -46,25 +45,15 @@ class ReportCustomLedger(models.AbstractModel):
         grouped_results = {}
 
         for account in accounts:
-            raw_initial = initial_data.get(account.id, 0.0)
-            raw_debit = period_data.get(account.id, {}).get('debit', 0.0)
-            raw_credit = period_data.get(account.id, {}).get('credit', 0.0)
-            
-            if account.internal_group in ['income', 'expense']:
-                initial = 0.0
-            else:
-                initial = currency.round(raw_initial) if raw_initial else 0.0
+            initial = initial_data.get(account.id, 0.0) or 0.0
+            debit = period_data.get(account.id, {}).get('debit', 0.0) or 0.0
+            credit = period_data.get(account.id, {}).get('credit', 0.0) or 0.0
 
-            debit = currency.round(raw_debit) if raw_debit else 0.0
-            credit = currency.round(raw_credit) if raw_credit else 0.0
-
-            if debit == 0 and credit == 0:
+            if initial == 0 and debit == 0 and credit == 0:
                 continue
 
-            # Determinamos el prefijo (3 dígitos)
             code_key = account.code[:3] if len(account.code) >= 3 else account.code
 
-            # SI EL GRUPO YA EXISTE EN EL DICCIONARIO, NO CAMBIAMOS EL NOMBRE
             if code_key not in grouped_results:
                 name_to_use = group_names.get(code_key) or (account.group_id.name if account.group_id else f"GRUPO {code_key}")
                 
@@ -77,12 +66,11 @@ class ReportCustomLedger(models.AbstractModel):
                     'final_balance': 0.0,
                 }
 
-            # Sumamos los valores (el nombre ya no se toca)
             grouped_results[code_key]['initial_balance'] += initial
             grouped_results[code_key]['debit'] += debit
             grouped_results[code_key]['credit'] += credit
 
-        # 3. Totales y Orden
+        # 4. Totales y Orden
         report_lines = []
         for key, values in grouped_results.items():
             values['final_balance'] = values['initial_balance'] + values['debit'] - values['credit']
