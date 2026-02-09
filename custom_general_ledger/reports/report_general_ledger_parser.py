@@ -11,57 +11,67 @@ class ReportCustomLedger(models.AbstractModel):
         if target_move == 'all':
             move_state = ['posted', 'draft']
             
-        # 1. Consulta Saldo Inicial
+        # 1. CONSULTA SALDO INICIAL
         query_initial = """
             SELECT
                 aml.account_id,
                 SUM(aml.debit - aml.credit) AS initial_balance
             FROM account_move_line aml
+            JOIN account_move am ON am.id = aml.move_id
             WHERE aml.date < %s
             AND aml.company_id = %s
-            AND aml.parent_state = ANY(%s)
-            AND aml.display_type IN ('product', 'tax', 'payment_term')
+            AND am.state = ANY(%s)
             GROUP BY aml.account_id
         """
         cr.execute(query_initial, (date_from, company_id, move_state))
         initial_data = {row[0]: row[1] for row in cr.fetchall()}
 
-        # 2. Consulta Movimientos del Periodo
+        # 2. CONSULTA MOVIMIENTOS DEL PERIODO
         query_period = """
             SELECT
                 aml.account_id,
                 SUM(aml.debit) AS debit,
                 SUM(aml.credit) AS credit
             FROM account_move_line aml
+            JOIN account_move am ON am.id = aml.move_id
             WHERE aml.date >= %s
             AND aml.date <= %s
             AND aml.company_id = %s
-            AND aml.parent_state = ANY(%s)
-            AND aml.display_type IN ('product', 'tax', 'payment_term')
+            AND am.state = ANY(%s)
             GROUP BY aml.account_id
         """
         cr.execute(query_period, (date_from, date_to, company_id, move_state))
         period_data = {row[0]: {'debit': row[1], 'credit': row[2]} for row in cr.fetchall()}
 
-        # 3. Carga de Cuentas y Grupos
-        accounts = self.env['account.account'].search([('company_id', '=', company_id)])
-        all_groups = self.env['account.group'].search([('company_id', '=', company_id)])
+        # 3. CARGA DE CUENTAS
+        # Filtramos solo cuentas activas
+        accounts = self.env['account.account'].search([
+            ('company_id', '=', company_id),
+            ('deprecated', '=', False) 
+        ])
         
-        group_names = {}
-        for g in all_groups:
-            if g.code_prefix_start:
-                group_names[g.code_prefix_start] = g.name
+        all_groups = self.env['account.group'].search([('company_id', '=', company_id)])
+        group_names = {g.code_prefix_start: g.name for g in all_groups if g.code_prefix_start}
 
         grouped_results = {}
 
         for account in accounts:
-            initial = initial_data.get(account.id, 0.0) or 0.0
+            raw_initial = initial_data.get(account.id, 0.0) or 0.0
             debit = period_data.get(account.id, {}).get('debit', 0.0) or 0.0
             credit = period_data.get(account.id, {}).get('credit', 0.0) or 0.0
+
+            is_pnl = account.internal_group in ['income', 'expense']
+
+            if is_pnl:
+                initial = 0.0
+            else:
+                # Si es Activo/Pasivo/Capital, respetamos el saldo histórico
+                initial = raw_initial
 
             if initial == 0 and debit == 0 and credit == 0:
                 continue
 
+            # --- AGRUPACIÓN ---
             code_key = account.code[:3] if len(account.code) >= 3 else account.code
 
             if code_key not in grouped_results:
@@ -80,7 +90,7 @@ class ReportCustomLedger(models.AbstractModel):
             grouped_results[code_key]['debit'] += debit
             grouped_results[code_key]['credit'] += credit
 
-        # 4. Totales y Orden
+        # 4. TOTALES
         report_lines = []
         for key, values in grouped_results.items():
             values['final_balance'] = values['initial_balance'] + values['debit'] - values['credit']
