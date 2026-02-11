@@ -42,7 +42,7 @@ class ReportCustomDaily(models.AbstractModel):
             code_key = account.code[:3] if len(account.code) >= 3 else account.code
 
             if code_key not in grouped_results:
-                # Buscamos el nombre correcto una sola vez
+                # Se busca el nombre de la cuenta
                 name_to_use = group_names.get(code_key) or (account.group_id.name if account.group_id else f"GRUPO {code_key}")
                 
                 grouped_results[code_key] = {
@@ -52,7 +52,7 @@ class ReportCustomDaily(models.AbstractModel):
                     'credit': 0.0,
                 }
 
-            # Acumulamos montos
+            # Sumamos montos
             grouped_results[code_key]['debit'] += debit
             grouped_results[code_key]['credit'] += credit
 
