@@ -51,7 +51,7 @@
                 </div>
 
                 <div class="page">
-                    <style>table { font-size: 14px; }</style>
+                    <style>table { font-size: 12px; }</style>
 
                     <table class="table table-sm table-bordered mt-4">
                         <thead>
