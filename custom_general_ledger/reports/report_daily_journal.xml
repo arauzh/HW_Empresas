@@ -35,7 +35,10 @@
                             <div class="fw-bold" style="font-size: 16px;"><span t-field="company.name"/></div>
                             <div><strong>NIT:</strong> <span t-field="company.vat"/></div>
                             <div class="fw-bold mt-1">LIBRO DIARIO AUTORIZADO</div>
-                            <div>Del <span t-esc="data['date_from']"/> al <span t-esc="data['date_to']"/></div>
+                            <div>
+                                Del <span t-esc="data['date_from']" t-options='{"widget": "date"}'/> 
+                                al <span t-esc="data['date_to']" t-options='{"widget": "date"}'/>
+                            </div>
                         </div>
                         <div class="col-4 text-end" style="font-size: 14px; font-family: Helvetica, Arial, sans-serif;">
                             <t t-if="data.get('folio')">
