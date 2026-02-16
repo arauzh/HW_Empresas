@@ -1,6 +1,6 @@
 {
     'name': 'Reporte Libro Mayor, Diario Personalizado',
-    'version': '17.0.0.0',
+    'version': '17.0.0.1',
     'category': 'Accounting/Reporting',
     'summary': 'Reporte de Libro Mayor y Diario con estructura personalizada',
     'author': 'HW Constructor',
