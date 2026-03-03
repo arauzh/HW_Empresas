@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="approval_budget_category_view_form_inherit" model="ir.ui.view">
+        <field name="name">approval.budget.category.view.form.inherit</field>
+        <field name="model">approval.category</field>
+        <field name="inherit_id" ref="approvals.approval_category_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/sheet/notebook/page[@name='options']/group/group[1]/field[@name='has_location']" position="after">
+                <field name="has_budget" string="Budget" widget="radio" options="{'horizontal': true}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
