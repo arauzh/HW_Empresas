@@ -7,7 +7,10 @@ class ApprovalRequest(models.Model):
     _name = 'approval.budget'
     _description = 'Approval budget'
     _check_company_auto = True
+    _order = "sequence, id"
     
+    sequence = fields.Integer(default=10, index=True)
+    name = fields.Char('Description')
     approval_request_id = fields.Many2one('approval.request', required=True, ondelete='cascade')
     company_id = fields.Many2one('res.company', string='Company', store=True, index=True, default=lambda s: s.env.company)
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id', store=True)
@@ -17,8 +20,26 @@ class ApprovalRequest(models.Model):
     date_from = fields.Date('Start Date', required=True)
     date_to = fields.Date('End Date', required=True)
     planned_amount = fields.Monetary(
-        'Planned Amount', required=True,
+        'Planned Amount', required=True, default=0.0,
         help="Amount you plan to earn/spend. Record a positive amount if it is a revenue and a negative amount if it is a cost.")
+    display_type = fields.Selection([
+        ('line_section', 'Section'),
+        ('line_note', 'Note'),
+    ], default=False)
+    # Campo para mostrar el subtotal de la sección
+    planned_subtotal = fields.Monetary(
+        string='Planned subtotal',
+        currency_field='currency_id',
+        store=False,
+    )
+    executed_amount = fields.Monetary(
+        'Executed amount', required=True, default=0.0,
+        help="Amount executed. Record a positive amount if it is income and a negative amount if it is a cost.")
+    executed_subtotal = fields.Monetary(
+        string='Executed subtotal',
+        currency_field='currency_id',
+        store=False,
+    )
 
     @api.onchange('approval_request_id')
     def _onchange_approval_request_id(self):

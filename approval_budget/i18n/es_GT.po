@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-03 14:15+0000\n"
-"PO-Revision-Date: 2026-03-03 14:15+0000\n"
+"POT-Creation-Date: 2026-03-05 14:52+0000\n"
+"PO-Revision-Date: 2026-03-05 14:52+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -18,7 +18,26 @@ msgstr ""
 #. module: approval_budget
 #: model:ir.module.module,shortdesc:base.module_approval_budget
 msgid "Approval budget"
-msgstr "Aprobación de presupuesto"
+msgstr "Aprobación - Presupuesto"
+
+#. module: approval_budget
+#: model_terms:ir.ui.view,arch_db:approval_budget.approval_budget_request_view_form_inherit
+msgid "Add line"
+msgstr "Agregar línea"
+
+#. module: approval_budget
+#: model_terms:ir.ui.view,arch_db:approval_budget.approval_budget_request_view_form_inherit
+msgid "Add section"
+msgstr "Agregar sección"
+
+#. module: approval_budget
+#: model:ir.model.fields,help:approval_budget.field_approval_budget__executed_amount
+msgid ""
+"Amount executed. Record a positive amount if it is income and a negative "
+"amount if it is a cost."
+msgstr ""
+"Importe ejecutado. Registre un importe positivo si se trata de un ingreso y "
+"un importe negativo si se trata de un coste."
 
 #. module: approval_budget
 #: model:ir.model.fields,help:approval_budget.field_approval_budget__planned_amount
@@ -26,8 +45,8 @@ msgid ""
 "Amount you plan to earn/spend. Record a positive amount if it is a revenue "
 "and a negative amount if it is a cost."
 msgstr ""
-"Cantidad que planea ganar/gastar. Registre una cantidad positiva si se trata de un ingreso "
-"y una cantidad negativa si se trata de un costo."
+"Monto que planea ganar/gastar. Registre una monto positivo si se trata de un"
+" ingreso y una monto negativo si se trata de un costo."
 
 #. module: approval_budget
 #: model:ir.model.fields,field_description:approval_budget.field_approval_budget__analytic_account_id
@@ -68,8 +87,8 @@ msgid ""
 "Before adding budget lines, you must define the 'From' and 'To' dates in the"
 " approval request."
 msgstr ""
-"Antes de agregar líneas presupuestarias, debe definir las fechas de inicio y fin en la"
-" solicitud de aprobación."
+"Antes de agregar líneas presupuestarias, debe definir las fechas de inicio y"
+" fin en la solicitud de aprobación."
 
 #. module: approval_budget
 #: model_terms:ir.ui.view,arch_db:approval_budget.approval_budget_category_view_form_inherit
@@ -100,8 +119,9 @@ msgid ""
 "Configuration error: If budgeting is enabled (as optional or required), the "
 "Period field MUST be set to 'Required'."
 msgstr ""
-"Error de configuración: Si la Opción de presupuesto está habilitada (como Opcional o Requerido), el "
-"campo \"Período\" DEBE estar configurado como \"Requerido\"."
+"Error de configuración: Si la Opción de presupuesto está habilitada (como "
+"Opcional o Requerido), el campo \"Período\" DEBE estar configurado como "
+"\"Requerido\"."
 
 #. module: approval_budget
 #: model:ir.model.fields,field_description:approval_budget.field_approval_budget__create_uid
@@ -115,8 +135,14 @@ msgstr "Creado el"
 
 #. module: approval_budget
 #: model:ir.model.fields,field_description:approval_budget.field_approval_budget__currency_id
+#: model:ir.model.fields,field_description:approval_budget.field_approval_request__currency_id
 msgid "Currency"
 msgstr "Moneda"
+
+#. module: approval_budget
+#: model:ir.model.fields,field_description:approval_budget.field_approval_budget__name
+msgid "Description"
+msgstr "Descripción"
 
 #. module: approval_budget
 #: model:ir.model.fields,field_description:approval_budget.field_approval_budget__display_name
@@ -124,9 +150,25 @@ msgid "Display Name"
 msgstr "Nombre para mostrar"
 
 #. module: approval_budget
+#: model:ir.model.fields,field_description:approval_budget.field_approval_budget__display_type
+msgid "Display Type"
+msgstr "Tipo de pantalla"
+
+#. module: approval_budget
 #: model:ir.model.fields,field_description:approval_budget.field_approval_budget__date_to
 msgid "End Date"
 msgstr "Fecha de finalización"
+
+#. module: approval_budget
+#: model:ir.model.fields,field_description:approval_budget.field_approval_budget__executed_amount
+#: model_terms:ir.ui.view,arch_db:approval_budget.approval_budget_request_view_form_inherit
+msgid "Executed amount"
+msgstr "Monto ejecutado"
+
+#. module: approval_budget
+#: model:ir.model.fields,field_description:approval_budget.field_approval_budget__executed_subtotal
+msgid "Executed subtotal"
+msgstr "Subtotal ejecutado"
 
 #. module: approval_budget
 #: model:ir.model.fields,field_description:approval_budget.field_approval_category__has_budget
@@ -137,7 +179,7 @@ msgstr "Tiene presupuesto"
 #. module: approval_budget
 #: model:ir.model.fields,field_description:approval_budget.field_approval_budget__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: approval_budget
 #: model:ir.model.fields,field_description:approval_budget.field_approval_budget__write_uid
@@ -155,6 +197,11 @@ msgid "None"
 msgstr "NO"
 
 #. module: approval_budget
+#: model:ir.model.fields.selection,name:approval_budget.selection__approval_budget__display_type__line_note
+msgid "Note"
+msgstr "Nota"
+
+#. module: approval_budget
 #: model:ir.model.fields.selection,name:approval_budget.selection__approval_category__has_budget__optional
 msgid "Optional"
 msgstr "Opcional"
@@ -163,7 +210,17 @@ msgstr "Opcional"
 #: model:ir.model.fields,field_description:approval_budget.field_approval_budget__planned_amount
 #: model_terms:ir.ui.view,arch_db:approval_budget.approval_budget_request_view_form_inherit
 msgid "Planned Amount"
-msgstr "Cantidad planificada"
+msgstr "Monto planificado"
+
+#. module: approval_budget
+#: model:ir.model.fields,field_description:approval_budget.field_approval_budget__planned_subtotal
+msgid "Planned subtotal"
+msgstr "Subtotal planificado"
+
+#. module: approval_budget
+#: model:ir.model.fields,field_description:approval_budget.field_approval_request__planned_total
+msgid "Planned total"
+msgstr "Total planificado"
 
 #. module: approval_budget
 #: model:ir.model.fields.selection,name:approval_budget.selection__approval_category__has_budget__required
@@ -171,6 +228,21 @@ msgid "Required"
 msgstr "Requerido"
 
 #. module: approval_budget
+#: model:ir.model.fields.selection,name:approval_budget.selection__approval_budget__display_type__line_section
+msgid "Section"
+msgstr "Sección"
+
+#. module: approval_budget
+#: model:ir.model.fields,field_description:approval_budget.field_approval_budget__sequence
+msgid "Sequence"
+msgstr "Secuencia"
+
+#. module: approval_budget
 #: model:ir.model.fields,field_description:approval_budget.field_approval_budget__date_from
 msgid "Start Date"
 msgstr "Fecha de inicio"
+
+#. module: approval_budget
+#: model:ir.model.fields,field_description:approval_budget.field_approval_request__total_executed
+msgid "Total executed"
+msgstr "Total ejecutado"
