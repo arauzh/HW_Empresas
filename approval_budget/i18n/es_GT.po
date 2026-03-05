@@ -210,17 +210,17 @@ msgstr "Opcional"
 #: model:ir.model.fields,field_description:approval_budget.field_approval_budget__planned_amount
 #: model_terms:ir.ui.view,arch_db:approval_budget.approval_budget_request_view_form_inherit
 msgid "Planned Amount"
-msgstr "Monto planificado"
+msgstr "Monto presupuestado"
 
 #. module: approval_budget
 #: model:ir.model.fields,field_description:approval_budget.field_approval_budget__planned_subtotal
 msgid "Planned subtotal"
-msgstr "Subtotal planificado"
+msgstr "Subtotal presupuestado"
 
 #. module: approval_budget
 #: model:ir.model.fields,field_description:approval_budget.field_approval_request__planned_total
 msgid "Planned total"
-msgstr "Total planificado"
+msgstr "Total presupuestado"
 
 #. module: approval_budget
 #: model:ir.model.fields.selection,name:approval_budget.selection__approval_category__has_budget__required
