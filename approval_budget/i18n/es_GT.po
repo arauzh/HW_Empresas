@@ -142,7 +142,7 @@ msgstr "Moneda"
 #. module: approval_budget
 #: model:ir.model.fields,field_description:approval_budget.field_approval_budget__name
 msgid "Description"
-msgstr "Descripción"
+msgstr "Observación"
 
 #. module: approval_budget
 #: model:ir.model.fields,field_description:approval_budget.field_approval_budget__display_name
@@ -220,7 +220,7 @@ msgstr "Subtotal presupuestado"
 #. module: approval_budget
 #: model:ir.model.fields,field_description:approval_budget.field_approval_request__planned_total
 msgid "Planned total"
-msgstr "Total presupuestado"
+msgstr "Saldo presupuestado"
 
 #. module: approval_budget
 #: model:ir.model.fields.selection,name:approval_budget.selection__approval_category__has_budget__required
@@ -245,4 +245,4 @@ msgstr "Fecha de inicio"
 #. module: approval_budget
 #: model:ir.model.fields,field_description:approval_budget.field_approval_request__total_executed
 msgid "Total executed"
-msgstr "Total ejecutado"
+msgstr "Saldo ejecutado"
