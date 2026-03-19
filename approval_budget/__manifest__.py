@@ -17,7 +17,7 @@ Additional module for budget approval
     # Check https://github.com/odoo/odoo/blob/15.0/odoo/addons/base/data/ir_module_category_data.xml
     # for the full list
     'category': 'Human Resources/Approvals',
-    'version': '17.0.2.0',
+    'version': '17.0.2.2',
 
     # any module necessary for this one to work correctly
     'depends': ['approvals', 'account'],
@@ -31,6 +31,8 @@ Additional module for budget approval
     'assets': {
         'web.assets_backend': [
             'approval_budget/static/src/js/section_wise_subtotal.js',
+            'approval_budget/static/src/js/observaciones_field.js',
+            'approval_budget/static/src/scss/observaciones_field.scss',
         ],
     },
     'installable': True,

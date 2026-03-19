@@ -40,6 +40,7 @@ class ApprovalRequest(models.Model):
         currency_field='currency_id',
         store=False,
     )
+    observation = fields.Text('Observation')
 
     @api.onchange('approval_request_id')
     def _onchange_approval_request_id(self):

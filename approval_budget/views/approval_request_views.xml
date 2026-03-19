@@ -5,6 +5,9 @@
         <field name="model">approval.request</field>
         <field name="inherit_id" ref="approvals.approval_request_view_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//form/header" position="inside">
+                <button type="object" name="action_update_executed_amount" string="Update executed amounts" invisible="has_budget == 'no' or request_status != 'approved'"/>
+            </xpath>
             <xpath expr="//form/sheet/group/group[@name='request_details']" position="inside">
                 <field name="currency_id" invisible="True"/>  
                 <field name="planned_total" invisible="has_budget == 'no'"/>  
@@ -20,22 +23,23 @@
                                 <create name="add_section_control" string="Add section" context="{'default_display_type': 'line_section'}"/>
                             </control>
                             <field name="sequence" widget="handle"/>        
+                            <field name="name" widget="section_and_note_text" invisible="display_type != 'line_section'" nolabel="1"/>
                             <field name="display_type" column_invisible="True"/>
                             <field name="company_id" column_invisible="True"/>
                             <field name="general_budget_id" domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]" invisible="display_type"/>
-                            <field name="name" widget="section_and_note_text" optional="show"/>
                             <field name="analytic_account_id" domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]" groups="analytic.group_analytic_accounting" optional="hide"/>
                             <field name="date_from" invisible="display_type"/>
                             <field name="date_to" invisible="display_type"/>
                             <field name="currency_id" column_invisible="True"/>
-                            <field name="planned_amount" sum="Planned Amount" optional="show"/>
-                            <field name="executed_amount" sum="Executed amount" optional="show"/>
+                            <field name="planned_amount" sum="Planned Amount" optional="show" invisible="display_type"/>
                             <field name="planned_subtotal" 
-                                readonly="1"
-                                invisible="display_type != 'line_section'" optional="show"/>
+                            readonly="1"
+                            invisible="display_type != 'line_section'" optional="show"/>
+                            <field name="executed_amount" sum="Executed amount" optional="show" invisible="display_type"/>
                             <field name="executed_subtotal" 
-                                readonly="1"
-                                invisible="display_type != 'line_section'" optional="show"/>
+                            readonly="1"
+                            invisible="display_type != 'line_section'" optional="show"/>
+                            <field name="observation" widget="observation_dialog_button" nolabel="1" class="o_obs_col" invisible="display_type"/>
 
                         </tree>
                     </field>

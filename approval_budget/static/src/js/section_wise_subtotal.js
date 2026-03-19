@@ -3,36 +3,40 @@ import { SectionAndNoteListRenderer } from "@account/components/section_and_note
 import { patch } from "@web/core/utils/patch";
 
 patch(SectionAndNoteListRenderer.prototype, {
-    _getFieldNames() {
-        const cols = this.state?.columns || [];
-        return new Set(cols.filter((c) => c.type === "field" && c.name).map((c) => c.name));
+    setup() {
+        super.setup();
+        this.titleField = "name";
     },
 
-    /**
-     * Devuelve configuración según campos disponibles.
-     * subtotalFields: lista de campos que se mostrarán en la sección
-     * sumFields: lista de campos que se sumarán en líneas normales (mismo orden que subtotalFields)
-     */
+    _getFieldNames() {
+        const cols = this.state?.columns || [];
+        return new Set(
+            cols.filter((c) => c.type === "field" && c.name).map((c) => c.name)
+        );
+    },
+
     _resolveSubtotalConfig() {
         const fields = this._getFieldNames();
 
-        // approval.budget: planned + executed
-        if (fields.has("planned_amount") && fields.has("executed_amount")) {
+        if (
+            fields.has("planned_subtotal") &&
+            fields.has("executed_subtotal") &&
+            fields.has("planned_amount") &&
+            fields.has("executed_amount")
+        ) {
             return {
                 subtotalFields: ["planned_subtotal", "executed_subtotal"],
                 sumFields: ["planned_amount", "executed_amount"],
             };
         }
 
-        // approval.budget: solo planned
-        if (fields.has("planned_amount")) {
+        if (fields.has("planned_subtotal") && fields.has("planned_amount")) {
             return {
                 subtotalFields: ["planned_subtotal"],
                 sumFields: ["planned_amount"],
             };
         }
 
-        // sale/purchase/account
         if (fields.has("price_subtotal")) {
             return {
                 subtotalFields: ["price_subtotal"],
@@ -41,6 +45,31 @@ patch(SectionAndNoteListRenderer.prototype, {
         }
 
         return null;
+    },
+
+    _getSectionLayoutInfo(columns, cfg) {
+        const handleIndex = columns.findIndex((col) => col.widget === "handle");
+        const titleIndex = columns.findIndex(
+            (col) => col.type === "field" && col.name === this.titleField
+        );
+        const firstSubtotalIndex = columns.findIndex(
+            (col) => col.type === "field" && cfg.subtotalFields.includes(col.name)
+        );
+
+        // Primera columna visible antes del primer subtotal donde "inyectaremos" name
+        const leadIndex = columns.findIndex(
+            (col, idx) =>
+                idx > handleIndex &&
+                idx < firstSubtotalIndex &&
+                col.type === "field"
+        );
+
+        return {
+            handleIndex,
+            titleIndex,
+            firstSubtotalIndex,
+            leadIndex: leadIndex >= 0 ? leadIndex : titleIndex,
+        };
     },
 
     isSectionOrNote(record = null) {
@@ -60,7 +89,6 @@ patch(SectionAndNoteListRenderer.prototype, {
             return super.isSectionOrNote(record);
         }
 
-        // Calcular subtotales solo para secciones
         if (record.data.display_type === "line_section") {
             const myIndex = allRows.findIndex((r) => r === record);
             const totals = cfg.sumFields.map(() => 0.0);
@@ -69,50 +97,25 @@ patch(SectionAndNoteListRenderer.prototype, {
                 for (let i = myIndex + 1; i < allRows.length; i++) {
                     const row = allRows[i].data;
 
-                    if (row.display_type === "line_section") break;
+                    if (row.display_type === "line_section") {
+                        break;
+                    }
 
-                    // sumar solo líneas normales
                     if (!row.display_type) {
                         for (let k = 0; k < cfg.sumFields.length; k++) {
-                            const f = cfg.sumFields[k];
-                            totals[k] += row[f] || 0.0;
+                            const fieldName = cfg.sumFields[k];
+                            totals[k] += row[fieldName] || 0.0;
                         }
                     }
                 }
             }
 
-            // escribir los subtotales en la fila sección (en los campos visibles)
             for (let k = 0; k < cfg.subtotalFields.length; k++) {
                 record.data[cfg.subtotalFields[k]] = totals[k];
             }
         }
 
         return super.isSectionOrNote(record);
-    },
-
-    getCellClass(column, record) {
-        const cfg = this._resolveSubtotalConfig();
-        if (!cfg) {
-            return super.getCellClass(column, record);
-        }
-
-        let classNames = super.getCellClass(column, record);
-
-        const keepVisible =
-            column.widget === "handle" ||
-            column.name === this.titleField ||
-            cfg.subtotalFields.includes(column.name);
-
-        if (this.isSectionOrNote(record) && !keepVisible) {
-            return `${classNames} o_hidden`;
-        }
-
-        // asegurar que los subtotales no queden ocultos
-        if (cfg.subtotalFields.includes(column.name) && classNames.includes("o_hidden")) {
-            classNames = classNames.replace("o_hidden", "").trim();
-        }
-
-        return classNames;
     },
 
     getColumns(record) {
@@ -123,29 +126,83 @@ patch(SectionAndNoteListRenderer.prototype, {
 
         const columns = this.state?.columns || [];
 
-        if (this.isSectionOrNote(record)) {
-            if (record?.data?.display_type === "line_note") {
-                return this.getSectionColumns(columns);
+        if (record?.data?.display_type === "line_note") {
+            return super.getColumns(record);
+        }
+
+        if (record?.data?.display_type === "line_section") {
+            const info = this._getSectionLayoutInfo(columns, cfg);
+
+            if (
+                info.firstSubtotalIndex < 0 ||
+                info.titleIndex < 0 ||
+                info.leadIndex < 0 ||
+                info.firstSubtotalIndex <= info.leadIndex
+            ) {
+                return columns;
             }
-            return this._getSubtotalSectionColumns(columns, cfg.subtotalFields);
+
+            const titleColumn = columns[info.titleIndex];
+
+            return columns
+                .map((col, index) => {
+                    if (col.widget === "handle") {
+                        return { ...col, colspan: 1 };
+                    }
+
+                    // Aquí movemos visualmente la columna `name`
+                    // a la primera columna antes del subtotal
+                    if (index === info.leadIndex) {
+                        return {
+                            ...titleColumn,
+                            colspan: info.firstSubtotalIndex - info.leadIndex,
+                        };
+                    }
+
+                    // ocultamos todas las columnas absorbidas por el colspan
+                    if (index > info.leadIndex && index < info.firstSubtotalIndex) {
+                        return {
+                            ...col,
+                            colspan: 0,
+                        };
+                    }
+
+                    return {
+                        ...col,
+                        colspan: 1,
+                    };
+                })
+                .filter((col) => col.colspan !== 0);
         }
 
         return columns;
     },
 
-    _getSubtotalSectionColumns(columns, subtotalFields) {
-        const sectionCols = columns.filter(
-            (col) =>
-                col.widget === "handle" ||
-                (col.type === "field" && subtotalFields.includes(col.name)) ||
-                (col.type === "field" && col.name === this.titleField)
-        );
+    getCellClass(column, record) {
+        const cfg = this._resolveSubtotalConfig();
+        if (!cfg) {
+            return super.getCellClass(column, record);
+        }
 
-        return sectionCols.map((col) => {
-            if (col.name === this.titleField) {
-                return { ...col, colspan: columns.length - sectionCols.length + 1 };
-            }
-            return { ...col };
-        });
+        let classNames = super.getCellClass(column, record);
+
+        if (!(this.isSectionOrNote(record) && record?.data?.display_type === "line_section")) {
+            return classNames;
+        }
+
+        // limpiar estados heredados
+        classNames = classNames.replace(/\bo_hidden\b/g, "").trim();
+        classNames = classNames.replace(/\bo_section_subtotal_placeholder\b/g, "").trim();
+
+        const keepVisible =
+            column.widget === "handle" ||
+            column.name === this.titleField ||
+            cfg.subtotalFields.includes(column.name);
+
+        if (!keepVisible) {
+            return `${classNames} o_section_subtotal_placeholder`.trim();
+        }
+
+        return classNames.trim();
     },
 });

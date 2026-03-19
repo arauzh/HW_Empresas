@@ -22,6 +22,7 @@ class ApprovalRequest(models.Model):
     @api.onchange(
     'approval_budget_ids',
     'approval_budget_ids.planned_amount',
+    'approval_budget_ids.executed_amount',
     'approval_budget_ids.display_type'
     )
     def _onchange_budget_total(self):
@@ -34,3 +35,23 @@ class ApprovalRequest(models.Model):
                     totalE += (line.executed_amount or 0.0)
             req.planned_total = totalp
             req.total_executed = totalE
+            
+    def action_update_executed_amount(self):
+        for requests in self:
+            for budget_line in requests.approval_budget_ids:
+                if not budget_line.display_type:
+                    domain = [
+                        ('company_id', '=', budget_line.company_id.id),
+                        ('posicion_presupuestaria_id', '=', budget_line.general_budget_id.id),
+                        ('state', '=', 'posted'),
+                        ("is_internal_transfer", "=", False),
+                        ("date", ">=", budget_line.date_from),
+                        ("date", "<=", budget_line.date_to)
+                    ]
+                    payments = self.env['account.payment'].search(domain)
+    
+                    # Sumamos aplicando el signo dinámicamente
+                    payments_total = sum(p.amount if p.partner_type == 'customer' else -p.amount for p in payments)
+                    budget_line.write({'executed_amount': payments_total})
+            
+            requests._onchange_budget_total()
