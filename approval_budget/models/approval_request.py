@@ -40,19 +40,22 @@ class ApprovalRequest(models.Model):
         for requests in self:
             for budget_line in requests.approval_budget_ids:
                 if not budget_line.display_type:
-                    domain = [
-                        ('company_id', '=', budget_line.company_id.id),
-                        ('posicion_presupuestaria_id', '=', budget_line.general_budget_id.id),
-                        ('state', '=', 'posted'),
-                        ("is_internal_transfer", "=", False),
-                        ("date", ">=", budget_line.date_from),
-                        ("date", "<=", budget_line.date_to),
-                        ("journal_id.type", "=", "bank")
-                    ]
-                    payments = self.env['account.payment'].search(domain)
-    
-                    # Sumamos aplicando el signo dinámicamente
-                    payments_total = sum(p.amount_company_currency_signed if p.partner_type == 'customer' else -p.amount_company_currency_signed for p in payments)
-                    budget_line.write({'executed_amount': payments_total})
+                    if budget_line.general_budget_id.name and "saldo" in budget_line.general_budget_id.name.lower():
+                        budget_line.write({'executed_amount': budget_line.planned_amount})
+                    else:
+                        domain = [
+                            ('company_id', '=', budget_line.company_id.id),
+                            ('posicion_presupuestaria_id', '=', budget_line.general_budget_id.id),
+                            ('state', '=', 'posted'),
+                            ("is_internal_transfer", "=", False),
+                            ("date", ">=", budget_line.date_from),
+                            ("date", "<=", budget_line.date_to),
+                            ("journal_id.type", "=", "bank")
+                        ]
+                        payments = self.env['account.payment'].search(domain)
+        
+                        # Sumamos aplicando el signo dinámicamente
+                        payments_total = sum(p.amount_company_currency_signed if p.partner_type == 'customer' else p.amount_company_currency_signed for p in payments)
+                        budget_line.write({'executed_amount': payments_total})
             
             requests._onchange_budget_total()
