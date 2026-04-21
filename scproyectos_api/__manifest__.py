@@ -1,5 +1,5 @@
 {
-    "name": "Empleados REST API",
+    "name": "SCProyectos REST API",
     "version": "17.0.0.0",
     "depends": ["base"],
     "installable": True,
