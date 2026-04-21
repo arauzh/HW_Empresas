@@ -90,6 +90,17 @@ class EmployeeAPI(http.Controller):
 
             employee = request.env['hr.employee'].browse(record['id'])
 
+            company = employee.company_id
+
+            if company and company.currency_id:
+                new_record["currency_id"] = company.currency_id.id
+                new_record["currency_name"] = company.currency_id.name
+                new_record["currency_symbol"] = company.currency_id.symbol
+            else:
+                new_record["currency_id"] = None
+                new_record["currency_name"] = None
+                new_record["currency_symbol"] = None
+
             for field_name, value in record.items():
 
                 field = model._fields.get(field_name)
@@ -109,8 +120,8 @@ class EmployeeAPI(http.Controller):
             contracts_data = []
 
             contracts = request.env['hr.contract'].sudo().search([
-                ('employee_id', '=', employee.id),
-                ('state', '=', 'open')
+                ('employee_id', '=', employee.id)
+                #('state', '=', 'open')
             ])
 
             for contract in contracts:
