@@ -88,14 +88,15 @@ class EmployeeAPI(http.Controller):
 
             new_record = {}
 
-            employee = request.env['hr.employee'].browse(record['id'])
+            employee = request.env['hr.employee'].sudo().browse(record['id'])
 
-            company = employee.company_id
+            company = employee.company_id.sudo()
+            currency = company.currency_id.sudo()
 
-            if company and company.currency_id:
-                new_record["currency_id"] = company.currency_id.id
-                new_record["currency_name"] = company.currency_id.name
-                new_record["currency_symbol"] = company.currency_id.symbol
+            if currency:
+                new_record["currency_id"] = currency.id
+                new_record["currency_name"] = currency.name
+                new_record["currency_symbol"] = currency.symbol
             else:
                 new_record["currency_id"] = None
                 new_record["currency_name"] = None
