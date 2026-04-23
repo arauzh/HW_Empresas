@@ -1,0 +1,96 @@
+<odoo>
+
+    <record id="action_report_balance_general" model="ir.actions.report">
+        <field name="name">Balance General</field>
+        <field name="model">custom.balance.general.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">custom_general_ledger.template_balance_general</field>
+        <field name="report_file">custom_general_ledger.template_balance_general</field>
+        <field name="binding_model_id" ref="model_custom_balance_general_wizard"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <template id="template_balance_general">
+        <t t-call="web.html_container">
+            <t t-call="web.basic_layout">
+
+                <div class="page">
+
+                    <h2>Balance General</h2>
+
+                    <t t-if="data.get('folio')">
+                        <div>
+                            <strong>FOLIO:</strong>
+                            <span t-esc="data['folio']"/>
+                        </div>
+                    </t>
+
+                    <p>
+                        Fecha Corte:
+                        <span t-esc="data['date_to']"
+                              t-options='{"widget": "date"}'/>
+                    </p>
+
+                    <table class="table table-sm table-bordered">
+                        <thead>
+                            <tr class="table-active">
+                                <th>Código</th>
+                                <th>Descripción</th>
+                                <th class="text-end">Saldo</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            <t t-foreach="lines" t-as="l">
+
+                                <tr t-if="l['type'] == 'l1'" class="fw-bold">
+                                    <td colspan="3">
+                                        <strong><t t-esc="l['name']"/></strong>
+                                    </td>
+                                </tr>
+
+                                <tr t-if="l['type'] == 'l2'">
+                                    <td></td>
+                                    <td colspan="2">
+                                        <strong><t t-esc="l['name']"/></strong>
+                                    </td>
+                                </tr>
+
+                                <tr t-if="l['type'] == 'l3'">
+                                    <td></td>
+                                    <td>
+                                        <t t-esc="l['code']"/> -
+                                        <t t-esc="l['name']"/>
+                                    </td>
+                                    <td class="text-end">
+                                        <t t-esc="l['balance']"
+                                           t-options='{"widget": "monetary", "display_currency": company.currency_id}'/>
+                                    </td>
+                                </tr>
+
+                                <tr t-if="l['type'] == 'total_l2'" class="fw-bold">
+                                    <td></td>
+                                    <td>
+                                        <t t-esc="l['name']"/>
+                                    </td>
+                                    <td class="text-end">
+                                        <strong>
+                                            <t t-esc="l['balance']"
+                                               t-options='{"widget": "monetary", "display_currency": company.currency_id}'/>
+                                        </strong>
+                                    </td>
+                                </tr>
+
+                            </t>
+
+                        </tbody>
+                    </table>
+
+                </div>
+
+            </t>
+        </t>
+    </template>
+
+</odoo>

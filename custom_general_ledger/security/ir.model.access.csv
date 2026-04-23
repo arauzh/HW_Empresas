@@ -1,3 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_custom_ledger_wizard,custom.ledger.wizard,model_custom_ledger_wizard,base.group_user,1,1,1,1
 access_custom_daily_wizard,custom.daily.wizard,model_custom_daily_wizard,base.group_user,1,1,1,1
+access_custom_balance_general_wizard,custom.balance.general.wizard,model_custom_balance_general_wizard,base.group_user,1,1,1,1
