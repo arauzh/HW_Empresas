@@ -98,7 +98,7 @@
             <div class="article">
                 <div class="page">
 				<style>
-                        table { font-size: 12px; }
+                        table { font-size: 10px; }
                     </style>
                     <table class="table table-sm table-bordered">
                         <thead>
