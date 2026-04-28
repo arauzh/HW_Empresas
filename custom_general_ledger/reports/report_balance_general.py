@@ -1,5 +1,5 @@
 from odoo import models, api
-
+from datetime import datetime
 
 class ReportBalanceGeneral(models.AbstractModel):
     _name = 'report.custom_general_ledger.template_balance_general'
@@ -125,21 +125,66 @@ class ReportBalanceGeneral(models.AbstractModel):
     @api.model
     def _get_report_values(self, docids, data=None):
         params = data.get('form') if data and data.get('form') else data
-
+    
         date_to = params.get('date_to')
+        date_obj = datetime.strptime(date_to, "%Y-%m-%d")
         target_move = params.get('target_move', 'posted')
         company_id = params.get('company_id') or self.env.company.id
 
         lines = self._get_account_data(date_to, target_move, company_id)
 
+        meses = {
+            1: 'enero', 2: 'febrero', 3: 'marzo', 4: 'abril',
+            5: 'mayo', 6: 'junio', 7: 'julio', 8: 'agosto',
+            9: 'septiembre', 10: 'octubre', 11: 'noviembre', 12: 'diciembre'
+        }
+
+        periodo = f"Mes de {meses[date_obj.month]} {date_obj.year}"
+
+        summary = {}
+
+        for line in lines:
+            if line['type'] == 'l3':
+                code = line.get('code', '')
+                l1 = code[:1]
+
+                if l1 not in summary:
+                    summary[l1] = {
+                        'name': None,
+                        'balance': 0.0
+                    }
+
+                summary[l1]['balance'] += line.get('balance', 0.0)
+
+        groups = self.env['account.group'].search([
+            ('company_id', '=', company_id)
+        ])
+
+        group_map = {
+            g.code_prefix_start: g.name
+            for g in groups if g.code_prefix_start
+        }
+
+        for key in summary:
+            summary[key]['name'] = group_map.get(key, f'Grupo {key}')
+
         totals = {
             'balance': sum(l.get('balance', 0.0) for l in lines if l['type'] in ['l3', 'total_l2'])
         }
+
+        total_general = sum(v['balance'] for v in summary.values())
+
+        folio = params.get('folio')
+        folio_base = int(folio) if folio else 0
 
         return {
             'doc_ids': docids,
             'data': params,
             'lines': lines,
             'totals': totals,
+            'summary': summary,
+            'total_general': total_general,
             'company': self.env['res.company'].browse(company_id),
+            'periodo': periodo,
+            'folio_base': folio_base,
         }
