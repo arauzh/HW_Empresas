@@ -1,9 +1,18 @@
 {
     "name": "SCProyectos REST API",
-    "version": "17.0.0.0",
-    "depends": ["base"],
-    "installable": True,
+    
+    "license": "LGPL-3",
+    
     'author': 'HW Constructor',
     "website": "https://www.hw.com.gt",
-    "license": "LGPL-3",
+    
+    'category': 'Customizations',
+    
+    "version": "17.0.0.1",
+    
+    "depends": ["base"],
+    
+    'data': [],
+    
+    "installable": True,
 }
