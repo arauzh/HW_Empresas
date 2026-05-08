@@ -10,9 +10,12 @@
     
     "version": "17.0.0.1",
     
-    "depends": ["base"],
+    "depends": ["base",
+                "account",],
     
-    'data': [],
+    'data': [
+        'views/account_analytic_account_views.xml',
+        ],
     
     "installable": True,
 }
