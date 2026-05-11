@@ -108,11 +108,15 @@ class stockAPI(http.Controller):
                 'move_id': move.id,
                 'picking_id': move.picking_id.id if move.picking_id else False,
                 'picking_name': move.picking_id.name if move.picking_id else False,
+                'warehouse_id': move.picking_id.picking_type_id.warehouse_id.id if move.picking_id else False,
+                'warehouse_name': move.picking_id.picking_type_id.warehouse_id.name if move.picking_id else False,
                 'date_done': move.picking_id.date_done.isoformat() if move.picking_id and move.picking_id.date_done else False,
 
                 'company_id': move.company_id.id if move.company_id else False,
                 'company_name': move.company_id.name if move.company_id else False,
                 
+                'location_dest_id': move.location_dest_id.id if move.location_dest_id else False,
+                'location_dest_name': move.location_dest_id.display_name if move.location_dest_id else False,
                 'product_id': move.product_id.id if move.product_id else False,
                 'product_code': move.product_id.default_code if move.product_id else '',
                 'product_name': move.product_id.name if move.product_id else '',

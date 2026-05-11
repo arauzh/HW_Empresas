@@ -103,6 +103,7 @@ class AccountAPI(http.Controller):
                         })
                     
                 data.append({
+                    'name': move.name,
                     'partner_name': move.partner_id.name,
                     'partner_vat': move.partner_id.vat,
                     'partner_is_company': 1 if move.partner_id.is_company else 0,
