@@ -95,7 +95,7 @@ class PayrollAPI(http.Controller):
         all_lines = line_model.search([
             ('slip_id', 'in', payslips.ids),
             '|',
-            ('code', '=', 'NET'),
+            ('code', '=', 'HRTIG'),
             ('category_id.code', '=', 'COMP')
         ])
 
