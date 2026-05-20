@@ -74,13 +74,10 @@ class PayrollAPI(http.Controller):
         if kwargs.get('employee_id'):
             domain.append(('employee_id', '=', int(kwargs.get('employee_id'))))
 
-        limit = int(kwargs.get('limit', 50))
-        offset = int(kwargs.get('offset', 0))
-
         payslip_model = env['hr.payslip'].sudo()
         line_model = env['hr.payslip.line'].sudo()
 
-        payslips = payslip_model.search(domain, limit=limit, offset=offset)
+        payslips = payslip_model.search(domain)
 
         payslip_fields = [
             "id",
@@ -97,7 +94,7 @@ class PayrollAPI(http.Controller):
 
         all_lines = line_model.search([
             ('slip_id', 'in', payslips.ids),
-            ('code', 'in', ['NET', 'COMP'])
+            ('category_id.code', 'in', ['NET', 'COMP'])
         ])
 
         lines_by_slip = {}
