@@ -9,7 +9,7 @@ en el formulario de contactos.
     'author': 'HW Constructor',
     'category': 'Customizations',
     'license': 'LGPL-3',
-    'depends': ['contacts', 'account', 'budgetary_position'],
+    'depends': ['contacts', 'account'],
     'data': [
         'security/ir.model.access.csv',
         'views/partner_tax_tag_views.xml',
