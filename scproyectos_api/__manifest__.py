@@ -8,7 +8,7 @@
     
     'category': 'Customizations',
     
-    "version": "17.0.0.6",
+    "version": "17.0.0.7",
     
     "depends": ["base",
                 "account",],
