@@ -191,10 +191,10 @@ class stockAPI(http.Controller):
             warehouse_id = data.get('warehouse_id')
             productos = data.get('productos', [])
 
-            if not partner_vat:
+            if not partner_id and not partner_vat:
                 return request.make_json_response({
                     'success': False,
-                    'message': 'Faltan datos: partner_vat'
+                    'message': 'Faltan datos: No se envio ni partner_id, ni partner_vat'
                 }, status=400)
 
             if not warehouse_id:
@@ -215,6 +215,12 @@ class stockAPI(http.Controller):
             ], limit=1)
 
             if not partner:
+                if not partner_vat:
+                    return request.make_json_response({
+                        'success': False,
+                        'message': 'Faltan datos: partner_vat'
+                    }, status=400)
+                    
                 partner = request.env['res.partner'].sudo().search([
                     ('vat', '=', partner_vat)
                 ], limit=1)
