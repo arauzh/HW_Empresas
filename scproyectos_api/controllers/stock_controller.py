@@ -124,6 +124,7 @@ class stockAPI(http.Controller):
                     'product_id': move.product_id.id if move.product_id else False,
                     'product_code': move.product_id.default_code if move.product_id else '',
                     'product_name': move.product_id.name if move.product_id else '',
+                    'product_type': move.product_id.detailed_type if move.product_id else '',
                     'categ_id': move.product_id.categ_id.id if move.product_id.categ_id else '',
                     'categ_name': move.product_id.categ_id.display_name if move.product_id.categ_id else '',
                     'analytic_distribution': analytic_result,
