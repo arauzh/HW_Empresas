@@ -202,3 +202,45 @@ class AccountAPI(http.Controller):
                 'message': str(e),
                 'type': 'server_error'
             }, status=400)
+    
+    @http.route('/api/account_account', type='http', auth='none', methods=['GET'], csrf=False)
+    def getAccountMove(self, **kwargs):
+        try:
+            user = self._authenticate()
+
+            if not user:
+                return request.make_json_response({
+                    'success': False,
+                    'message': 'Unauthorized'
+                }, headers=[('Content-Type', 'application/json')], status=401)
+            
+            accounts = request.env['account.account'].sudo().search(
+                domain=[],
+                order='id'
+            )
+            
+            data = []
+            for account in accounts:
+                data.append({
+                    'Id': account.id,
+                    'code': account.code,
+                    'name': account.name,
+                    'account_type': account.account_type,
+                    'currency_id': account.currency_id.id if account.currency_id else False,
+                    'currency_name': account.currency_id.name if account.currency_id else False,
+                    'company_id': account.company_id.id if account.company_id else False,
+                    'company_name': account.company_id.name if account.company_id else False,
+                    'deprecated': account.deprecated,
+                })
+            
+            return request.make_json_response({
+                'success': True,
+                'count': len(data),
+                'data': data,
+            }, status=200)
+        except Exception as e:
+            return request.make_json_response({
+                'success': False,
+                'message': str(e),   
+                'type': 'server_error'
+            }, status=400)
