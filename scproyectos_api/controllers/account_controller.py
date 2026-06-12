@@ -132,6 +132,73 @@ class AccountAPI(http.Controller):
         except Exception as e:
             return request.make_json_response({
                 'success': False,
-                'message': str(e),   # puedes ocultarlo en producción si quieres
+                'message': str(e),   
+                'type': 'server_error'
+            }, status=400)
+
+    @http.route('/api/diarios', type='http', auth='none', methods=['GET'], csrf=False)
+    def getJournals(self, **kwargs):
+
+        try:
+
+            user = self._authenticate()
+
+            if not user:
+                return request.make_json_response({
+                    'success': False,
+                    'message': 'Unauthorized'
+                }, headers=[('Content-Type', 'application/json')], status=401)
+
+            journals = request.env['account.journal'].sudo().search(
+                [],
+                order='code'
+            )
+
+            data = []
+
+            for journal in journals:
+
+                company = journal.company_id.sudo()
+                currency = journal.currency_id.sudo() if journal.currency_id else company.currency_id.sudo()
+
+                data.append({
+                    'id': journal.id,
+                    'name': journal.name,
+                    'code': journal.code,
+                    'type': journal.type,
+
+                    'company_id': company.id,
+                    'company_name': company.name,
+
+                    'currency_id': currency.id if currency else False,
+                    'currency_name': currency.name if currency else False,
+                    'currency_symbol': currency.symbol if currency else False,
+
+                    'active': journal.active,
+
+                    'default_account_id': journal.default_account_id.id if journal.default_account_id else False,
+                    'default_account_name': journal.default_account_id.display_name if journal.default_account_id else False,
+
+                    'suspense_account_id': journal.suspense_account_id.id if journal.suspense_account_id else False,
+                    'suspense_account_name': journal.suspense_account_id.display_name if journal.suspense_account_id else False,
+
+                    'profit_account_id': journal.profit_account_id.id if journal.profit_account_id else False,
+                    'profit_account_name': journal.profit_account_id.display_name if journal.profit_account_id else False,
+
+                    'loss_account_id': journal.loss_account_id.id if journal.loss_account_id else False,
+                    'loss_account_name': journal.loss_account_id.display_name if journal.loss_account_id else False,
+                })
+
+            return request.make_json_response({
+                'success': True,
+                'count': len(data),
+                'data': data,
+            }, status=200)
+
+        except Exception as e:
+
+            return request.make_json_response({
+                'success': False,
+                'message': str(e),
                 'type': 'server_error'
             }, status=400)
