@@ -1,5 +1,11 @@
 {
     "name": "SCProyectos REST API",
+
+    'summary': "Modulo con los apis de odoopro",
+
+    'description': """
+Modulo con los apis de odoopro
+    """,
     
     "license": "LGPL-3",
     
