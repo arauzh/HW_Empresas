@@ -82,20 +82,20 @@ class AccountAPI(http.Controller):
                 
                 lines = []
                 for line in move.invoice_line_ids:
-                    analytic_result = []
-                    if line.analytic_distribution:
-                        id_string = list(line.analytic_distribution.keys())[0]
-                        analytic_ids = [int(id) for id in id_string.split(',')]
-                        accounts = request.env['account.analytic.account'].sudo().browse(analytic_ids)
-                        if accounts:
-                            for account in accounts:
-                                analytic_result.append({'id': account.id,'name': account.name})
+                    # analytic_result = []
+                    # if line.analytic_distribution:
+                    #     id_string = list(line.analytic_distribution.keys())[0]
+                    #     analytic_ids = [int(id) for id in id_string.split(',')]
+                    #     accounts = request.env['account.analytic.account'].sudo().browse(analytic_ids)
+                    #     if accounts:
+                    #         for account in accounts:
+                    #             analytic_result.append({'id': account.id,'name': account.name})
                                 
                     lines.append({
                         'product_code':line.product_id.default_code,
                         'product_name':line.product_id.name,
                         'description':line.name,
-                        'analytic_distribution':analytic_result,
+                        'analytic_distribution':line.analytic_distribution if line.analytic_distribution else [],
                         'quantity':line.quantity,
                         'price_unit':line.price_unit,
                         'discount':line.discount,
