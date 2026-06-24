@@ -204,7 +204,7 @@ class AccountAPI(http.Controller):
             }, status=400)
     
     @http.route('/api/account_account', type='http', auth='none', methods=['GET'], csrf=False)
-    def getAccountMove(self, **kwargs):
+    def getAccountAccount(self, **kwargs):
         try:
             user = self._authenticate()
 
