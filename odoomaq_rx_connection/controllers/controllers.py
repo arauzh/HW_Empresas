@@ -161,7 +161,7 @@ class OdoomaqRxConnection(http.Controller):
                 horas_extra_simple = 0
                 if 'horas_extra_simple' in slip._fields:
                     # El campo existe, puedes usarlo con seguridad
-                    horas_extra_simple = self.horas_extra_simple
+                    horas_extra_simple = slip.horas_extra_simple
                 else:
                     horas_extra_simple = 0
                 
