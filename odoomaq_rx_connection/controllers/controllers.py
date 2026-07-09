@@ -158,6 +158,14 @@ class OdoomaqRxConnection(http.Controller):
                 
                 # 4) Calcular total de horas trabajadas en esa planilla
                 worked_hours = sum(slip.worked_days_line_ids.mapped('number_of_hours'))
+                horas_extra_simple = 0
+                if 'horas_extra_simple' in slip._fields:
+                    # El campo existe, puedes usarlo con seguridad
+                    horas_extra_simple = self.horas_extra_simple
+                else:
+                    horas_extra_simple = 0
+                
+                Total_worked_hours = worked_hours + horas_extra_simple
                 
                 data.append({
                     'employee_id':   emp_id,
@@ -166,7 +174,8 @@ class OdoomaqRxConnection(http.Controller):
                     'payslip_name':  slip.name,
                     'date_from':     slip.date_from.isoformat(),
                     'gross_salary':  float(gross_amount),
-                    'worked_hours':  float(worked_hours),
+                    # 'worked_hours':  float(worked_hours),
+                    'worked_hours':  float(Total_worked_hours),
                 })
 
             # print(data)
