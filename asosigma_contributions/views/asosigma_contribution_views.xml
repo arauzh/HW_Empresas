@@ -39,9 +39,10 @@
                                 <tree decoration-danger="is_member == False">
                                     <field name="identification_id"/>
                                     <field name="employee_id"/>
+                                    <field name="payslip_run_name"/>
                                     <field name="concept"/>
                                     <field name="company_id"/>
-                                    <field name="is_member" widget="boolean_toggle"/>
+                                    <field name="is_member" string="¿Es Asociado?" readonly="1"/>
                                     <field name="amount" sum="Total"/>
                                 </tree>
                             </field>

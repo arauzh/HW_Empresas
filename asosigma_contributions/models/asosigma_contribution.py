@@ -20,25 +20,28 @@ class AsosigmaContributionBatch(models.Model):
     def action_consult(self):
         self.ensure_one()
         self.line_ids.unlink()
+
         payslip_lines = self.env['hr.payslip.line'].sudo().search([
             ('slip_id.date_from', '>=', self.date_start),
             ('slip_id.date_to', '<=', self.date_end),
-            ('slip_id.state', 'in', ['done', 'paid']), # ver que estado se van a querer
+            ('slip_id.state', 'in', ['done', 'paid']),
             ('code', 'in', ['AHORASOSIGMA', 'AHEXASOSIGMA'])
         ])
 
         if not payslip_lines:
             raise UserError(_("No se encontraron retenciones con esos códigos en el rango de fechas indicado."))
 
-        # 3. Agrupar la información
         grouped_data = {}
         for line in payslip_lines:
             employee = line.employee_id
             company = line.slip_id.company_id
             code = line.code
+            
+            # Obtenemos el nombre del lote de nómina (hr.payslip.run). Si se hizo individual, le ponemos 'Sin Lote'
+            payslip_run_name = line.slip_id.payslip_run_id.name if line.slip_id.payslip_run_id else 'Sin Lote'
 
-            # Llave única de agrupación: Empleado + Código + Empresa
-            key = (employee.id, code, company.id)
+            # Agregamos el lote de nómina a la llave para que no mezcle planillas distintas
+            key = (employee.id, code, company.id, payslip_run_name)
 
             if key not in grouped_data:
                 partner = employee.work_contact_id
@@ -54,23 +57,32 @@ class AsosigmaContributionBatch(models.Model):
                     'code': code,
                     'concept': concept,
                     'company_id': company.id,
+                    'payslip_run_name': payslip_run_name,
                     'amount': 0.0,
                 }
 
             grouped_data[key]['amount'] += line.total
 
-        self.env['asosigma.contribution.line'].create(list(grouped_data.values()))
+        # Filtramos para que solo pasen las líneas que tienen un monto mayor a 0
+        lines_to_create = [data for data in grouped_data.values() if data['amount'] > 0]
+
+        if lines_to_create:
+            self.env['asosigma.contribution.line'].create(lines_to_create)
 
 
 class AsosigmaContributionLine(models.Model):
     _name = 'asosigma.contribution.line'
     _description = 'Detalle de Aportación ASOSIGMA'
+    
+    # Esto agrupará visualmente de forma predeterminada todas las líneas por identificación en la vista de lista
+    _order = 'identification_id, payslip_run_name'
 
-    batch_id = fields.Many2one('asosigma.contribution.batch', string='Lote', ondelete='cascade')
+    batch_id = fields.Many2one('asosigma.contribution.batch', string='Lote de Consulta', ondelete='cascade')
     employee_id = fields.Many2one('hr.employee', string='Empleado')
     identification_id = fields.Char(string='Identificación')
-    is_member = fields.Boolean(string='¿Es Asociado?')
+    is_member = fields.Boolean(string='Asociado Activo')
     code = fields.Char(string='Código')
     concept = fields.Char(string='Concepto')
     company_id = fields.Many2one('res.company', string='Empresa')
+    payslip_run_name = fields.Char(string='Lote de Nómina')
     amount = fields.Float(string='Total Acumulado')
