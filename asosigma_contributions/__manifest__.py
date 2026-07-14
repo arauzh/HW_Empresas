@@ -9,9 +9,11 @@
     'depends': [
         'contacts',
         'hr_payroll',
+        'mail',
     ],
     'data': [
         'views/res_partner_views.xml',
+        'data/sequence.xml',
         'views/asosigma_contribution_views.xml',
         'security/ir.model.access.csv'
     ],
