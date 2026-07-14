@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_asosigma_contribution_tree" model="ir.ui.view">
+        <field name="name">asosigma.contribution.batch.tree</field>
+        <field name="model">asosigma.contribution.batch</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_asosigma_contribution_form" model="ir.ui.view">
+        <field name="name">asosigma.contribution.batch.form</field>
+        <field name="model">asosigma.contribution.batch</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_consult" string="Consultar" type="object" class="oe_highlight"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="date_start"/>
+                            <field name="date_end"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Aportaciones">
+                            <field name="line_ids" readonly="1">
+                                <tree decoration-danger="is_member == False">
+                                    <field name="identification_id"/>
+                                    <field name="employee_id"/>
+                                    <field name="concept"/>
+                                    <field name="company_id"/>
+                                    <field name="is_member" widget="boolean_toggle"/>
+                                    <field name="amount" sum="Total"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_asosigma_contribution" model="ir.actions.act_window">
+        <field name="name">Lotes de Ahorro</field>
+        <field name="res_model">asosigma.contribution.batch</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_asosigma_root" name="ASOSIGMA" sequence="10"/>
+    <menuitem id="menu_asosigma_contributions" name="Aportaciones" parent="menu_asosigma_root" action="action_asosigma_contribution" sequence="1"/>
+
+</odoo>
