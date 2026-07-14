@@ -30,16 +30,18 @@ class AsosigmaContributionBatch(models.Model):
         if not payslip_lines:
             raise UserError(_("No se encontraron retenciones con esos códigos en el rango de fechas indicado."))
 
+        # 3. Agrupar la información
         grouped_data = {}
         for line in payslip_lines:
             employee = line.employee_id
             company = line.slip_id.company_id
             code = line.code
 
+            # Llave única de agrupación: Empleado + Código + Empresa
             key = (employee.id, code, company.id)
 
             if key not in grouped_data:
-                partner = employee.address_home_id
+                partner = employee.work_contact_id
                 is_member = partner.is_asosigma_member if partner else False
                 
                 concept = 'Ahorro Ordinario ASOSIGMA' if code == 'AHORASOSIGMA' else 'Ahorro Extraordinario ASOSIGMA'
