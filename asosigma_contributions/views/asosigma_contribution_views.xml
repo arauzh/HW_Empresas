@@ -87,8 +87,10 @@
         <field name="name">asosigma.member.account.tree</field>
         <field name="model">asosigma.member.account</field>
         <field name="arch" type="xml">
-            <tree create="0" edit="0"> <field name="identification_id"/>
+            <tree create="0" edit="0">
+                <field name="identification_id"/>
                 <field name="employee_id"/>
+                <!-- <field name="partner_id"/>  -->
                 <field name="company_id"/>
                 <field name="total_ordinary" sum="Total Ordinario"/>
                 <field name="total_extraordinary" sum="Total Extraordinario"/>
@@ -104,29 +106,41 @@
             <form create="0" edit="0">
                 <sheet>
                     <div class="oe_title">
+                        <label for="partner_id" class="oe_edit_only" string="Contacto Asociado"/>
                         <h1>
-                            <field name="employee_id" readonly="1"/>
+                            <field name="partner_id" options="{'no_open': False, 'no_create': True}"/>
                         </h1>
                     </div>
                     <group>
                         <group>
                             <field name="identification_id"/>
+                            <field name="employee_id" readonly="1"/>
                             <field name="company_id"/>
                         </group>
                         <group>
                             <field name="total_ordinary"/>
                             <field name="total_extraordinary"/>
-                            <field name="total_accumulated" class="oe_subtotal_footer_separator"/>
+                            <field name="total_accumulated" class="oe_subtotal_footer_separator" decoration-bf="1"/>
                         </group>
                     </group>
                     <notebook>
-                        <page string="Detalle de Aportaciones">
+                        <page string="Detalle de Nóminas (Confirmadas)">
                             <field name="line_ids" readonly="1">
                                 <tree>
                                     <field name="batch_id" string="Lote de Consulta"/>
                                     <field name="payslip_run_name"/>
                                     <field name="concept"/>
                                     <field name="amount" sum="Total"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Cargas y Ajustes Manuales">
+                            <field name="manual_line_ids">
+                                <tree editable="bottom">
+                                    <field name="date"/>
+                                    <field name="description"/>
+                                    <field name="type"/>
+                                    <field name="amount" sum="Total Ajustes"/>
                                 </tree>
                             </field>
                         </page>
