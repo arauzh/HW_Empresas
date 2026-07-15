@@ -110,15 +110,15 @@ class AsosigmaContributionBatch(models.Model):
         self.write({'state': 'draft'})
 
 
-# --- SALDOS ACUMULADOS ---
 class AsosigmaMemberAccount(models.Model):
     _name = 'asosigma.member.account'
     _description = 'Saldos Acumulados ASOSIGMA'
 
     employee_id = fields.Many2one('hr.employee', string='Empleado', required=True, ondelete='cascade')
-    partner_id = fields.Many2one('res.partner', related='employee_id.work_contact_id', string='Contacto Asociado', store=True, readonly=True)
-    identification_id = fields.Char(related='employee_id.identification_id', string='Identificación', store=True)
-    company_id = fields.Many2one('res.company', related='employee_id.company_id', string='Empresa', store=True)
+    
+    partner_id = fields.Many2one('res.partner', related='employee_id.work_contact_id', string='Contacto Asociado', store=True, readonly=True, compute_sudo=True)
+    identification_id = fields.Char(related='employee_id.identification_id', string='Identificación', store=True, compute_sudo=True)
+    company_id = fields.Many2one('res.company', related='employee_id.company_id', string='Empresa', store=True, compute_sudo=True)
 
     total_ordinary = fields.Float(string='Total Ordinario', compute='_compute_totals', store=True)
     total_extraordinary = fields.Float(string='Total Extraordinario', compute='_compute_totals', store=True)
@@ -150,7 +150,8 @@ class AsosigmaMemberAccount(models.Model):
     @api.depends('employee_id')
     def _compute_display_name(self):
         for record in self:
-            record.display_name = f"Saldo: {record.employee_id.name}" if record.employee_id else "Saldo Sin Empleado"
+            employee_name = record.employee_id.sudo().name if record.employee_id else "Sin Empleado"
+            record.display_name = f"Saldo: {employee_name}"
 
 
 class AsosigmaMemberAccountManual(models.Model):

@@ -83,15 +83,14 @@
         <field name="view_mode">tree,form</field>
     </record>
 
-    <record id="view_asosigma_member_account_tree" model="ir.ui.view">
+   <record id="view_asosigma_member_account_tree" model="ir.ui.view">
         <field name="name">asosigma.member.account.tree</field>
         <field name="model">asosigma.member.account</field>
         <field name="arch" type="xml">
             <tree create="0" edit="0">
                 <field name="identification_id"/>
                 <field name="employee_id"/>
-                <!-- <field name="partner_id"/>  -->
-                <field name="company_id"/>
+                <field name="partner_id"/> <field name="company_id"/>
                 <field name="total_ordinary" sum="Total Ordinario"/>
                 <field name="total_extraordinary" sum="Total Extraordinario"/>
                 <field name="total_accumulated" sum="Total Acumulado" decoration-bf="1"/>
@@ -103,19 +102,18 @@
         <field name="name">asosigma.member.account.form</field>
         <field name="model">asosigma.member.account</field>
         <field name="arch" type="xml">
-            <form create="0" edit="0">
+            <form create="0">
                 <sheet>
                     <div class="oe_title">
                         <label for="partner_id" class="oe_edit_only" string="Contacto Asociado"/>
                         <h1>
-                            <field name="partner_id" options="{'no_open': False, 'no_create': True}"/>
+                            <field name="partner_id" options="{'no_open': False, 'no_create': True}" readonly="1"/>
                         </h1>
                     </div>
                     <group>
                         <group>
-                            <field name="identification_id"/>
-                            <field name="employee_id" readonly="1"/>
-                            <field name="company_id"/>
+                            <field name="identification_id" readonly="1"/>
+                            <field name="company_id" readonly="1"/>
                         </group>
                         <group>
                             <field name="total_ordinary"/>
