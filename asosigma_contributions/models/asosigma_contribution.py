@@ -1,8 +1,38 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 
-from odoo import models, fields, api, _
-from odoo.exceptions import UserError
+class AsosigmaMemberAccount(models.Model):
+    _name = 'asosigma.member.account'
+    _description = 'Saldos Acumulados ASOSIGMA'
+
+    employee_id = fields.Many2one('hr.employee', string='Empleado', required=True, ondelete='cascade')
+    identification_id = fields.Char(related='employee_id.identification_id', string='Identificación', store=True)
+    company_id = fields.Many2one('res.company', related='employee_id.company_id', string='Empresa', store=True)
+
+    total_ordinary = fields.Float(string='Total Ordinario', compute='_compute_totals', store=True)
+    total_extraordinary = fields.Float(string='Total Extraordinario', compute='_compute_totals', store=True)
+    total_accumulated = fields.Float(string='Total General', compute='_compute_totals', store=True)
+
+    line_ids = fields.One2many('asosigma.contribution.line', 'account_id', string='Detalle de Aportaciones')
+
+    @api.depends('line_ids.amount', 'line_ids.code', 'line_ids.batch_id.state')
+    def _compute_totals(self):
+        for record in self:
+            valid_lines = record.line_ids.filtered(lambda l: l.batch_id.state == 'confirmed')
+            
+            ordinary = sum(valid_lines.filtered(lambda l: l.code == 'AHORASOSIGMA').mapped('amount'))
+            extraordinary = sum(valid_lines.filtered(lambda l: l.code == 'AHEXASOSIGMA').mapped('amount'))
+            
+            record.total_ordinary = ordinary
+            record.total_extraordinary = extraordinary
+            record.total_accumulated = ordinary + extraordinary
+
+    def name_get(self):
+        result = []
+        for rec in self:
+            name = f"Cuenta de {rec.employee_id.name}"
+            result.append((rec.id, name))
+        return result
 
 class AsosigmaContributionBatch(models.Model):
     _name = 'asosigma.contribution.batch'
@@ -97,7 +127,18 @@ class AsosigmaContributionBatch(models.Model):
             self.env['asosigma.contribution.run'].create(runs_to_create)
 
     def action_confirm(self):
-        self.write({'state': 'confirmed'})
+        for record in self:
+            for line in record.line_ids:
+                account = self.env['asosigma.member.account'].search([('employee_id', '=', line.employee_id.id)], limit=1)
+                
+                if not account:
+                    account = self.env['asosigma.member.account'].create({
+                        'employee_id': line.employee_id.id
+                    })
+                
+                line.account_id = account.id
+
+            record.write({'state': 'confirmed'})
 
     def action_cancel(self):
         self.write({'state': 'cancel'})
@@ -116,8 +157,11 @@ class AsosigmaContributionRun(models.Model):
 class AsosigmaContributionLine(models.Model):
     _name = 'asosigma.contribution.line'
     _description = 'Detalle de Aportación ASOSIGMA'
+    _order = 'identification_id, payslip_run_name'
     
     batch_id = fields.Many2one('asosigma.contribution.batch', string='Lote de Consulta', ondelete='cascade')
+    account_id = fields.Many2one('asosigma.member.account', string='Cuenta Acumulada', ondelete='cascade')
+    
     employee_id = fields.Many2one('hr.employee', string='Empleado')
     identification_id = fields.Char(string='Identificación')
     is_member = fields.Boolean(string='Asociado Activo')

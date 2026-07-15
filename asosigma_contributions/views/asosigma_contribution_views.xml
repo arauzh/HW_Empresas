@@ -2,7 +2,6 @@
 <odoo>
 
     <record id="view_asosigma_contribution_tree" model="ir.ui.view">
-        <!-- (Se mantiene igual que antes) -->
         <field name="name">asosigma.contribution.batch.tree</field>
         <field name="model">asosigma.contribution.batch</field>
         <field name="arch" type="xml">
@@ -48,7 +47,6 @@
                     </group>
                     <notebook>
                         <page string="Aportaciones">
-                            <!-- Se eliminó el context conflictivo -->
                             <field name="line_ids" readonly="1">
                                 <tree decoration-danger="is_member == False">
                                     <field name="identification_id"/>
@@ -70,7 +68,6 @@
                         </page>
                     </notebook>
                 </sheet>
-                <!-- CHATTER AÑADIDO AQUÍ -->
                 <div class="oe_chatter">
                     <field name="message_follower_ids" widget="mail_followers"/>
                     <field name="activity_ids" widget="mail_activity"/>
@@ -86,7 +83,66 @@
         <field name="view_mode">tree,form</field>
     </record>
 
-    <menuitem id="menu_asosigma_root" name="ASOSIGMA" sequence="10"/>
-    <menuitem id="menu_asosigma_contributions" name="Aportaciones" parent="menu_asosigma_root" action="action_asosigma_contribution" sequence="1"/>
+    <record id="view_asosigma_member_account_tree" model="ir.ui.view">
+        <field name="name">asosigma.member.account.tree</field>
+        <field name="model">asosigma.member.account</field>
+        <field name="arch" type="xml">
+            <tree create="0" edit="0"> <field name="identification_id"/>
+                <field name="employee_id"/>
+                <field name="company_id"/>
+                <field name="total_ordinary" sum="Total Ordinario"/>
+                <field name="total_extraordinary" sum="Total Extraordinario"/>
+                <field name="total_accumulated" sum="Total Acumulado" decoration-bf="1"/>
+            </tree>
+        </field>
+    </record>
 
+    <record id="view_asosigma_member_account_form" model="ir.ui.view">
+        <field name="name">asosigma.member.account.form</field>
+        <field name="model">asosigma.member.account</field>
+        <field name="arch" type="xml">
+            <form create="0" edit="0">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="employee_id" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="identification_id"/>
+                            <field name="company_id"/>
+                        </group>
+                        <group>
+                            <field name="total_ordinary"/>
+                            <field name="total_extraordinary"/>
+                            <field name="total_accumulated" class="oe_subtotal_footer_separator"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Detalle de Aportaciones">
+                            <field name="line_ids" readonly="1">
+                                <tree>
+                                    <field name="batch_id" string="Lote de Consulta"/>
+                                    <field name="payslip_run_name"/>
+                                    <field name="concept"/>
+                                    <field name="amount" sum="Total"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_asosigma_member_account" model="ir.actions.act_window">
+        <field name="name">Saldos Acumulados</field>
+        <field name="res_model">asosigma.member.account</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_asosigma_root" name="ASOSIGMA" sequence="10" web_icon="asosigma_contributions,static/description/icon.png"/>
+    <menuitem id="menu_asosigma_contributions" name="Aportaciones" parent="menu_asosigma_root" action="action_asosigma_contribution" sequence="1"/>
+    <menuitem id="menu_asosigma_accounts" name="Saldos Acumulados" parent="menu_asosigma_root" action="action_asosigma_member_account" sequence="2"/>
 </odoo>

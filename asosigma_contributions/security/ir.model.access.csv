@@ -2,3 +2,4 @@ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_asosigma_contribution_batch,asosigma.contribution.batch,model_asosigma_contribution_batch,,1,1,1,1
 access_asosigma_contribution_line,asosigma.contribution.line,model_asosigma_contribution_line,,1,1,1,1
 access_asosigma_contribution_run,asosigma.contribution.run,model_asosigma_contribution_run,,1,1,1,1
+access_asosigma_member_account,asosigma.member.account,model_asosigma_member_account,,1,1,1,1
