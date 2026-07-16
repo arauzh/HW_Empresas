@@ -103,6 +103,10 @@
         <field name="model">asosigma.member.account</field>
         <field name="arch" type="xml">
             <form create="0">
+                <!-- AÑADIMOS EL HEADER CON EL BOTÓN AQUÍ -->
+                <header>
+                    <button name="action_add_manual_adjustment" type="object" string="Carga / Ajuste Manual" class="oe_highlight"/>
+                </header>
                 <sheet>
                     <div class="oe_title">
                         <label for="partner_id" class="oe_edit_only" string="Contacto Asociado"/>
@@ -122,23 +126,16 @@
                         </group>
                     </group>
                     <notebook>
-                        <page string="Detalle de Nóminas (Confirmadas)">
+                        <page string="Detalle de Aportaciones">
+                            <!-- La lista de líneas ahora muestra reference_display -->
                             <field name="line_ids" readonly="1">
                                 <tree>
-                                    <field name="batch_id" string="Lote de Consulta"/>
+                                    <!-- Esta columna mostrará ASOSIGMA/2026/0001 o MANUAL/2026/0001 -->
+                                    <field name="reference_display"/>
+                                    <!-- Esta columna mostrará el nombre del Lote, o "Aporte manual" -->
                                     <field name="payslip_run_name"/>
                                     <field name="concept"/>
                                     <field name="amount" sum="Total"/>
-                                </tree>
-                            </field>
-                        </page>
-                        <page string="Cargas y Ajustes Manuales">
-                            <field name="manual_line_ids">
-                                <tree editable="bottom">
-                                    <field name="date"/>
-                                    <field name="description"/>
-                                    <field name="type"/>
-                                    <field name="amount" sum="Total Ajustes"/>
                                 </tree>
                             </field>
                         </page>
@@ -152,6 +149,50 @@
         <field name="name">Saldos Acumulados</field>
         <field name="res_model">asosigma.member.account</field>
         <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="view_asosigma_manual_adjustment_wizard" model="ir.ui.view">
+        <field name="name">asosigma.manual.adjustment.wizard.form</field>
+        <field name="model">asosigma.manual.adjustment.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="account_id" invisible="1"/>
+                    <field name="type"/>
+                    <field name="amount"/>
+                </group>
+                <footer>
+                    <button string="Confirmar Carga" name="action_confirm" type="object" class="oe_highlight"/>
+                    <button string="Cancelar" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_asosigma_contribution_line_form" model="ir.ui.view">
+        <field name="name">asosigma.contribution.line.form</field>
+        <field name="model">asosigma.contribution.line</field>
+        <field name="arch" type="xml">
+            <form create="0" edit="0">
+                <sheet>
+                    <group>
+                        <group string="Información del Asociado">
+                            <!-- Aquí mostramos el Contacto en vez del empleado -->
+                            <field name="partner_id" options="{'no_open': False}"/>
+                            <field name="identification_id"/>
+                            <field name="company_id"/>
+                        </group>
+                        <group string="Detalle de Aportación">
+                            <field name="reference_display" string="Referencia / Lote"/>
+                            <field name="payslip_run_name" string="Planilla / Origen"/>
+                            <field name="concept"/>
+                            <field name="amount"/>
+                            <field name="is_manual" invisible="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
     </record>
 
     <menuitem id="menu_asosigma_root" name="ASOSIGMA" sequence="10" web_icon="asosigma_contributions,static/description/icon.png"/>

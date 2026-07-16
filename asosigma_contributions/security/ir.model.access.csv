@@ -3,4 +3,4 @@ access_asosigma_contribution_batch,asosigma.contribution.batch,model_asosigma_co
 access_asosigma_contribution_line,asosigma.contribution.line,model_asosigma_contribution_line,,1,1,1,1
 access_asosigma_contribution_run,asosigma.contribution.run,model_asosigma_contribution_run,,1,1,1,1
 access_asosigma_member_account,asosigma.member.account,model_asosigma_member_account,,1,1,1,1
-access_asosigma_member_account_manual,asosigma.member.account.manual,model_asosigma_member_account_manual,,1,1,1,1
+access_asosigma_manual_adjustment_wizard,asosigma.manual.adjustment.wizard,model_asosigma_manual_adjustment_wizard,,1,1,1,1
