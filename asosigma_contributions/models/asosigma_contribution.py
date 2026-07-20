@@ -73,7 +73,7 @@ class AsosigmaContributionBatch(models.Model):
 
                 grouped_data[key] = {
                     'batch_id': self.id,
-                    'date': fields.Date.context_today(self),
+                    'date': line.slip_id.date_to,
                     'employee_id': employee.id,
                     'identification_id': employee.identification_id,
                     'is_member': is_member,
@@ -124,7 +124,6 @@ class AsosigmaMemberAccount(models.Model):
     total_extraordinary = fields.Float(string='Total Extraordinario', compute='_compute_totals', store=True)
     total_accumulated = fields.Float(string='Total General', compute='_compute_totals', store=True)
 
-    # Ahora el dominio acepta: o está confirmado el lote, o es una línea manual.
     line_ids = fields.One2many(
         'asosigma.contribution.line', 
         'account_id', 
@@ -135,7 +134,6 @@ class AsosigmaMemberAccount(models.Model):
     @api.depends('line_ids.amount', 'line_ids.code', 'line_ids.batch_id.state', 'line_ids.is_manual')
     def _compute_totals(self):
         for record in self:
-            # Filtramos para sumar solo líneas manuales o de lotes confirmados
             valid_lines = record.line_ids.filtered(lambda l: l.is_manual or (l.batch_id and l.batch_id.state == 'confirmed'))
             
             record.total_ordinary = sum(valid_lines.filtered(lambda l: l.code == 'AHORASOSIGMA').mapped('amount'))
@@ -148,7 +146,6 @@ class AsosigmaMemberAccount(models.Model):
             employee_name = record.employee_id.sudo().name if record.employee_id else "Sin Empleado"
             record.display_name = f"Saldo: {employee_name}"
 
-    # Acción que abre la ventana emergente para cargas manuales
     def action_add_manual_adjustment(self):
         self.ensure_one()
         return {
@@ -170,7 +167,6 @@ class AsosigmaContributionLine(models.Model):
     date = fields.Date(string='Fecha', default=fields.Date.context_today)
     
     employee_id = fields.Many2one('hr.employee', string='Empleado')
-    # Vinculamos el contacto para que en el form de la línea salga el partner
     partner_id = fields.Many2one('res.partner', related='employee_id.work_contact_id', string='Contacto Asociado', store=True, compute_sudo=True)
     identification_id = fields.Char(string='Identificación')
     is_member = fields.Boolean(string='Asociado Activo')
@@ -181,11 +177,9 @@ class AsosigmaContributionLine(models.Model):
     payslip_run_name = fields.Char(string='Lote de Nómina / Referencia')
     amount = fields.Float(string='Total')
 
-    # Campos nuevos para gestionar la lógica manual
     is_manual = fields.Boolean(string='Es Manual', default=False)
     manual_reference = fields.Char(string='Secuencia Manual')
     
-    # Este campo dinámico mostrará el nombre del Lote o la Secuencia manual
     reference_display = fields.Char(string='Referencia / Lote', compute='_compute_reference_display', store=True)
 
     @api.depends('batch_id.name', 'manual_reference', 'is_manual')
@@ -209,11 +203,9 @@ class AsosigmaManualAdjustmentWizard(models.TransientModel):
     amount = fields.Float(string='Monto', required=True, help="Positivo para sumar, negativo para restar.")
 
     def action_confirm(self):
-        # 1. Generar la secuencia manual
         seq = self.env['ir.sequence'].next_by_code('asosigma.manual.adjustment') or '/'
         concept = 'Ahorro Ordinario ASOSIGMA' if self.type == 'AHORASOSIGMA' else 'Ahorro Extraordinario ASOSIGMA'
         
-        # 2. Crear la línea directamente en asosigma.contribution.line
         self.env['asosigma.contribution.line'].create({
             'account_id': self.account_id.id,
             'employee_id': self.account_id.employee_id.id,
@@ -222,7 +214,7 @@ class AsosigmaManualAdjustmentWizard(models.TransientModel):
             'is_member': self.account_id.partner_id.is_asosigma_member,
             'code': self.type,
             'concept': concept,
-            'payslip_run_name': 'Aporte manual', # Aquí se cumple lo que pediste
+            'payslip_run_name': 'Aporte manual',
             'amount': self.amount,
             'is_manual': True,
             'manual_reference': seq,
