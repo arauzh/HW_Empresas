@@ -73,6 +73,7 @@ class AsosigmaContributionBatch(models.Model):
 
                 grouped_data[key] = {
                     'batch_id': self.id,
+                    'date': fields.Date.context_today(self),
                     'employee_id': employee.id,
                     'identification_id': employee.identification_id,
                     'is_member': is_member,
@@ -166,6 +167,7 @@ class AsosigmaContributionLine(models.Model):
     
     batch_id = fields.Many2one('asosigma.contribution.batch', string='Lote Origen', ondelete='cascade')
     account_id = fields.Many2one('asosigma.member.account', string='Cuenta Acumulada', ondelete='cascade')
+    date = fields.Date(string='Fecha', default=fields.Date.context_today)
     
     employee_id = fields.Many2one('hr.employee', string='Empleado')
     # Vinculamos el contacto para que en el form de la línea salga el partner
@@ -199,6 +201,7 @@ class AsosigmaManualAdjustmentWizard(models.TransientModel):
     _description = 'Asistente de Carga Manual'
 
     account_id = fields.Many2one('asosigma.member.account', string='Cuenta', required=True)
+    date = fields.Date(string='Fecha', required=True, default=fields.Date.context_today)
     type = fields.Selection([
         ('AHORASOSIGMA', 'Ahorro Ordinario ASOSIGMA'),
         ('AHEXASOSIGMA', 'Ahorro Extraordinario ASOSIGMA')
@@ -223,6 +226,7 @@ class AsosigmaManualAdjustmentWizard(models.TransientModel):
             'amount': self.amount,
             'is_manual': True,
             'manual_reference': seq,
+            'date': self.date,
         })
 
 

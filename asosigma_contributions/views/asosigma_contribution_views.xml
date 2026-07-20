@@ -49,6 +49,7 @@
                         <page string="Aportaciones">
                             <field name="line_ids" readonly="1">
                                 <tree decoration-danger="is_member == False">
+                                    <field name="date"/>
                                     <field name="identification_id"/>
                                     <field name="employee_id"/>
                                     <field name="payslip_run_name"/>
@@ -130,6 +131,7 @@
                             <!-- La lista de líneas ahora muestra reference_display -->
                             <field name="line_ids" readonly="1">
                                 <tree>
+                                    <field name="date"/>
                                     <!-- Esta columna mostrará ASOSIGMA/2026/0001 o MANUAL/2026/0001 -->
                                     <field name="reference_display"/>
                                     <!-- Esta columna mostrará el nombre del Lote, o "Aporte manual" -->
@@ -158,6 +160,7 @@
             <form>
                 <group>
                     <field name="account_id" invisible="1"/>
+                    <field name="date"/>
                     <field name="type"/>
                     <field name="amount"/>
                 </group>
@@ -183,6 +186,7 @@
                             <field name="company_id"/>
                         </group>
                         <group string="Detalle de Aportación">
+                            <field name="date"/>
                             <field name="reference_display" string="Referencia / Lote"/>
                             <field name="payslip_run_name" string="Planilla / Origen"/>
                             <field name="concept"/>
