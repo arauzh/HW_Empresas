@@ -109,6 +109,9 @@ class AsosigmaContributionBatch(models.Model):
                 raise UserError(_("Para confirmar el lote debe seleccionar el Diario, la Cuenta de Cargo (Debe) y las Cuentas de Abono (Haber)."))
 
             for line in record.line_ids:
+                if not line.is_member:
+                    raise UserError(_("No puede confirmar el lote porque hay líneas de aportación donde el empleado no es Asociado Activo (is_member es falso)."))
+
                 account = self.env['asosigma.member.account'].search([('employee_id', '=', line.employee_id.id)], limit=1)
                 if not account:
                     account = self.env['asosigma.member.account'].create({
@@ -164,6 +167,8 @@ class AsosigmaContributionBatch(models.Model):
 
     def action_cancel(self):
         for record in self:
+            if record.state == 'posted':
+                raise UserError(_("No puede cancelar un lote cuyo asiento contable ya ha sido publicado."))
             if record.move_id:
                 if record.move_id.state == 'posted':
                     record.move_id.button_draft()
@@ -172,6 +177,12 @@ class AsosigmaContributionBatch(models.Model):
         
     def action_draft(self):
         self.write({'state': 'draft'})
+
+    def unlink(self):
+        for record in self:
+            if record.state == 'posted':
+                raise UserError(_("No puede borrar un lote cuyo asiento contable ya ha sido publicado."))
+        return super().unlink()
 
 
 class AsosigmaMemberAccount(models.Model):
@@ -187,19 +198,19 @@ class AsosigmaMemberAccount(models.Model):
     total_extraordinary = fields.Float(string='Total Extraordinario', compute='_compute_totals', store=True)
     total_accumulated = fields.Float(string='Total General', compute='_compute_totals', store=True)
 
-    # Ahora el dominio acepta: o está confirmado el lote, o es una línea manual.
+    # Ahora el dominio acepta: o está confirmado/publicado el lote, o es una línea manual.
     line_ids = fields.One2many(
         'asosigma.contribution.line', 
         'account_id', 
         string='Detalle de Aportaciones',
-        domain=['|', ('batch_id.state', '=', 'confirmed'), ('is_manual', '=', True)]
+        domain=['|', ('batch_id.state', 'in', ['confirmed', 'posted']), ('is_manual', '=', True)]
     )
 
     @api.depends('line_ids.amount', 'line_ids.code', 'line_ids.batch_id.state', 'line_ids.is_manual')
     def _compute_totals(self):
         for record in self:
-            # Filtramos para sumar solo líneas manuales o de lotes confirmados
-            valid_lines = record.line_ids.filtered(lambda l: l.is_manual or (l.batch_id and l.batch_id.state == 'confirmed'))
+            # Filtramos para sumar solo líneas manuales o de lotes confirmados/publicados
+            valid_lines = record.line_ids.filtered(lambda l: l.is_manual or (l.batch_id and l.batch_id.state in ['confirmed', 'posted']))
             
             record.total_ordinary = sum(valid_lines.filtered(lambda l: l.code == 'AHORASOSIGMA').mapped('amount'))
             record.total_extraordinary = sum(valid_lines.filtered(lambda l: l.code == 'AHEXASOSIGMA').mapped('amount'))
