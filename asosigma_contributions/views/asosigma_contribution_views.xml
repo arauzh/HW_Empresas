@@ -11,7 +11,7 @@
                 <field name="date_end"/>
                 <field name="total_ordinary" sum="Total Ordinario"/>
                 <field name="total_extraordinary" sum="Total Extraordinario"/>
-                <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state == 'confirmed'"/>
+                <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-warning="state == 'confirmed'" decoration-success="state == 'posted'"/>
             </tree>
         </field>
     </record>
@@ -27,7 +27,7 @@
                     <button name="action_draft" string="Volver a Borrador" type="object" invisible="state != 'cancel'"/>
                     <button name="action_cancel" string="Cancelar" type="object" invisible="state in ('cancel')"/>
                     
-                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,posted"/>
                 </header>
                 <sheet>
                     <div class="oe_title">
@@ -36,13 +36,27 @@
                         </h1>
                     </div>
                     <group>
-                        <group>
+                        <group string="Periodo">
                             <field name="date_start" readonly="state != 'draft'"/>
                             <field name="date_end" readonly="state != 'draft'"/>
+                            <field name="company_id" readonly="state != 'draft'" groups="base.group_multi_company"/>
                         </group>
-                        <group>
+                        <group string="Totales">
                             <field name="total_ordinary"/>
                             <field name="total_extraordinary"/>
+                        </group>
+                    </group>
+                    <group string="Contabilidad">
+                        <group>
+                            <field name="journal_id" readonly="state != 'draft'" required="state == 'draft'"/>
+                            <field name="accounting_date" readonly="state != 'draft'" required="state == 'draft'"/>
+                            <field name="move_ref" invisible="not move_id"/>
+                            <field name="move_id" invisible="not move_id"/>
+                        </group>
+                        <group>
+                            <field name="debit_account_id" readonly="state != 'draft'" required="state == 'draft'"/>
+                            <field name="ordinary_credit_account_id" readonly="state != 'draft'" required="state == 'draft'"/>
+                            <field name="extraordinary_credit_account_id" readonly="state != 'draft'" required="state == 'draft'"/>
                         </group>
                     </group>
                     <notebook>

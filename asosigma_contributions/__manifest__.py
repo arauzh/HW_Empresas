@@ -10,6 +10,7 @@
         'contacts',
         'hr_payroll',
         'mail',
+        'account',
     ],
     'data': [
         'views/res_partner_views.xml',
