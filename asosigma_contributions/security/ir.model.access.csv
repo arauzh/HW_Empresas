@@ -4,3 +4,5 @@ access_asosigma_contribution_line,asosigma.contribution.line,model_asosigma_cont
 access_asosigma_contribution_run,asosigma.contribution.run,model_asosigma_contribution_run,,1,1,1,1
 access_asosigma_member_account,asosigma.member.account,model_asosigma_member_account,,1,1,1,1
 access_asosigma_manual_adjustment_wizard,asosigma.manual.adjustment.wizard,model_asosigma_manual_adjustment_wizard,,1,1,1,1
+access_asosigma_interest_batch,asosigma.interest.batch,model_asosigma_interest_batch,,1,1,1,1
+access_asosigma_interest_line,asosigma.interest.line,model_asosigma_interest_line,,1,1,1,1

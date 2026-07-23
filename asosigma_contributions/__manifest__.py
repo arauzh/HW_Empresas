@@ -16,6 +16,7 @@
         'views/res_partner_views.xml',
         'data/sequence.xml',
         'views/asosigma_contribution_views.xml',
+        'views/asosigma_interest_views.xml',
         'security/ir.model.access.csv'
     ],
     'installable': True,

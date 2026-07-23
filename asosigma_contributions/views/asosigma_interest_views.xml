@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_asosigma_interest_tree" model="ir.ui.view">
+        <field name="name">asosigma.interest.batch.tree</field>
+        <field name="model">asosigma.interest.batch</field>
+        <field name="arch" type="xml">
+            <tree decoration-info="state == 'draft'" decoration-success="state == 'confirmed'">
+                <field name="name"/>
+                <field name="year"/>
+                <field name="month"/>
+                <field name="total_interest" sum="Total Interés"/>
+                <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-warning="state == 'calculated'" decoration-success="state == 'confirmed'"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_asosigma_interest_form" model="ir.ui.view">
+        <field name="name">asosigma.interest.batch.form</field>
+        <field name="model">asosigma.interest.batch</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_consult" string="Consultar" type="object" class="oe_highlight" invisible="state not in ('draft', 'consulted')"/>
+                    <button name="action_calculate" string="Calcular" type="object" class="oe_highlight" invisible="state not in ('consulted', 'calculated')"/>
+                    <button name="action_confirm" string="Confirmar" type="object" class="oe_highlight" invisible="state != 'calculated'"/>
+                    <button name="action_draft" string="Volver a Borrador" type="object" invisible="state == 'draft'"/>
+                    
+                    <field name="state" widget="statusbar" statusbar_visible="draft,consulted,calculated,confirmed"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="year" readonly="state != 'draft'"/>
+                            <field name="month" readonly="state != 'draft'"/>
+                        </group>
+                        <group>
+                            <field name="total_interest" readonly="state == 'confirmed'"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Distribución de Intereses">
+                            <field name="line_ids" readonly="1">
+                                <tree>
+                                    <field name="partner_id"/>
+                                    <field name="total_ordinary" sum="Total Ordinario"/>
+                                    <field name="employer_contribution" sum="Aportes Patronales"/>
+                                    <field name="total_extraordinary" sum="Total Extraordinario"/>
+                                    <field name="total_sum" sum="Total Suma"/>
+                                    <field name="percentage" sum="Total %"/>
+                                    <field name="canasta" sum="Total Canasta" decoration-bf="1"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_asosigma_interest" model="ir.actions.act_window">
+        <field name="name">Intereses Mensuales</field>
+        <field name="res_model">asosigma.interest.batch</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Asumiendo que menu_asosigma_root ya existe en views/asosigma_contribution_views.xml -->
+    <menuitem id="menu_asosigma_interests" name="Intereses Mensuales" parent="menu_asosigma_root" action="action_asosigma_interest" sequence="3"/>
+
+</odoo>

@@ -15,5 +15,12 @@
             <field name="padding">4</field>
             <field name="company_id" eval="False"/>
         </record>
+
+        <record id="seq_asosigma_interest_batch" model="ir.sequence">
+            <field name="name">Lote de Intereses Mensuales ASOSIGMA</field>
+            <field name="code">asosigma.interest.batch.sequence</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
     </data>
 </odoo>
