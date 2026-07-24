@@ -10,7 +10,7 @@
                 <field name="year"/>
                 <field name="month"/>
                 <field name="total_interest" sum="Total Interés"/>
-                <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-warning="state == 'calculated'" decoration-success="state == 'confirmed'"/>
+                <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-warning="state == 'calculated'" decoration-success="state in ('confirmed', 'posted')" decoration-muted="state == 'cancel'"/>
             </tree>
         </field>
     </record>
@@ -24,9 +24,10 @@
                     <button name="action_consult" string="Consultar" type="object" class="oe_highlight" invisible="state not in ('draft', 'consulted')"/>
                     <button name="action_calculate" string="Calcular" type="object" class="oe_highlight" invisible="state not in ('consulted', 'calculated')"/>
                     <button name="action_confirm" string="Confirmar" type="object" class="oe_highlight" invisible="state != 'calculated'"/>
-                    <button name="action_draft" string="Volver a Borrador" type="object" invisible="state == 'draft'"/>
+                    <button name="action_draft" string="Volver a Borrador" type="object" invisible="state != 'cancel'"/>
+                    <button name="action_cancel" string="Cancelar" type="object" invisible="state in ('cancel', 'posted')"/>
                     
-                    <field name="state" widget="statusbar" statusbar_visible="draft,consulted,calculated,confirmed"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,consulted,calculated,confirmed,posted"/>
                 </header>
                 <sheet>
                     <div class="oe_title">
@@ -40,7 +41,20 @@
                             <field name="month" readonly="state != 'draft'"/>
                         </group>
                         <group>
-                            <field name="total_interest" readonly="state == 'confirmed'"/>
+                            <field name="total_interest" readonly="state in ('confirmed', 'posted', 'cancel')"/>
+                        </group>
+                    </group>
+                    <group string="Contabilidad">
+                        <group>
+                            <field name="journal_id" readonly="state in ('confirmed', 'posted', 'cancel')" required="state == 'calculated'"/>
+                            <field name="accounting_date" readonly="state in ('confirmed', 'posted', 'cancel')" required="state == 'calculated'"/>
+                            <field name="move_ref" invisible="not move_id"/>
+                            <field name="move_id" invisible="not move_id"/>
+                            <field name="company_id" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="debit_account_id" readonly="state in ('confirmed', 'posted', 'cancel')" required="state == 'calculated'"/>
+                            <field name="credit_account_id" readonly="state in ('confirmed', 'posted', 'cancel')" required="state == 'calculated'"/>
                         </group>
                     </group>
                     <notebook>

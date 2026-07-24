@@ -197,6 +197,7 @@ class AsosigmaMemberAccount(models.Model):
     total_ordinary = fields.Float(string='Total Ordinario', compute='_compute_totals', store=True)
     total_extraordinary = fields.Float(string='Total Extraordinario', compute='_compute_totals', store=True)
     total_accumulated = fields.Float(string='Total General', compute='_compute_totals', store=True)
+    total_canasta = fields.Float(string='Total Canasta', compute='_compute_totals', store=True)
 
     # Ahora el dominio acepta: o está confirmado/publicado el lote, o es una línea manual.
     line_ids = fields.One2many(
@@ -205,8 +206,15 @@ class AsosigmaMemberAccount(models.Model):
         string='Detalle de Aportaciones',
         domain=['|', ('batch_id.state', 'in', ['confirmed', 'posted']), ('is_manual', '=', True)]
     )
+    
+    interest_line_ids = fields.One2many(
+        'asosigma.interest.line',
+        'account_id',
+        string='Detalle de Intereses',
+        domain=['|', ('batch_id.state', 'in', ['confirmed', 'posted']), ('is_manual', '=', True)]
+    )
 
-    @api.depends('line_ids.amount', 'line_ids.code', 'line_ids.batch_id.state', 'line_ids.is_manual')
+    @api.depends('line_ids.amount', 'line_ids.code', 'line_ids.batch_id.state', 'line_ids.is_manual', 'interest_line_ids.canasta', 'interest_line_ids.batch_id.state')
     def _compute_totals(self):
         for record in self:
             # Filtramos para sumar solo líneas manuales o de lotes confirmados/publicados
@@ -215,6 +223,9 @@ class AsosigmaMemberAccount(models.Model):
             record.total_ordinary = sum(valid_lines.filtered(lambda l: l.code == 'AHORASOSIGMA').mapped('amount'))
             record.total_extraordinary = sum(valid_lines.filtered(lambda l: l.code == 'AHEXASOSIGMA').mapped('amount'))
             record.total_accumulated = record.total_ordinary + record.total_extraordinary
+            
+            valid_interests = record.interest_line_ids.filtered(lambda l: l.is_manual or (l.batch_id and l.batch_id.state in ['confirmed', 'posted']))
+            record.total_canasta = sum(valid_interests.mapped('canasta'))
 
     @api.depends('employee_id')
     def _compute_display_name(self):
@@ -278,30 +289,45 @@ class AsosigmaManualAdjustmentWizard(models.TransientModel):
     date = fields.Date(string='Fecha', required=True, default=fields.Date.context_today)
     type = fields.Selection([
         ('AHORASOSIGMA', 'Ahorro Ordinario ASOSIGMA'),
-        ('AHEXASOSIGMA', 'Ahorro Extraordinario ASOSIGMA')
-    ], string='Tipo de Ahorro', required=True, default='AHORASOSIGMA')
+        ('AHEXASOSIGMA', 'Ahorro Extraordinario ASOSIGMA'),
+        ('CANASTA', 'Canasta (Intereses)')
+    ], string='Tipo de Ajuste', required=True, default='AHORASOSIGMA')
     amount = fields.Float(string='Monto', required=True, help="Positivo para sumar, negativo para restar.")
 
     def action_confirm(self):
-        # 1. Generar la secuencia manual
         seq = self.env['ir.sequence'].next_by_code('asosigma.manual.adjustment') or '/'
-        concept = 'Ahorro Ordinario ASOSIGMA' if self.type == 'AHORASOSIGMA' else 'Ahorro Extraordinario ASOSIGMA'
         
-        # 2. Crear la línea directamente en asosigma.contribution.line
-        self.env['asosigma.contribution.line'].create({
-            'account_id': self.account_id.id,
-            'employee_id': self.account_id.employee_id.id,
-            'identification_id': self.account_id.identification_id,
-            'company_id': self.account_id.company_id.id,
-            'is_member': self.account_id.partner_id.is_asosigma_member,
-            'code': self.type,
-            'concept': concept,
-            'payslip_run_name': 'Aporte manual', # Aquí se cumple lo que pediste
-            'amount': self.amount,
-            'is_manual': True,
-            'manual_reference': seq,
-            'date': self.date,
-        })
+        if self.type == 'CANASTA':
+            self.env['asosigma.interest.line'].create({
+                'account_id': self.account_id.id,
+                'partner_id': self.account_id.partner_id.id,
+                'total_ordinary': 0.0,
+                'employer_contribution': 0.0,
+                'total_extraordinary': 0.0,
+                'total_sum': 0.0,
+                'percentage': 0.0,
+                'canasta': self.amount,
+                'is_manual': True,
+                'manual_reference': seq,
+                'date': self.date,
+                'concept': 'Ajuste Manual Canasta',
+            })
+        else:
+            concept = 'Ahorro Ordinario ASOSIGMA' if self.type == 'AHORASOSIGMA' else 'Ahorro Extraordinario ASOSIGMA'
+            self.env['asosigma.contribution.line'].create({
+                'account_id': self.account_id.id,
+                'employee_id': self.account_id.employee_id.id,
+                'identification_id': self.account_id.identification_id,
+                'company_id': self.account_id.company_id.id,
+                'is_member': self.account_id.partner_id.is_asosigma_member,
+                'code': self.type,
+                'concept': concept,
+                'payslip_run_name': 'Aporte manual',
+                'amount': self.amount,
+                'is_manual': True,
+                'manual_reference': seq,
+                'date': self.date,
+            })
 
 
 class AsosigmaContributionRun(models.Model):
@@ -318,10 +344,16 @@ class AccountMove(models.Model):
         res = super().action_post()
         batches = self.env['asosigma.contribution.batch'].search([('move_id', 'in', self.ids), ('state', '=', 'confirmed')])
         batches.write({'state': 'posted'})
+        
+        interest_batches = self.env['asosigma.interest.batch'].search([('move_id', 'in', self.ids), ('state', '=', 'confirmed')])
+        interest_batches.write({'state': 'posted'})
         return res
 
     def button_draft(self):
         res = super().button_draft()
         batches = self.env['asosigma.contribution.batch'].search([('move_id', 'in', self.ids), ('state', '=', 'posted')])
         batches.write({'state': 'confirmed'})
+        
+        interest_batches = self.env['asosigma.interest.batch'].search([('move_id', 'in', self.ids), ('state', '=', 'posted')])
+        interest_batches.write({'state': 'confirmed'})
         return res

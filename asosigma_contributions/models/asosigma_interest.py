@@ -21,11 +21,21 @@ class AsosigmaInterestBatch(models.Model):
     
     total_interest = fields.Float(string='Interés Total', required=True, tracking=True)
     
+    company_id = fields.Many2one('res.company', string='Empresa', default=lambda self: self.env.company)
+    journal_id = fields.Many2one('account.journal', string='Diario Contable', domain="[('type', 'in', ['general', 'bank', 'cash'])]")
+    accounting_date = fields.Date(string='Fecha Contable', default=fields.Date.context_today)
+    move_id = fields.Many2one('account.move', string='Asiento Contable', readonly=True)
+    move_ref = fields.Char(related='move_id.ref', string='Referencia del Asiento', readonly=True)
+    debit_account_id = fields.Many2one('account.account', string='Cuenta de Cargo (Debe)')
+    credit_account_id = fields.Many2one('account.account', string='Cuenta de Abono (Haber)')
+    
     state = fields.Selection([
         ('draft', 'Borrador'),
         ('consulted', 'Consultado'),
         ('calculated', 'Calculado'),
-        ('confirmed', 'Confirmado')
+        ('confirmed', 'Confirmado'),
+        ('posted', 'Asiento Publicado'),
+        ('cancel', 'Cancelado')
     ], string='Estado', default='draft', tracking=True)
 
     line_ids = fields.One2many('asosigma.interest.line', 'batch_id', string='Detalle de Distribución')
@@ -70,6 +80,7 @@ class AsosigmaInterestBatch(models.Model):
                 total_sum = total_ord + emp_contrib + total_ext
                 
                 lines_val.append((0, 0, {
+                    'account_id': account.id,
                     'partner_id': account.partner_id.id,
                     'total_ordinary': total_ord,
                     'employer_contribution': emp_contrib,
@@ -108,10 +119,63 @@ class AsosigmaInterestBatch(models.Model):
         for record in self:
             if record.state != 'calculated':
                 raise UserError(_("Debe calcular los intereses antes de confirmar."))
+            if not record.journal_id or not record.debit_account_id or not record.credit_account_id:
+                raise UserError(_("Para confirmar el lote debe seleccionar el Diario y las Cuentas de Cargo y Abono."))
+            
+            total_canasta_all = sum(record.line_ids.mapped('canasta'))
+            
+            if total_canasta_all > 0:
+                move_lines = []
+                
+                # Debe
+                move_lines.append((0, 0, {
+                    'name': f"Total Intereses {record.name}",
+                    'account_id': record.debit_account_id.id,
+                    'debit': total_canasta_all,
+                    'credit': 0.0,
+                }))
+                
+                # Haber
+                move_lines.append((0, 0, {
+                    'name': f"Total Intereses {record.name}",
+                    'account_id': record.credit_account_id.id,
+                    'debit': 0.0,
+                    'credit': total_canasta_all,
+                }))
+                
+                create_date_str = record.create_date.strftime('%Y-%m-%d') if record.create_date else fields.Date.context_today(record).strftime('%Y-%m-%d')
+                ref_name = f"{record.name} - {create_date_str}"
+                
+                move_vals = {
+                    'journal_id': record.journal_id.id,
+                    'date': record.accounting_date,
+                    'ref': ref_name,
+                    'company_id': record.company_id.id,
+                    'line_ids': move_lines,
+                }
+                move = self.env['account.move'].create(move_vals)
+                record.move_id = move.id
+                
             record.write({'state': 'confirmed'})
             
+    def action_cancel(self):
+        for record in self:
+            if record.state == 'posted':
+                raise UserError(_("No puede cancelar un lote cuyo asiento contable ya ha sido publicado."))
+            if record.move_id:
+                if record.move_id.state == 'posted':
+                    record.move_id.button_draft()
+                record.move_id.button_cancel()
+            record.write({'state': 'cancel'})
+
     def action_draft(self):
         self.write({'state': 'draft'})
+
+    def unlink(self):
+        for record in self:
+            if record.state == 'posted':
+                raise UserError(_("No puede borrar un lote cuyo asiento contable ya ha sido publicado."))
+        return super().unlink()
 
 
 class AsosigmaInterestLine(models.Model):
@@ -119,6 +183,7 @@ class AsosigmaInterestLine(models.Model):
     _description = 'Línea de Interés Mensual'
 
     batch_id = fields.Many2one('asosigma.interest.batch', string='Lote de Interés', ondelete='cascade')
+    account_id = fields.Many2one('asosigma.member.account', string='Cuenta Acumulada', ondelete='cascade')
     partner_id = fields.Many2one('res.partner', string='Contacto Asociado', required=True)
     
     total_ordinary = fields.Float(string='Total Ordinario')
@@ -128,3 +193,18 @@ class AsosigmaInterestLine(models.Model):
     
     percentage = fields.Float(string='(%) Porcentaje')
     canasta = fields.Float(string='Canasta')
+    
+    date = fields.Date(string='Fecha', default=fields.Date.context_today)
+    concept = fields.Char(string='Concepto')
+    is_manual = fields.Boolean(string='Es Manual', default=False)
+    manual_reference = fields.Char(string='Secuencia Manual')
+    
+    reference_display = fields.Char(string='Referencia / Lote', compute='_compute_reference_display', store=True)
+
+    @api.depends('batch_id.name', 'manual_reference', 'is_manual')
+    def _compute_reference_display(self):
+        for line in self:
+            if line.is_manual:
+                line.reference_display = line.manual_reference
+            else:
+                line.reference_display = line.batch_id.name if line.batch_id else ''

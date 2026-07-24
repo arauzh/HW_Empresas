@@ -109,6 +109,7 @@
                 <field name="total_ordinary" sum="Total Ordinario"/>
                 <field name="total_extraordinary" sum="Total Extraordinario"/>
                 <field name="total_accumulated" sum="Total Acumulado" decoration-bf="1"/>
+                <field name="total_canasta" sum="Total Canasta" decoration-bf="1" decoration-success="1"/>
             </tree>
         </field>
     </record>
@@ -138,6 +139,7 @@
                             <field name="total_ordinary"/>
                             <field name="total_extraordinary"/>
                             <field name="total_accumulated" class="oe_subtotal_footer_separator" decoration-bf="1"/>
+                            <field name="total_canasta" decoration-bf="1" decoration-success="1"/>
                         </group>
                     </group>
                     <notebook>
@@ -152,6 +154,17 @@
                                     <field name="payslip_run_name"/>
                                     <field name="concept"/>
                                     <field name="amount" sum="Total"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Detalle de Intereses">
+                            <field name="interest_line_ids" readonly="1">
+                                <tree>
+                                    <field name="date"/>
+                                    <field name="reference_display"/>
+                                    <field name="concept"/>
+                                    <field name="percentage"/>
+                                    <field name="canasta" sum="Total"/>
                                 </tree>
                             </field>
                         </page>
