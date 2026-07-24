@@ -121,7 +121,6 @@ class AsosigmaContributionBatch(models.Model):
 
             move_lines = []
             
-            # Línea 1: Debe (Total general)
             total_debit = record.total_ordinary + record.total_extraordinary
             if total_debit > 0:
                 move_lines.append((0, 0, {
@@ -131,7 +130,6 @@ class AsosigmaContributionBatch(models.Model):
                     'credit': 0.0,
                 }))
 
-            # Línea 2: Haber (Ahorro Ordinario)
             if record.total_ordinary > 0:
                 move_lines.append((0, 0, {
                     'name': f"Ahorro Ordinario {record.name}",
@@ -140,7 +138,6 @@ class AsosigmaContributionBatch(models.Model):
                     'credit': record.total_ordinary,
                 }))
 
-            # Línea 3: Haber (Ahorro Extraordinario)
             if record.total_extraordinary > 0:
                 move_lines.append((0, 0, {
                     'name': f"Ahorro Extraordinario {record.name}",
@@ -199,7 +196,6 @@ class AsosigmaMemberAccount(models.Model):
     total_accumulated = fields.Float(string='Total General', compute='_compute_totals', store=True)
     total_canasta = fields.Float(string='Total Canasta', compute='_compute_totals', store=True)
 
-    # Ahora el dominio acepta: o está confirmado/publicado el lote, o es una línea manual.
     line_ids = fields.One2many(
         'asosigma.contribution.line', 
         'account_id', 
@@ -217,7 +213,6 @@ class AsosigmaMemberAccount(models.Model):
     @api.depends('line_ids.amount', 'line_ids.code', 'line_ids.batch_id.state', 'line_ids.is_manual', 'interest_line_ids.canasta', 'interest_line_ids.batch_id.state')
     def _compute_totals(self):
         for record in self:
-            # Filtramos para sumar solo líneas manuales o de lotes confirmados/publicados
             valid_lines = record.line_ids.filtered(lambda l: l.is_manual or (l.batch_id and l.batch_id.state in ['confirmed', 'posted']))
             
             record.total_ordinary = sum(valid_lines.filtered(lambda l: l.code == 'AHORASOSIGMA').mapped('amount'))
@@ -233,7 +228,6 @@ class AsosigmaMemberAccount(models.Model):
             employee_name = record.employee_id.sudo().name if record.employee_id else "Sin Empleado"
             record.display_name = f"Saldo: {employee_name}"
 
-    # Acción que abre la ventana emergente para cargas manuales
     def action_add_manual_adjustment(self):
         self.ensure_one()
         return {
@@ -255,7 +249,6 @@ class AsosigmaContributionLine(models.Model):
     date = fields.Date(string='Fecha', default=fields.Date.context_today)
     
     employee_id = fields.Many2one('hr.employee', string='Empleado')
-    # Vinculamos el contacto para que en el form de la línea salga el partner
     partner_id = fields.Many2one('res.partner', related='employee_id.work_contact_id', string='Contacto Asociado', store=True, compute_sudo=True)
     identification_id = fields.Char(string='Identificación')
     is_member = fields.Boolean(string='Asociado Activo')
@@ -266,11 +259,9 @@ class AsosigmaContributionLine(models.Model):
     payslip_run_name = fields.Char(string='Lote de Nómina / Referencia')
     amount = fields.Float(string='Total')
 
-    # Campos nuevos para gestionar la lógica manual
     is_manual = fields.Boolean(string='Es Manual', default=False)
     manual_reference = fields.Char(string='Secuencia Manual')
     
-    # Este campo dinámico mostrará el nombre del Lote o la Secuencia manual
     reference_display = fields.Char(string='Referencia / Lote', compute='_compute_reference_display', store=True)
 
     @api.depends('batch_id.name', 'manual_reference', 'is_manual')

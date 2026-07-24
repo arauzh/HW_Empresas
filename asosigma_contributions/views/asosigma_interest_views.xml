@@ -88,7 +88,6 @@
         <field name="view_mode">tree,form</field>
     </record>
 
-    <!-- Asumiendo que menu_asosigma_root ya existe en views/asosigma_contribution_views.xml -->
     <menuitem id="menu_asosigma_interests" name="Intereses Mensuales" parent="menu_asosigma_root" action="action_asosigma_interest" sequence="3"/>
 
 </odoo>

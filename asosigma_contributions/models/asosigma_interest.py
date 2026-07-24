@@ -40,6 +40,19 @@ class AsosigmaInterestBatch(models.Model):
 
     line_ids = fields.One2many('asosigma.interest.line', 'batch_id', string='Detalle de Distribución')
 
+    @api.constrains('year', 'month', 'state')
+    def _check_unique_year_month(self):
+        for record in self:
+            if record.state != 'cancel':
+                domain = [
+                    ('year', '=', record.year),
+                    ('month', '=', record.month),
+                    ('state', '!=', 'cancel'),
+                    ('id', '!=', record.id)
+                ]
+                if self.search_count(domain) > 0:
+                    raise UserError(_("No se puede tener más de un lote de intereses activo para el mismo Año y Mes."))
+
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
@@ -72,6 +85,10 @@ class AsosigmaInterestBatch(models.Model):
             if not accounts:
                 raise UserError(_("No se encontraron contactos en Saldos Acumulados."))
             
+            month_dict = dict(self._fields['month'].selection)
+            month_name = month_dict.get(record.month, '')
+            concept_name = f"Canasta basica {month_name}-{record.year}"
+            
             lines_val = []
             for account in accounts:
                 total_ord = account.total_ordinary
@@ -88,6 +105,7 @@ class AsosigmaInterestBatch(models.Model):
                     'total_sum': total_sum,
                     'percentage': 0.0,
                     'canasta': 0.0,
+                    'concept': concept_name,
                 }))
             
             if lines_val:

@@ -3,8 +3,8 @@
     'version': '17.0.0.1',
     'category': 'Accounting',
     'summary': 'Gestión de aportaciones y ahorros ASOSIGMA',
-    'author': 'ASOSIGMA',
-    'website': '',
+    "author": "HW Contractor",
+    "website": "https://www.hw.com.gt",
     'license': 'LGPL-3',
     'depends': [
         'contacts',

@@ -104,7 +104,6 @@
         <field name="arch" type="xml">
             <tree create="0" edit="0">
                 <field name="identification_id"/>
-                <field name="employee_id"/>
                 <field name="partner_id"/> <field name="company_id"/>
                 <field name="total_ordinary" sum="Total Ordinario"/>
                 <field name="total_extraordinary" sum="Total Extraordinario"/>
@@ -119,7 +118,6 @@
         <field name="model">asosigma.member.account</field>
         <field name="arch" type="xml">
             <form create="0">
-                <!-- AÑADIMOS EL HEADER CON EL BOTÓN AQUÍ -->
                 <header>
                     <button name="action_add_manual_adjustment" type="object" string="Carga / Ajuste Manual" class="oe_highlight"/>
                 </header>
@@ -144,13 +142,10 @@
                     </group>
                     <notebook>
                         <page string="Detalle de Aportaciones">
-                            <!-- La lista de líneas ahora muestra reference_display -->
                             <field name="line_ids" readonly="1">
                                 <tree>
                                     <field name="date"/>
-                                    <!-- Esta columna mostrará ASOSIGMA/2026/0001 o MANUAL/2026/0001 -->
                                     <field name="reference_display"/>
-                                    <!-- Esta columna mostrará el nombre del Lote, o "Aporte manual" -->
                                     <field name="payslip_run_name"/>
                                     <field name="concept"/>
                                     <field name="amount" sum="Total"/>
@@ -207,7 +202,6 @@
                 <sheet>
                     <group>
                         <group string="Información del Asociado">
-                            <!-- Aquí mostramos el Contacto en vez del empleado -->
                             <field name="partner_id" options="{'no_open': False}"/>
                             <field name="identification_id"/>
                             <field name="company_id"/>
