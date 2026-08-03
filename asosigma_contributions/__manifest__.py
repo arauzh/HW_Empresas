@@ -1,6 +1,6 @@
 {
     'name': 'ASOSIGMA Contributions',
-    'version': '17.0.0.1',
+    'version': '17.0.0.2',
     'category': 'Accounting',
     'summary': 'Gestión de aportaciones y ahorros ASOSIGMA',
     "author": "HW Contractor",
