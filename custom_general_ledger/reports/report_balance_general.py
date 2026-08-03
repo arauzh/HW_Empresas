@@ -36,7 +36,7 @@ class ReportBalanceGeneral(models.AbstractModel):
         cr.execute(query, (company_id, move_state, date_to))
         data = {row[0]: row[1] for row in cr.fetchall()}
 
-        # 2. PnL Histórico
+        # 2. PnL Histórico (Se agrupa en cuenta 399)
         query_pnl_hist = """
             SELECT SUM(aml.balance)
             FROM account_move_line aml
@@ -51,9 +51,9 @@ class ReportBalanceGeneral(models.AbstractModel):
         res_hist = cr.fetchone()
         pnl_hist = res_hist[0] if res_hist and res_hist[0] else 0.0
 
-        # 3. PnL del Ejercicio
-        query_pnl_curr = """
-            SELECT SUM(aml.balance)
+        # 3. Cuentas de Resultados (Ingresos y Gastos) del Ejercicio
+        query_inc_exp = """
+            SELECT aml.account_id, SUM(aml.balance)
             FROM account_move_line aml
             JOIN account_move am ON am.id = aml.move_id
             JOIN account_account aa ON aa.id = aml.account_id
@@ -61,18 +61,21 @@ class ReportBalanceGeneral(models.AbstractModel):
             AND am.state = ANY(%s)
             AND aml.date >= %s AND aml.date <= %s
             AND aa.internal_group IN ('income', 'expense')
+            GROUP BY aml.account_id
         """
-        cr.execute(query_pnl_curr, (company_id, move_state, fiscal_year_start, date_to))
-        res_curr = cr.fetchone()
-        pnl_curr = res_curr[0] if res_curr and res_curr[0] else 0.0
+        cr.execute(query_inc_exp, (company_id, move_state, fiscal_year_start, date_to))
+        for row in cr.fetchall():
+            data[row[0]] = row[1]
 
         unaffected_acc = self.env['account.account'].search([
             ('account_type', '=', 'equity_unaffected'),
             ('company_id', '=', company_id)
         ], limit=1)
 
+        # En Odoo, el PnL histórico se suma dinámicamente a la cuenta de resultados acumulados
+        # No sumamos el pnl_curr porque las cuentas de ingresos/gastos ya se están imprimiendo individualmente
         if unaffected_acc:
-            data[unaffected_acc.id] = data.get(unaffected_acc.id, 0.0) + pnl_hist + pnl_curr
+            data[unaffected_acc.id] = data.get(unaffected_acc.id, 0.0) + pnl_hist
 
         accounts = self.env['account.account'].search([
             ('company_id', '=', company_id)
@@ -92,9 +95,6 @@ class ReportBalanceGeneral(models.AbstractModel):
         level3 = {}
 
         for acc in accounts:
-            if acc.internal_group not in ('asset', 'liability', 'equity'):
-                continue
-                
             balance = data.get(acc.id, 0.0) or 0.0
 
             if abs(balance) < 0.01:
@@ -131,25 +131,6 @@ class ReportBalanceGeneral(models.AbstractModel):
                     'parent': l2
                 }
 
-            level3[l3]['balance'] += balance
-
-        if not unaffected_acc and (abs(pnl_hist) >= 0.01 or abs(pnl_curr) >= 0.01):
-            code = '399'
-            balance = pnl_hist + pnl_curr
-            l1 = code[:1]
-            l2 = code[:2]
-            l3 = code[:3]
-            
-            if l1 not in level1:
-                level1[l1] = {'name': group_map.get(l1, f'Grupo {l1}'), 'balance': 0.0}
-            level1[l1]['balance'] += balance
-            
-            if l2 not in level2:
-                level2[l2] = {'name': group_map.get(l2, f'Subgrupo {l2}'), 'balance': 0.0, 'parent': l1}
-            level2[l2]['balance'] += balance
-            
-            if l3 not in level3:
-                level3[l3] = {'code': l3, 'name': 'RESULTADOS ACUMULADOS', 'balance': 0.0, 'parent': l2}
             level3[l3]['balance'] += balance
 
         lines = []
