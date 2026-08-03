@@ -1,6 +1,6 @@
 {
     'name': 'Reporte Libro Mayor, Diario, Balance general Personalizado',
-    'version': '17.0.0.2',
+    'version': '17.0.0.3',
     'category': 'Accounting/Reporting',
     'summary': 'Reporte de Libro Mayor, Diario y Balance general con estructura personalizada',
     'author': 'HW Constructor',

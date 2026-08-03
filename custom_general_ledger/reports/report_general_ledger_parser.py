@@ -108,9 +108,12 @@ class ReportCustomLedger(models.AbstractModel):
         # 7. Datos de la cuenta resultados
         if unaffected_acc:
             code_3 = unaffected_acc.code[:3]
-            if code_3 not in grouped_results:
-                grouped_results[code_3] = {'code': code_3, 'name': 'RESULTADOS ACUMULADOS', 'initial_balance': 0.0, 'debit': 0.0, 'credit': 0.0}
-            grouped_results[code_3]['initial_balance'] += pnl_historico
+        else:
+            code_3 = '399'
+
+        if code_3 not in grouped_results:
+            grouped_results[code_3] = {'code': code_3, 'name': 'RESULTADOS ACUMULADOS', 'initial_balance': 0.0, 'debit': 0.0, 'credit': 0.0}
+        grouped_results[code_3]['initial_balance'] += pnl_historico
 
         # 8. Formato XML
         report_lines = []

@@ -39,7 +39,8 @@ class ReportCustomDaily(models.AbstractModel):
             if debit == 0 and credit == 0:
                 continue
 
-            code_key = account.code[:3] if len(account.code) >= 3 else account.code
+            code = account.code or ''
+            code_key = code[:3] if len(code) >= 3 else code
 
             if code_key not in grouped_results:
                 # Se busca el nombre de la cuenta
