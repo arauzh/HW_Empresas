@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo import http
+from odoo import http, fields
 from odoo.http import request
 from datetime import datetime, timedelta
 from odoo.tools import float_round
@@ -191,6 +191,116 @@ class stockAPI(http.Controller):
             partner_iscompa = data.get('partner_iscompa')
             warehouse_id = data.get('warehouse_id')
             productos = data.get('productos', [])
+            
+            # -------------------------------------------------------------
+            # CONFIRMAR, ASIGNAR Y VALIDAR PICKING - ODOO 17
+            # -------------------------------------------------------------
+            def confirmar_asignar_validar(picking_record, effective_date=False):
+                """Confirma, reserva y valida completamente un stock.picking."""
+
+                # 1. Confirmar la transferencia
+                if picking_record.state == 'draft':
+                    picking_record.action_confirm()
+
+                # 2. Intentar reservar existencias
+                if picking_record.state in (
+                    'confirmed',
+                    'waiting',
+                    'partially_available',
+                ):
+                    picking_record.action_assign()
+
+                picking_record.invalidate_recordset()
+
+                # Para entregas no se permite una validación parcial.
+                # En recepciones Odoo normalmente permite continuar porque la
+                # ubicación origen es de tipo proveedor/cliente/transitoria.
+                if (
+                    picking_record.picking_type_code == 'outgoing'
+                    and picking_record.state != 'assigned'
+                ):
+                    unavailable_products = picking_record.move_ids.filtered(
+                        lambda move: move.state not in ('assigned', 'done', 'cancel')
+                    ).mapped('product_id.display_name')
+
+                    raise ValueError(
+                        'No existe disponibilidad suficiente para reservar y '
+                        'validar el picking %s. Productos pendientes: %s'
+                        % (
+                            picking_record.name,
+                            ', '.join(unavailable_products) or 'Sin detalle',
+                        )
+                    )
+
+                # 3. Registrar como realizada toda la cantidad solicitada.
+                # En Odoo 17 stock.move.quantity actualiza las cantidades
+                # realizadas de sus stock.move.line.
+                moves_to_process = picking_record.move_ids.filtered(
+                    lambda move: move.state not in ('done', 'cancel')
+                )
+
+                for move in moves_to_process:
+                    move.quantity = move.product_uom_qty
+
+                # 4. Validar el picking sin crear backorder.
+                validation_result = picking_record.with_context(
+                    skip_backorder=True,
+                    cancel_backorder=True,
+                    skip_immediate=True,
+                ).button_validate()
+
+                # Manejar asistentes devueltos por Odoo o personalizaciones.
+                if isinstance(validation_result, dict):
+                    res_model = validation_result.get('res_model')
+                    wizard_context = validation_result.get('context') or {}
+
+                    if res_model == 'stock.immediate.transfer':
+                        wizard = env[res_model].with_context(**wizard_context).create({
+                            'pick_ids': [(6, 0, picking_record.ids)],
+                        })
+                        wizard.process()
+
+                    elif res_model == 'stock.backorder.confirmation':
+                        wizard = env[res_model].with_context(**wizard_context).create({
+                            'pick_ids': [(6, 0, picking_record.ids)],
+                        })
+                        wizard.process_cancel_backorder()
+
+                picking_record.invalidate_recordset()
+
+                if picking_record.state != 'done':
+                    raise ValueError(
+                        'No fue posible validar el picking %s. Estado final: %s'
+                        % (picking_record.name, picking_record.state)
+                    )
+
+                # button_validate coloca la fecha actual. Se restaura la fecha
+                # efectiva enviada al API después de la validación.
+                if effective_date:
+                    picking_record.write({'date_done': effective_date})
+                    picking_record.move_ids.write({'date': effective_date})
+
+                return picking_record
+            
+            fecha_programada_raw = data.get('fecha_programada')
+            fecha_efectiva_raw = data.get('fecha_efectiva')
+            
+            try:
+                fecha_programada = (
+                    fields.Datetime.to_datetime(fecha_programada_raw)
+                    if fecha_programada_raw else False
+                )
+                fecha_efectiva = (
+                    fields.Datetime.to_datetime(fecha_efectiva_raw)
+                    if fecha_efectiva_raw else False
+                )
+            except (TypeError, ValueError):
+                return request.make_json_response({
+                    'success': False,
+                    'message': (
+                        'Formato de fecha inválido. Utilice YYYY-MM-DD HH:MM:SS para fecha_programada y fecha_efectiva.'
+                    )
+                }, status=400)
 
             if not partner_id and not partner_vat:
                 return request.make_json_response({
@@ -296,6 +406,12 @@ class stockAPI(http.Controller):
                 'origin': data.get('referencia', 'API Delivery'),
                 'company_id': company_id,
             }
+            
+            if fecha_programada:
+                picking_vals['scheduled_date'] = fecha_programada
+
+            if fecha_efectiva:
+                picking_vals['date_done'] = fecha_efectiva
 
             picking = env['stock.picking'].create(picking_vals)
 
@@ -329,6 +445,13 @@ class stockAPI(http.Controller):
                     'location_dest_id': picking.location_dest_id.id,
                     'company_id': company_id,
                 }
+                
+                # stock.move solamente posee un campo estándar de fecha.
+                # Se utiliza la fecha programada y, si no viene, la efectiva.
+                if fecha_efectiva :
+                    move_vals['date'] = fecha_efectiva 
+                elif fecha_programada:
+                    move_vals['date'] = fecha_programada
 
                 moves.append(move_vals)
 
@@ -356,13 +479,19 @@ class stockAPI(http.Controller):
                 )
 
                 receipt_vals = {
-                    'partner_id': partner.id,
+                    'partner_id': warehouse_origin.partner_id.id,
                     'picking_type_id': incoming_type.id,
                     'location_id': picking.location_dest_id.id,
                     'location_dest_id': receipt_location_dest_id,
                     'origin': picking.name,
                     'company_id': company_id,
                 }
+                
+                if fecha_programada:
+                    receipt_vals['scheduled_date'] = fecha_programada
+
+                if fecha_efectiva:
+                    receipt_vals['date_done'] = fecha_efectiva
 
                 receipt = env['stock.picking'].create(receipt_vals)
 
@@ -382,10 +511,22 @@ class stockAPI(http.Controller):
                         'location_id': receipt.location_id.id,
                         'location_dest_id': receipt.location_dest_id.id,
                         'company_id': company_id,
+                        # 'date': fecha_efectiva if fecha_efectiva else (fecha_programada if fecha_programada else False)
+                        'date': fecha_efectiva or fecha_programada or False
                     })
 
                 env['stock.move'].create(receipt_moves)
+            
+            # -------------------------------------------------------------
+            # CONFIRMAR, ASIGNAR Y VALIDAR LOS PICKINGS
+            # -------------------------------------------------------------
+            # Primero se completa la salida del almacén origen.
+            confirmar_asignar_validar(picking, fecha_efectiva)
 
+            # Si corresponde a traslado, se completa la recepción destino.
+            if receipt:
+                confirmar_asignar_validar(receipt, fecha_efectiva)
+            
             return request.make_json_response({
                 'success': True,
                 'is_inventory_transfer': is_inventory_transfer,
