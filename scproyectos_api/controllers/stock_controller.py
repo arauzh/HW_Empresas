@@ -287,11 +287,11 @@ class stockAPI(http.Controller):
             
             try:
                 fecha_programada = (
-                    fields.Datetime.to_datetime(fecha_programada_raw)
+                    fields.Datetime.to_datetime(fecha_programada_raw) + timedelta(hours=6)
                     if fecha_programada_raw else False
                 )
                 fecha_efectiva = (
-                    fields.Datetime.to_datetime(fecha_efectiva_raw)
+                    fields.Datetime.to_datetime(fecha_efectiva_raw) + timedelta(hours=6)
                     if fecha_efectiva_raw else False
                 )
             except (TypeError, ValueError):
