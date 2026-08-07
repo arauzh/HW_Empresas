@@ -11,7 +11,6 @@
         'hr_payroll',
         'mail',
         'account',
-        'advanced_loan_management',
     ],
     'data': [
         'views/res_partner_views.xml',

@@ -142,13 +142,10 @@
                     </group>
                     <notebook>
                         <page string="Detalle de Aportaciones">
-                            <!-- La lista de líneas ahora muestra reference_display -->
                             <field name="line_ids" readonly="1">
                                 <tree>
                                     <field name="date"/>
-                                    <!-- Esta columna mostrará ASOSIGMA/2026/0001 o MANUAL/2026/0001 -->
                                     <field name="reference_display"/>
-                                    <!-- Esta columna mostrará el nombre del Lote, o "Aporte manual" -->
                                     <field name="payslip_run_name"/>
                                     <field name="concept"/>
                                     <field name="amount" sum="Total"/>
@@ -223,7 +220,7 @@
         </field>
     </record>
 
-    <menuitem id="menu_asosigma_root" name="ASOSIGMA" sequence="10" web_icon="asosigma_contributions,static/description/icon.png" groups="advanced_loan_management.loan_management_group_user,advanced_loan_management.loan_management_group_manager"/>
+    <menuitem id="menu_asosigma_root" name="ASOSIGMA" sequence="10" web_icon="asosigma_contributions,static/description/icon.png"/>
     <menuitem id="menu_asosigma_contributions" name="Aportaciones" parent="menu_asosigma_root" action="action_asosigma_contribution" sequence="1"/>
     <menuitem id="menu_asosigma_accounts" name="Saldos Acumulados" parent="menu_asosigma_root" action="action_asosigma_member_account" sequence="2"/>
 </odoo>
