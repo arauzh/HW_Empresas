@@ -405,15 +405,19 @@ class stockAPI(http.Controller):
                 # 'location_dest_id': location_dest_id,
                 'origin': data.get('referencia', 'API Delivery'),
                 'company_id': company_id,
+                'scheduled_date': fecha_programada or False
             }
             
-            if fecha_programada:
-                picking_vals['scheduled_date'] = fecha_programada
+            # if fecha_programada:
+            #     picking_vals['scheduled_date'] = fecha_programada
 
-            if fecha_efectiva:
-                picking_vals['date_done'] = fecha_efectiva
+            # if fecha_efectiva:
+            #     picking_vals['date_done'] = fecha_efectiva
 
             picking = env['stock.picking'].create(picking_vals)
+            
+            if fecha_programada:
+                picking.write({'scheduled_date': fecha_programada})
 
             moves = []
 
@@ -448,10 +452,10 @@ class stockAPI(http.Controller):
                 
                 # stock.move solamente posee un campo estándar de fecha.
                 # Se utiliza la fecha programada y, si no viene, la efectiva.
-                if fecha_efectiva :
-                    move_vals['date'] = fecha_efectiva 
-                elif fecha_programada:
+                if fecha_programada:
                     move_vals['date'] = fecha_programada
+                elif fecha_efectiva :
+                    move_vals['date'] = fecha_efectiva 
 
                 moves.append(move_vals)
 
@@ -485,15 +489,19 @@ class stockAPI(http.Controller):
                     'location_dest_id': receipt_location_dest_id,
                     'origin': picking.name,
                     'company_id': company_id,
+                    'scheduled_date': fecha_programada or False
                 }
                 
-                if fecha_programada:
-                    receipt_vals['scheduled_date'] = fecha_programada
-
-                if fecha_efectiva:
-                    receipt_vals['date_done'] = fecha_efectiva
-
+                # if fecha_programada:
+                #     receipt_vals['scheduled_date'] = fecha_programada
+                    
+                # if fecha_efectiva:
+                #     receipt_vals['date_done'] = fecha_efectiva
+                
                 receipt = env['stock.picking'].create(receipt_vals)
+                
+                if fecha_programada:
+                    receipt.write({'scheduled_date': fecha_programada})
 
                 receipt_moves = []
 
@@ -512,7 +520,7 @@ class stockAPI(http.Controller):
                         'location_dest_id': receipt.location_dest_id.id,
                         'company_id': company_id,
                         # 'date': fecha_efectiva if fecha_efectiva else (fecha_programada if fecha_programada else False)
-                        'date': fecha_efectiva or fecha_programada or False
+                        'date': fecha_programada or fecha_efectiva or False
                     })
 
                 env['stock.move'].create(receipt_moves)
