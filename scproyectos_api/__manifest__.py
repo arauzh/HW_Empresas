@@ -14,7 +14,7 @@ Modulo con los apis de odoopro
     
     'category': 'Customizations',
     
-    "version": "17.0.0.16",
+    "version": "17.0.0.17",
     
     "depends": ["base",
                 "account",],

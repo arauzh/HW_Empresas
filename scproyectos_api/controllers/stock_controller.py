@@ -201,16 +201,30 @@ class stockAPI(http.Controller):
                 # 1. Confirmar la transferencia
                 if picking_record.state == 'draft':
                     picking_record.action_confirm()
+                    
+                picking_record.invalidate_recordset()
+                
+                # reservation_method = picking_record.picking_type_id.reservation_method
 
                 # 2. Intentar reservar existencias
-                if picking_record.state in (
-                    'confirmed',
-                    'waiting',
-                    'partially_available',
-                ):
-                    picking_record.action_assign()
+                # if (
+                #     reservation_method != 'at_confirm'
+                #     and picking_record.state in (
+                #         'confirmed',
+                #         'waiting',
+                #         'partially_available',
+                #     )
+                # ):
+                #     picking_record.action_assign()
+                #     picking_record.invalidate_recordset()
+                # if picking_record.state in (
+                #     'confirmed',
+                #     'waiting',
+                #     'partially_available',
+                # ):
+                #     picking_record.action_assign()
 
-                picking_record.invalidate_recordset()
+                # picking_record.invalidate_recordset()
 
                 # Para entregas no se permite una validación parcial.
                 # En recepciones Odoo normalmente permite continuar porque la
@@ -238,9 +252,12 @@ class stockAPI(http.Controller):
                 moves_to_process = picking_record.move_ids.filtered(
                     lambda move: move.state not in ('done', 'cancel')
                 )
+                
+                if moves_to_process:
+                    moves_to_process.write({'picked': True})
 
-                for move in moves_to_process:
-                    move.quantity = move.product_uom_qty
+                # for move in moves_to_process:
+                #     move.quantity = move.product_uom_qty
 
                 # 4. Validar el picking sin crear backorder.
                 validation_result = picking_record.with_context(
@@ -443,8 +460,7 @@ class stockAPI(http.Controller):
                     'picking_id': picking.id,
                     'product_id': product.id,
                     'product_uom_qty': cantidad,
-                    'quantity': cantidad,
-                    'product_uom': product.uom_id.id,
+                    # 'product_uom': product.uom_id.id,
                     'location_id': picking.location_id.id,
                     'location_dest_id': picking.location_dest_id.id,
                     'company_id': company_id,
@@ -514,8 +530,7 @@ class stockAPI(http.Controller):
                         'picking_id': receipt.id,
                         'product_id': product.id,
                         'product_uom_qty': cantidad,
-                        'quantity': cantidad,
-                        'product_uom': product.uom_id.id,
+                        # 'product_uom': product.uom_id.id,
                         'location_id': receipt.location_id.id,
                         'location_dest_id': receipt.location_dest_id.id,
                         'company_id': company_id,
@@ -529,11 +544,11 @@ class stockAPI(http.Controller):
             # CONFIRMAR, ASIGNAR Y VALIDAR LOS PICKINGS
             # -------------------------------------------------------------
             # Primero se completa la salida del almacén origen.
-            confirmar_asignar_validar(picking, fecha_efectiva)
+            # confirmar_asignar_validar(picking, fecha_efectiva)
 
-            # Si corresponde a traslado, se completa la recepción destino.
-            if receipt:
-                confirmar_asignar_validar(receipt, fecha_efectiva)
+            # # Si corresponde a traslado, se completa la recepción destino.
+            # if receipt:
+            #     confirmar_asignar_validar(receipt, fecha_efectiva)
             
             return request.make_json_response({
                 'success': True,
