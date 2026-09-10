@@ -259,6 +259,7 @@ class OdoomaqRxConnection(http.Controller):
                 'journal_id':               journal_obj.id if journal_obj else False,
                 'x_studio_fact_odoomaq':    inv_vals['x_studio_fact_odoomaq'],
                 'invoice_origin':           origin,
+                'narration':                inv_vals['narration'],
                 'invoice_line_ids':         [],
             }
             # invoice = Invoice.create()
@@ -266,7 +267,16 @@ class OdoomaqRxConnection(http.Controller):
             # Lines
             for ln in inv_vals['lines']:
                 #Se busca la linea de orden de compra
-                purchase_order_line_obj = request.env['purchase.order.line'].sudo().with_company(company).search([('order_id.name','=',ln.get('purchase_order_id')),('origin_order_line_id','=',ln.get('origin_order_line_id'))], limit=1)
+                purchase_order_line_obj = request.env['purchase.order.line'].sudo().with_company(company).search(
+                    [
+                        ('order_id.name','=',ln.get('purchase_order_id')),
+                        ('origin_order_line_id','=',ln.get('origin_order_line_id'))
+                    ], limit=1)
+                
+                tax_ids = request.env['account.tax'].sudo().with_context(lang=lang).with_company(company).search([
+                    ('name', 'in', ln.get('taxes', [])),
+                    ('company_id', '=', company.id)
+                ]).ids
                 
                 # Se crea la linea con relación a una orden de compra si los campos purchase_order_id y origin_order_line_id 
                 # si traian datos y la linea de la orden de compra fue encontrada.
@@ -276,19 +286,32 @@ class OdoomaqRxConnection(http.Controller):
                     
                     line_vals = purchase_order_line_obj._prepare_account_move_line()
                     
-                    line_vals["name"] = ln.get('description', '')
-                    line_vals["quantity"] = float(ln.get('quantity', 0))
-                    line_vals["price_unit"] = float(ln.get('price', 0))
-                    line_vals["discount"] = float(ln.get('discount', 0))
-                    tax_ids = request.env['account.tax'].sudo().with_context(lang=lang).with_company(company).search([('name', 'in', ln.get('taxes', [])),('company_id', '=', company.id)]).ids
-                    line_vals["tax_ids"] = [(6, 0, tax_ids)]
+                    # line_vals["name"] = ln.get('description', '')
+                    # line_vals["quantity"] = float(ln.get('quantity', 0))
+                    # line_vals["price_unit"] = float(ln.get('price', 0))
+                    # line_vals["discount"] = float(ln.get('discount', 0))
+                    # line_vals["tax_ids"] = [(6, 0, tax_ids)]
+                    
+                    # Sobreescribir valores enviados en el Payload explícitamente
+                    line_vals.update({
+                        'name': ln.get('description', line_vals.get('name')),
+                        'quantity': float(ln.get('quantity', line_vals.get('quantity'))),
+                        'price_unit': float(ln.get('price', line_vals.get('price_unit'))),
+                        'discount': float(ln.get('discount', line_vals.get('discount', 0))),
+                        'tax_ids': [(6, 0, tax_ids)] if tax_ids else line_vals.get('tax_ids'),
+                    })
+
+                    # Limpiamos los montos precalculados en moneda local de la PO para forzar el cálculo al tipo de cambio actual de la Factura
+                    line_vals.pop('amount_currency', None)
+                    line_vals.pop('debit', None)
+                    line_vals.pop('credit', None)
                     
                     inv_dict['invoice_line_ids'].append((0, 0, line_vals))
                     
                 else:
                     # Se crea la linea sin relación a una orden de compra si los campos purchase_order_id y origin_order_line_id no traen datos
                     prod = request.env['product.product'].sudo().search([('default_code', '=', ln.get('product')),'|', ('company_id', '=', company.id),('company_id', '=', False),], limit=1)
-                    tax_ids = request.env['account.tax'].sudo().with_context(lang=lang).with_company(company).search([('name', 'in', ln.get('taxes', [])),('company_id', '=', company.id)]).ids
+                    # tax_ids = request.env['account.tax'].sudo().with_context(lang=lang).with_company(company).search([('name', 'in', ln.get('taxes', [])),('company_id', '=', company.id)]).ids
                     inv_dict['invoice_line_ids'].append((0, 0, {
                         'product_id': prod.id if prod else False,
                         'name': ln.get('description', ''),
