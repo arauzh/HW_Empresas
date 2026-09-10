@@ -18,7 +18,7 @@ Module to receive information from Odoo Machinery and place it in the administra
     # for the full list
     'category': 'Customizations',
 
-    'version': '17.0.0.3',
+    'version': '17.0.0.4',
 
     # any module necessary for this one to work correctly
     'depends': [

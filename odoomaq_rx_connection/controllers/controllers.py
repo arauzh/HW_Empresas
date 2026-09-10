@@ -264,6 +264,9 @@ class OdoomaqRxConnection(http.Controller):
             }
             # invoice = Invoice.create()
             
+            # Lista temporal para guardar los precios/descuentos personalizados por cada línea
+            custom_line_updates = []
+            
             # Lines
             for ln in inv_vals['lines']:
                 #Se busca la linea de orden de compra
@@ -278,6 +281,10 @@ class OdoomaqRxConnection(http.Controller):
                     ('company_id', '=', company.id)
                 ]).ids
                 
+                price_payload = float(ln.get('price', 0))
+                qty_payload = float(ln.get('quantity', 0))
+                discount_payload = float(ln.get('discount', 0))
+                
                 # Se crea la linea con relación a una orden de compra si los campos purchase_order_id y origin_order_line_id 
                 # si traian datos y la linea de la orden de compra fue encontrada.
                 if purchase_order_line_obj.order_id:
@@ -286,27 +293,22 @@ class OdoomaqRxConnection(http.Controller):
                     
                     line_vals = purchase_order_line_obj._prepare_account_move_line()
                     
-                    # line_vals["name"] = ln.get('description', '')
-                    # line_vals["quantity"] = float(ln.get('quantity', 0))
-                    # line_vals["price_unit"] = float(ln.get('price', 0))
-                    # line_vals["discount"] = float(ln.get('discount', 0))
-                    # line_vals["tax_ids"] = [(6, 0, tax_ids)]
-                    
                     # Sobreescribir valores enviados en el Payload explícitamente
                     line_vals.update({
-                        'name': ln.get('description', line_vals.get('name')),
-                        'quantity': float(ln.get('quantity', line_vals.get('quantity'))),
-                        'price_unit': float(ln.get('price', line_vals.get('price_unit'))),
-                        'discount': float(ln.get('discount', line_vals.get('discount', 0))),
-                        'tax_ids': [(6, 0, tax_ids)] if tax_ids else line_vals.get('tax_ids'),
+                        'name': ln.get('description', line_vals.get('name'))
                     })
-
-                    # Limpiamos los montos precalculados en moneda local de la PO para forzar el cálculo al tipo de cambio actual de la Factura
-                    line_vals.pop('amount_currency', None)
-                    line_vals.pop('debit', None)
-                    line_vals.pop('credit', None)
                     
                     inv_dict['invoice_line_ids'].append((0, 0, line_vals))
+                    
+                    # Guardamos los valores que debemos sobreescribir después de crear la factura
+                    custom_line_updates.append({
+                        'is_po': True,
+                        'po_line_id': purchase_order_line_obj.id,
+                        'price_unit': price_payload,
+                        'quantity': qty_payload,
+                        'discount': discount_payload,
+                        'tax_ids': tax_ids,
+                    })
                     
                 else:
                     # Se crea la linea sin relación a una orden de compra si los campos purchase_order_id y origin_order_line_id no traen datos
@@ -326,6 +328,28 @@ class OdoomaqRxConnection(http.Controller):
             
             if not invoice:
                 return BadRequest(_(f"An unidentified error occurred while creating an invoice."))
+            
+            # SOBREESCRIBIR PRECIOS Y RECALCULAR ASIENTOS CONTABLES
+            for update_data in custom_line_updates:
+                if update_data['is_po']:
+                    # Buscar la línea recien creada vinculada al PO
+                    inv_line = invoice.invoice_line_ids.filtered(
+                        lambda l: l.purchase_line_id.id == update_data['po_line_id']
+                    )
+                    if inv_line:
+                        vals_to_write = {
+                            'price_unit': update_data['price_unit'],
+                            'quantity': update_data['quantity'],
+                            'discount': update_data['discount'],
+                        }
+                        if update_data['tax_ids']:
+                            vals_to_write['tax_ids'] = [(6, 0, update_data['tax_ids'])]
+
+                        # Se sobreescriben los valores directamente en el registro creado
+                        inv_line.write(vals_to_write)
+
+            # Método nativo de Odoo 17 para resincronizar líneas dinámicas y apuntes de impuestos
+            invoice._sync_dynamic_lines(container={'records': invoice})
                 
             return {'success': True, 'invoice_id': invoice.id, 'invoice_name': invoice.name,}
         
