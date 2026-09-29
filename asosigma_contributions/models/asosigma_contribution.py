@@ -195,7 +195,13 @@ class AsosigmaMemberAccount(models.Model):
     employee_id = fields.Many2one('hr.employee', string='Empleado (Opcional)', ondelete='cascade')
     partner_id = fields.Many2one('res.partner', string='Contacto Asociado', required=True, ondelete='cascade')
     identification_id = fields.Char(related='partner_id.vat', string='Identificación', store=True, readonly=False)
-    company_id = fields.Many2one('res.company', string='Empresa', default=lambda self: self.env.company)
+    company_id = fields.Many2one('res.company', string='Empresa', required=True)
+
+    @api.constrains('partner_id')
+    def _check_partner_is_member(self):
+        for record in self:
+            if record.partner_id and not record.partner_id.is_asosigma_member:
+                raise UserError(_("El contacto '%s' no puede ser asignado porque no es un Asociado Activo.") % record.partner_id.name)
 
     total_ordinary = fields.Float(string='Total Ordinario', compute='_compute_totals', store=True)
     total_extraordinary = fields.Float(string='Total Extraordinario', compute='_compute_totals', store=True)

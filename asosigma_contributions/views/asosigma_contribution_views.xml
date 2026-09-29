@@ -132,7 +132,7 @@
                     <group>
                         <group>
                             <field name="identification_id" readonly="1"/>
-                            <field name="company_id" readonly="1"/>
+                            <field name="company_id" readonly="id" options="{'no_create': True}"/>
                         </group>
                         <group>
                             <field name="total_ordinary"/>
