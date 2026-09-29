@@ -102,7 +102,7 @@
         <field name="name">asosigma.member.account.tree</field>
         <field name="model">asosigma.member.account</field>
         <field name="arch" type="xml">
-            <tree create="0" edit="0">
+            <tree edit="0">
                 <field name="identification_id"/>
                 <field name="partner_id"/> <field name="company_id"/>
                 <field name="total_ordinary" sum="Total Ordinario"/>
@@ -117,7 +117,8 @@
         <field name="name">asosigma.member.account.form</field>
         <field name="model">asosigma.member.account</field>
         <field name="arch" type="xml">
-            <form create="0">
+            <form>
+                <!-- AÑADIMOS EL HEADER CON EL BOTÓN AQUÍ -->
                 <header>
                     <button name="action_add_manual_adjustment" type="object" string="Carga / Ajuste Manual" class="oe_highlight"/>
                 </header>
@@ -125,7 +126,7 @@
                     <div class="oe_title">
                         <label for="partner_id" class="oe_edit_only" string="Contacto Asociado"/>
                         <h1>
-                            <field name="partner_id" options="{'no_open': False, 'no_create': True}" readonly="1"/>
+                            <field name="partner_id" options="{'no_open': False, 'no_create': True}" readonly="id"/>
                         </h1>
                     </div>
                     <group>
@@ -142,17 +143,20 @@
                     </group>
                     <notebook>
                         <page string="Detalle de Aportaciones">
+                            <!-- La lista de líneas ahora muestra reference_display -->
                             <field name="line_ids" readonly="1">
                                 <tree>
                                     <field name="date"/>
+                                    <!-- Esta columna mostrará ASOSIGMA/2026/0001 o MANUAL/2026/0001 -->
                                     <field name="reference_display"/>
+                                    <!-- Esta columna mostrará el nombre del Lote, o "Aporte manual" -->
                                     <field name="payslip_run_name"/>
                                     <field name="concept"/>
                                     <field name="amount" sum="Total"/>
                                 </tree>
                             </field>
                         </page>
-                        <page string="Detalle de Intereses">
+                        <page string="Canasta">
                             <field name="interest_line_ids" readonly="1">
                                 <tree>
                                     <field name="date"/>
@@ -202,6 +206,7 @@
                 <sheet>
                     <group>
                         <group string="Información del Asociado">
+                            <!-- Aquí mostramos el Contacto en vez del empleado -->
                             <field name="partner_id" options="{'no_open': False}"/>
                             <field name="identification_id"/>
                             <field name="company_id"/>
