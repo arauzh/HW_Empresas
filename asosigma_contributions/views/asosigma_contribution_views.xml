@@ -5,7 +5,7 @@
         <field name="name">asosigma.contribution.batch.tree</field>
         <field name="model">asosigma.contribution.batch</field>
         <field name="arch" type="xml">
-            <tree decoration-info="state == 'draft'" decoration-muted="state == 'cancel'">
+            <tree decoration-info="state == 'draft'" decoration-muted="state == 'cancel'" default_order="name desc">
                 <field name="name"/>
                 <field name="date_start"/>
                 <field name="date_end"/>

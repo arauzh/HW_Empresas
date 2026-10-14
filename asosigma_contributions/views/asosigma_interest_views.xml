@@ -5,7 +5,7 @@
         <field name="name">asosigma.interest.batch.tree</field>
         <field name="model">asosigma.interest.batch</field>
         <field name="arch" type="xml">
-            <tree decoration-info="state == 'draft'" decoration-success="state == 'confirmed'">
+            <tree decoration-info="state == 'draft'" decoration-success="state == 'confirmed'" default_order="name desc">
                 <field name="name"/>
                 <field name="year"/>
                 <field name="month"/>

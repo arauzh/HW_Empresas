@@ -5,6 +5,7 @@ class AsosigmaContributionBatch(models.Model):
     _name = 'asosigma.contribution.batch'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = 'Lote de Aportaciones ASOSIGMA'
+    _order = 'name desc'
 
     name = fields.Char(string='Referencia', required=True, copy=False, readonly=True, default=lambda self: _('Nuevo'), tracking=True)
     state = fields.Selection([
@@ -17,10 +18,12 @@ class AsosigmaContributionBatch(models.Model):
     date_start = fields.Date(string='Fecha Inicio', required=True, tracking=True)
     date_end = fields.Date(string='Fecha Fin', required=True, tracking=True)
     
-    total_ordinary = fields.Float(string='Total Ahorro Ordinario', compute='_compute_totals', store=True, tracking=True)
-    total_extraordinary = fields.Float(string='Total Ahorro Extraordinario', compute='_compute_totals', store=True, tracking=True)
-
     company_id = fields.Many2one('res.company', string='Empresa', default=lambda self: self.env.company)
+    currency_id = fields.Many2one('res.currency', string='Moneda', related='company_id.currency_id', readonly=True)
+
+    total_ordinary = fields.Monetary(string='Total Ahorro Ordinario', compute='_compute_totals', store=True, tracking=True, currency_field='currency_id')
+    total_extraordinary = fields.Monetary(string='Total Ahorro Extraordinario', compute='_compute_totals', store=True, tracking=True, currency_field='currency_id')
+
     journal_id = fields.Many2one('account.journal', string='Diario Contable', domain="[('type', 'in', ['general', 'bank', 'cash'])]")
     accounting_date = fields.Date(string='Fecha Contable', default=fields.Date.context_today)
     move_id = fields.Many2one('account.move', string='Asiento Contable', readonly=True)
@@ -196,6 +199,7 @@ class AsosigmaMemberAccount(models.Model):
     partner_id = fields.Many2one('res.partner', string='Contacto Asociado', required=True, ondelete='cascade')
     identification_id = fields.Char(related='partner_id.vat', string='Identificación', store=True, readonly=False)
     company_id = fields.Many2one('res.company', string='Empresa', required=True)
+    currency_id = fields.Many2one('res.currency', string='Moneda', related='company_id.currency_id', readonly=True)
 
     @api.constrains('partner_id')
     def _check_partner_is_member(self):
@@ -203,10 +207,14 @@ class AsosigmaMemberAccount(models.Model):
             if record.partner_id and not record.partner_id.is_asosigma_member:
                 raise UserError(_("El contacto '%s' no puede ser asignado porque no es un Asociado Activo.") % record.partner_id.name)
 
-    total_ordinary = fields.Float(string='Total Ordinario', compute='_compute_totals', store=True)
-    total_extraordinary = fields.Float(string='Total Extraordinario', compute='_compute_totals', store=True)
-    total_accumulated = fields.Float(string='Total General', compute='_compute_totals', store=True)
-    total_canasta = fields.Float(string='Total Canasta', compute='_compute_totals', store=True)
+    _sql_constraints = [
+        ('unique_partner_account', 'unique(partner_id)', '¡Este contacto ya tiene una cuenta de saldos acumulados creada!')
+    ]
+
+    total_ordinary = fields.Monetary(string='Total Ordinario', compute='_compute_totals', store=True, currency_field='currency_id')
+    total_extraordinary = fields.Monetary(string='Total Extraordinario', compute='_compute_totals', store=True, currency_field='currency_id')
+    total_accumulated = fields.Monetary(string='Total General', compute='_compute_totals', store=True, currency_field='currency_id')
+    total_canasta = fields.Monetary(string='Total Canasta', compute='_compute_totals', store=True, currency_field='currency_id')
 
     # Ahora el dominio acepta: o está confirmado/publicado el lote, o es una línea manual.
     line_ids = fields.One2many(
@@ -272,8 +280,9 @@ class AsosigmaContributionLine(models.Model):
     code = fields.Char(string='Código')
     concept = fields.Char(string='Concepto')
     company_id = fields.Many2one('res.company', string='Empresa')
+    currency_id = fields.Many2one('res.currency', string='Moneda', related='company_id.currency_id', readonly=True)
     payslip_run_name = fields.Char(string='Lote de Nómina / Referencia')
-    amount = fields.Float(string='Total')
+    amount = fields.Monetary(string='Total', currency_field='currency_id')
 
     # Campos nuevos para gestionar la lógica manual
     is_manual = fields.Boolean(string='Es Manual', default=False)
@@ -295,13 +304,14 @@ class AsosigmaManualAdjustmentWizard(models.TransientModel):
     _description = 'Asistente de Carga Manual'
 
     account_id = fields.Many2one('asosigma.member.account', string='Cuenta', required=True)
+    currency_id = fields.Many2one('res.currency', string='Moneda', related='account_id.currency_id', readonly=True)
     date = fields.Date(string='Fecha', required=True, default=fields.Date.context_today)
     type = fields.Selection([
         ('AHORASOSIGMA', 'Ahorro Ordinario ASOSIGMA'),
         ('AHEXASOSIGMA', 'Ahorro Extraordinario ASOSIGMA'),
         ('CANASTA', 'Canasta (Intereses)')
     ], string='Tipo de Ajuste', required=True, default='AHORASOSIGMA')
-    amount = fields.Float(string='Monto', required=True, help="Positivo para sumar, negativo para restar.")
+    amount = fields.Monetary(string='Monto', required=True, currency_field='currency_id', help="Positivo para sumar, negativo para restar.")
 
     def action_confirm(self):
         seq = self.env['ir.sequence'].next_by_code('asosigma.manual.adjustment') or '/'

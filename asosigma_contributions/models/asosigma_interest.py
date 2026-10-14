@@ -5,6 +5,7 @@ class AsosigmaInterestBatch(models.Model):
     _name = 'asosigma.interest.batch'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = 'Lote de Intereses Mensuales ASOSIGMA'
+    _order = 'name desc'
 
     name = fields.Char(string='Referencia', required=True, copy=False, readonly=True, default=lambda self: _('Nuevo'), tracking=True)
     
@@ -19,9 +20,10 @@ class AsosigmaInterestBatch(models.Model):
         ('10', 'Octubre'), ('11', 'Noviembre'), ('12', 'Diciembre')
     ], string='Mes', required=True, tracking=True)
     
-    total_interest = fields.Float(string='Interés Total', required=True, tracking=True)
-    
     company_id = fields.Many2one('res.company', string='Empresa', default=lambda self: self.env.company)
+    currency_id = fields.Many2one('res.currency', string='Moneda', related='company_id.currency_id', readonly=True)
+
+    total_interest = fields.Monetary(string='Interés Total', required=True, tracking=True, currency_field='currency_id')
     journal_id = fields.Many2one('account.journal', string='Diario Contable', domain="[('type', 'in', ['general', 'bank', 'cash'])]")
     accounting_date = fields.Date(string='Fecha Contable', default=fields.Date.context_today)
     move_id = fields.Many2one('account.move', string='Asiento Contable', readonly=True)
@@ -203,14 +205,16 @@ class AsosigmaInterestLine(models.Model):
     batch_id = fields.Many2one('asosigma.interest.batch', string='Lote de Interés', ondelete='cascade')
     account_id = fields.Many2one('asosigma.member.account', string='Cuenta Acumulada', ondelete='cascade')
     partner_id = fields.Many2one('res.partner', string='Contacto Asociado', required=True)
+    company_id = fields.Many2one('res.company', string='Empresa', related='account_id.company_id', readonly=True, store=True)
+    currency_id = fields.Many2one('res.currency', string='Moneda', related='company_id.currency_id', readonly=True)
     
-    total_ordinary = fields.Float(string='Total Ordinario')
-    employer_contribution = fields.Float(string='Aportaciones Patronales')
-    total_extraordinary = fields.Float(string='Total Extraordinario')
-    total_sum = fields.Float(string='Total (Suma)')
+    total_ordinary = fields.Monetary(string='Total Ordinario', currency_field='currency_id')
+    employer_contribution = fields.Monetary(string='Aportaciones Patronales', currency_field='currency_id')
+    total_extraordinary = fields.Monetary(string='Total Extraordinario', currency_field='currency_id')
+    total_sum = fields.Monetary(string='Total (Suma)', currency_field='currency_id')
     
     percentage = fields.Float(string='(%) Porcentaje')
-    canasta = fields.Float(string='Canasta')
+    canasta = fields.Monetary(string='Canasta', currency_field='currency_id')
     
     date = fields.Date(string='Fecha', default=fields.Date.context_today)
     concept = fields.Char(string='Concepto')
