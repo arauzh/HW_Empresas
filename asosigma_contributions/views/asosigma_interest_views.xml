@@ -6,6 +6,7 @@
         <field name="model">asosigma.interest.batch</field>
         <field name="arch" type="xml">
             <tree decoration-info="state == 'draft'" decoration-success="state == 'confirmed'" default_order="name desc">
+                <field name="currency_id" column_invisible="True"/>
                 <field name="name"/>
                 <field name="year"/>
                 <field name="month"/>
@@ -30,6 +31,7 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,consulted,calculated,confirmed,posted"/>
                 </header>
                 <sheet>
+                    <field name="currency_id" invisible="1"/>
                     <div class="oe_title">
                         <h1>
                             <field name="name"/>
@@ -61,6 +63,7 @@
                         <page string="Distribución de canasta">
                             <field name="line_ids" readonly="1">
                                 <tree>
+                                    <field name="currency_id" column_invisible="True"/>
                                     <field name="partner_id"/>
                                     <field name="total_ordinary" sum="Total Ordinario"/>
                                     <field name="employer_contribution" sum="Aportes Patronales"/>
