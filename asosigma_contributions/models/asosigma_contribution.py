@@ -92,7 +92,7 @@ class AsosigmaContributionBatch(models.Model):
                     'is_member': is_member,
                     'code': code,
                     'concept': concept,
-                    'company_id': company.id,
+                    'company_id': self.company_id.id,
                     'payslip_run_name': payslip_run_name,
                     'amount': 0.0,
                 }
@@ -100,7 +100,7 @@ class AsosigmaContributionBatch(models.Model):
 
         lines_to_create = [data for data in grouped_data.values() if data['amount'] > 0]
         if lines_to_create:
-            self.env['asosigma.contribution.line'].create(lines_to_create)
+            self.env['asosigma.contribution.line'].sudo().create(lines_to_create)
 
         if unique_runs:
             runs_to_create = [{'batch_id': self.id, 'name': run_name} for run_name in unique_runs]

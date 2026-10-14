@@ -9,13 +9,6 @@
             <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
         </record>
 
-        <!-- Regla Multi-Empresa para Líneas de Aportación -->
-        <record id="rule_asosigma_contribution_line_multi_company" model="ir.rule">
-            <field name="name">Líneas de Aportación ASOSIGMA Multi-Company</field>
-            <field name="model_id" ref="model_asosigma_contribution_line"/>
-            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
-        </record>
-
         <!-- Regla Multi-Empresa para Lotes de Canasta -->
         <record id="rule_asosigma_interest_batch_multi_company" model="ir.rule">
             <field name="name">Lotes de Canasta ASOSIGMA Multi-Company</field>
