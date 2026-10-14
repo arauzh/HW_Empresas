@@ -13,11 +13,12 @@
         'account',
     ],
     'data': [
+        'security/asosigma_security.xml',
+        'security/ir.model.access.csv',
         'views/res_partner_views.xml',
         'data/sequence.xml',
         'views/asosigma_contribution_views.xml',
         'views/asosigma_interest_views.xml',
-        'security/ir.model.access.csv'
     ],
     'installable': True,
     'application': True,

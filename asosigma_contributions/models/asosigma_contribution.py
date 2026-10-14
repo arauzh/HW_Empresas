@@ -115,7 +115,9 @@ class AsosigmaContributionBatch(models.Model):
                 if not line.is_member:
                     raise UserError(_("No puede confirmar el lote porque hay líneas de aportación donde el empleado no es Asociado Activo (is_member es falso)."))
 
-                account = self.env['asosigma.member.account'].search([('partner_id', '=', line.partner_id.id)], limit=1)
+                account = self.env['asosigma.member.account'].search([
+                    ('partner_id', '=', line.partner_id.id)
+                ], limit=1)
                 if not account:
                     account = self.env['asosigma.member.account'].create({
                         'employee_id': line.employee_id.id,
